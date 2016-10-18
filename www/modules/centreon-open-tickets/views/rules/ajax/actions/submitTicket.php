@@ -36,13 +36,13 @@ function get_service_state_str($state) {
     
     if ($state == 0) {
         $result = 'OK';
-    } else if ($result == 1) {
+    } else if ($state == 1) {
         $result = 'WARNING';
-    } else if ($result == 2) {
+    } else if ($state == 2) {
         $result = 'CRITICAL';
-    } else if ($result == 3) {
+    } else if ($state == 3) {
         $result = 'UNKNOWN';
-    } else if ($result == 4) {
+    } else if ($state == 4) {
         $result = 'PENDING';
     } 
     return $result;
@@ -53,9 +53,9 @@ function get_host_state_str($state) {
     
     if ($state == 0) {
         $result = 'UP';
-    } else if ($result == 1) {
+    } else if ($state == 1) {
         $result = 'DOWN';
-    } else if ($result == 2) {
+    } else if ($state == 2) {
         $result = 'UNREACHABLE';
     }
     return $result;
