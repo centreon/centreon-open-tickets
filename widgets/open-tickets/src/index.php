@@ -340,13 +340,15 @@ while ($row = $res->fetchRow()) {
         } elseif (($key == "h_action_url" || $key == "h_notes_url") && $value) {
             if (!preg_match("/(^http[s]?)|(^\/\/)/", $value)) {
                 $value = '//' . $value;
+                $value = urlencode($hostObj->replaceMacroInString($row['hostname'], $value));
             }
             $value = CentreonUtils::escapeSecure($hostObj->replaceMacroInString($row['hostname'], $value));
         } elseif (($key == "s_action_url" || $key == "s_notes_url") && $value) {
+            $value = $hostObj->replaceMacroInString($row['hostname'], $value);
             if (!preg_match("/(^http[s]?)|(^\/\/)/", $value)) {
                 $value = '//' . $value;
+                $value = urlencode($svcObj->replaceMacroInString($row['service_id'], $value));
             }
-            $value = $hostObj->replaceMacroInString($row['hostname'], $value);
             $value = CentreonUtils::escapeSecure($svcObj->replaceMacroInString($row['service_id'], $value));
         } elseif ($key == "criticality_id" && $value != '') {
             $critData = $criticality->getData($row["criticality_id"], 1);
