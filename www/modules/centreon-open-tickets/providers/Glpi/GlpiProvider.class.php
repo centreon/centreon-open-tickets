@@ -117,7 +117,7 @@ class GlpiProvider extends AbstractProvider {
         $this->_checkFormValue('timeout', "Please set 'Timeout' value");
         $this->_checkFormValue('username', "Please set 'Username' value");
         $this->_checkFormValue('password', "Please set 'Password' value");
-        $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
+	    $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
         $this->_checkFormInteger('timeout', "'Timeout' must be a number");
         $this->_checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
         
@@ -146,6 +146,8 @@ class GlpiProvider extends AbstractProvider {
         $path_html = '<input size="50" name="path" type="text" value="' . $this->_getFormValue('path') . '" />';
         $username_html = '<input size="50" name="username" type="text" value="' . $this->_getFormValue('username') . '" />';
         $password_html = '<input size="50" name="password" type="password" value="' . $this->_getFormValue('password') . '" autocomplete="off" />';
+        $user_name_html = '<input size="50" name="user_name" type="text" value="' . $this->_getFormValue('user_name') . '" />';
+        $user_password_html = '<input size="50" name="user_password" type="password" value="' . $this->_getFormValue('user_password') . '" autocomplete="off" />';
         $https_html = '<input type="checkbox" name="https" value="yes" ' . ($this->_getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
         $timeout_html = '<input size="2" name="timeout" type="text" value="' . $this->_getFormValue('timeout') . '" />';
 
@@ -154,6 +156,8 @@ class GlpiProvider extends AbstractProvider {
             'path' => array('label' => _("Path"), 'html' => $path_html),
             'username' => array('label' => _("Username") . $this->_required_field, 'html' => $username_html),
             'password' => array('label' => _("Password") . $this->_required_field, 'html' => $password_html),
+            'user_name' => array('label' => _("user_name"), 'html' => $user_name_html),
+            'user_password' => array('label' => _("user_password"), 'html' => $user_password_html),
             'https' => array('label' => _("Use https"), 'html' => $https_html),
             'timeout' => array('label' => _("Timeout"), 'html' => $timeout_html),
             'mappingticket' => array('label' => _("Mapping ticket arguments")),
@@ -199,8 +203,10 @@ class GlpiProvider extends AbstractProvider {
         $this->_save_config['simple']['path'] = $this->_submitted_config['path'];
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
+	    $this->_save_config['simple']['user_name'] = $this->_submitted_config['user_name'];
+        $this->_save_config['simple']['user_password'] = $this->_submitted_config['user_password'];
         $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes') ? 
-            $this->_submitted_config['https'] : '';
+        $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
         
         $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
@@ -432,7 +438,8 @@ class GlpiProvider extends AbstractProvider {
                                                'timeout' => $this->rule_data['timeout'],
                                                'content' => $request)));
         $file = file_get_contents("$proto://$host/$url", false, $context);
-        if (!$file) {
+        var_export($file);
+	if (!$file) {
             $this->setRpcError("webservice '$method': no response");
             return $array_result;
         }
@@ -548,7 +555,7 @@ class GlpiProvider extends AbstractProvider {
             return -1;
         }
         
-        $this->glpi_call_response = $this->requestRpc('glpi.doLogin', array('login_name' => $this->rule_data['username'], 'login_password' => $this->rule_data['password']));
+        $this->glpi_call_response = $this->requestRpc('glpi.doLogin', array('login_name' => $this->rule_data['username'], 'login_password' => $this->rule_data['password'], 'username' => $this->rule_data['user_name'], 'password' => $this->rule_data['user_password']));
         if ($this->glpi_call_response['code'] == -1) {
             return -1;
         }
