@@ -117,7 +117,7 @@ class GlpiProvider extends AbstractProvider {
         $this->_checkFormValue('timeout', "Please set 'Timeout' value");
         $this->_checkFormValue('username', "Please set 'Username' value");
         $this->_checkFormValue('password', "Please set 'Password' value");
-	    $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
+	$this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
         $this->_checkFormInteger('timeout', "'Timeout' must be a number");
         $this->_checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
         
