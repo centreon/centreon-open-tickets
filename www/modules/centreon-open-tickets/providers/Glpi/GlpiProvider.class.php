@@ -203,7 +203,7 @@ class GlpiProvider extends AbstractProvider {
         $this->_save_config['simple']['path'] = $this->_submitted_config['path'];
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-	    $this->_save_config['simple']['user_name'] = $this->_submitted_config['user_name'];
+	$this->_save_config['simple']['user_name'] = $this->_submitted_config['user_name'];
         $this->_save_config['simple']['user_password'] = $this->_submitted_config['user_password'];
         $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes') ? 
         $this->_submitted_config['https'] : '';
@@ -438,7 +438,6 @@ class GlpiProvider extends AbstractProvider {
                                                'timeout' => $this->rule_data['timeout'],
                                                'content' => $request)));
         $file = file_get_contents("$proto://$host/$url", false, $context);
-        var_export($file);
 	if (!$file) {
             $this->setRpcError("webservice '$method': no response");
             return $array_result;
