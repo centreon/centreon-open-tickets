@@ -136,17 +136,17 @@ try {
         }
         if (is_null($row['description']) || $row['description'] == '') {
             $command = "CHANGE_CUSTOM_HOST_VAR;%s;%s;%s";
-            $external_cmd->set_process_command(sprintf($command, $row['host_name'], $centreon_provider->getMacroTicketId(), ''), $row['instance_id']);
+            $external_cmd->setProcessCommand(sprintf($command, $row['host_name'], $centreon_provider->getMacroTicketId(), ''), $row['instance_id']);
             $command = "REMOVE_HOST_ACKNOWLEDGEMENT;%s";
-            $external_cmd->set_process_command(sprintf($command, $row['host_name']), $row['instance_id']);
+            $external_cmd->setProcessCommand(sprintf($command, $row['host_name']), $row['instance_id']);
             continue;
         }
 
         $command = "CHANGE_CUSTOM_SVC_VAR;%s;%s;%s;%s";
-        $external_cmd->set_process_command(sprintf($command, $row['host_name'], $row['description'], $centreon_provider->getMacroTicketId(), ''), $row['instance_id']);
+        $external_cmd->setProcessCommand(sprintf($command, $row['host_name'], $row['description'], $centreon_provider->getMacroTicketId(), ''), $row['instance_id']);
         if ($centreon_provider->doAck()) {
             $command = "REMOVE_SVC_ACKNOWLEDGEMENT;%s;%s";
-            $external_cmd->set_process_command(sprintf($command, $row['host_name'], $row['description']), $row['instance_id']);
+            $external_cmd->setProcessCommand(sprintf($command, $row['host_name'], $row['description']), $row['instance_id']);
         }
     }
     
