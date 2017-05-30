@@ -37,7 +37,7 @@ $query .= " ORDER BY r.alias";
 $query .= " LIMIT ".$num * $limit.", ".$limit;
 
 $resCount = $db->query($queryCount);
-$rows = $resCount->numRows();
+$rows = $resCount->rowCount();
 
 $res = $db->query($query);
 $elemArr = array();

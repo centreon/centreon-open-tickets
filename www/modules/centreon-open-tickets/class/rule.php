@@ -319,7 +319,7 @@ class Centreon_OpenTickets_Rule
         foreach ($select as $ruleId => $val) {
             $query = "SELECT * FROM mod_open_tickets_rule WHERE rule_id = '" . $ruleId . "' LIMIT 1";
             $res = $this->_db->query($query);
-            if (!$res->numRows()) {
+            if (!$res->rowCount()) {
                 throw new Exception(sprintf('Rule ID: % not found', $ruleId));
             }
             $row = $res->fetchRow();
@@ -329,8 +329,8 @@ class Centreon_OpenTickets_Rule
                 for ($j = 1; $j <= $duplicateNb[$ruleId]; $j++) {
                     $name = $row['alias'] . "_" . $j;
                     $res2 = $this->_db->query("SELECT `rule_id` FROM `mod_open_tickets_rule` WHERE `alias` = '" . $this->_db->escape($name) . "'");
-                    while ($res2->numRows()) {
-                        $res2->free();
+                    while ($res2->rowCount()) {
+                        $res2->closeCursor();
                         $i++;
                         $name = $row['alias'] . "_" . $i;
                         $res2 = $this->_db->query("SELECT `rule_id` FROM `mod_open_tickets_rule` WHERE `alias` = '" . $this->_db->escape($name) . "'");
