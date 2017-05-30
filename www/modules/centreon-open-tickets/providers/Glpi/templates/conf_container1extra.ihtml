@@ -35,6 +35,24 @@
         {$form.password.html}
     </td>
 </tr>
+
+<tr class="list_one">
+    <td class="FormRowField">
+	{$form.user_name.label}
+    </td>
+    <td class="FormRowValue">
+	{$form.user_name.html}
+    </td>
+</tr>
+<tr class="list_two">
+    <td class="FormRowField">
+	{$form.user_password.label}
+    </td>
+    <td class="FormRowValue">
+	{$form.user_password.html}
+    </td>
+</tr>
+
 <tr class="list_one">
     <td class="FormRowField">
         {$form.https.label}
