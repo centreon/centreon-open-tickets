@@ -20,6 +20,7 @@
  */
 
 require_once "../../require.php";
+require_once $centreon_path . 'bootstrap.php';
 require_once $centreon_path . 'www/class/centreon.class.php';
 require_once $centreon_path . 'www/class/centreonSession.class.php';
 require_once $centreon_path . 'www/class/centreonDB.class.php';
@@ -41,11 +42,11 @@ $template = initSmartyTplForPopup($path . 'templates/', $template, "./", $centre
 
 $centreon = $_SESSION['centreon'];
 $widgetId = $_POST['widgetId'];
-$db = new CentreonDB();
+$db = $dependencyInjector['configuration_db'];
 $widgetObj = new CentreonWidget($centreon, $db);
 $preferences = $widgetObj->getWidgetPreferences($widgetId);
 
-$pearDB = new CentreonDB();
+$pearDB = $dependencyInjector['configuration_db'];
 $admin = $centreon->user->admin;
 $canDoAction = false;
 if ($admin) {

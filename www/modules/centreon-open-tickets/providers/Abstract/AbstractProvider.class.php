@@ -992,7 +992,8 @@ Output: {$service.output|substr:0:1024}
         }
         
         try {
-            $db_storage->autocommit();
+            $db_storage->beginTransaction();
+            $db_storage->autocommit(0);
             
             if ($extra_args['no_create_ticket_id'] == false) {
                 $query = "INSERT INTO mod_open_tickets

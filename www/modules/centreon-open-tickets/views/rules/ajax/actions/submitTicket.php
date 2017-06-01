@@ -113,11 +113,11 @@ $centreon_provider->setWidgetId($get_information['form']['widgetId']);
 require_once $centreon_path . 'www/class/centreonDuration.class.php';
 
 $selected_values = explode(',', $get_information['form']['selection']);
-$db_storage = new centreonDBManager('centstorage');
-
+$db_storage =$dependencyInjector['realtime_db'];
 $selected = $rule->loadSelection($db_storage, $get_information['form']['cmd'], $get_information['form']['selection']);
 
 try {
+    $dependencyInjector['configuration_db']->beginTransaction();
     $contact_infos = get_contact_information();
     $resultat['result'] = $centreon_provider->submitTicket($db_storage, $contact_infos, $selected['host_selected'], $selected['service_selected']);
     
@@ -156,5 +156,3 @@ try {
     $resultat['msg'] = $e->getMessage();
     $dependencyInjector['configuration_db']->rollback();
 }
-
-?>
