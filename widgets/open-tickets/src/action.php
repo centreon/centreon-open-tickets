@@ -20,6 +20,7 @@
  */
 
 require_once "../../require.php";
+require_once $centreon_path . 'bootstrap.php';
 require_once $centreon_path . 'www/class/centreon.class.php';
 require_once $centreon_path . 'www/class/centreonSession.class.php';
 require_once $centreon_path . 'www/class/centreonDB.class.php';
@@ -30,7 +31,7 @@ require_once $centreon_path . 'www/modules/centreon-open-tickets/class/rule.php'
 require_once $centreon_path . "GPL_LIB/Smarty/libs/Smarty.class.php";
 
 session_start();
-$centreon_bg = new CentreonXMLBGRequest(session_id(), 1, 1, 0, 1);
+$centreon_bg = new CentreonXMLBGRequest($dependencyInjector, session_id(), 1, 1, 0, 1);
 
 ?>
 
@@ -130,7 +131,7 @@ function format_popup() {
 }
 
 function remove_tickets() {
-    global $cmd, $widgetId, $rule, $preferences, $centreon, $centreon_path, $centreon_bg;
+    global $cmd, $widgetId, $rule, $preferences, $centreon, $centreon_path, $centreon_bg, $dependencyInjector;
 
     $path = $centreon_path . "www/widgets/open-tickets/src/";
     $provider_infos = $rule->getAliasAndProviderId($preferences['rule']);
@@ -149,7 +150,8 @@ try {
     if (!isset($_SESSION['centreon']) || !isset($_REQUEST['cmd']) || !isset($_REQUEST['selection'])) {
         throw new Exception('Missing data');
     }
-    $db = new CentreonDB();
+
+    $db = $dependencyInjector['configuration_db'];
     if (CentreonSession::checkSession(session_id(), $db) == 0) {
         throw new Exception('Invalid session');
     }
@@ -163,7 +165,7 @@ try {
     $widgetObj = new CentreonWidget($centreon, $db);
     $preferences = $widgetObj->getWidgetPreferences($widgetId);
         
-    $rule = new Centreon_OpenTickets_Rule($db);
+    $rule = new Centreon_OpenTickets_Rule($dependencyInjector);
     
     if ($cmd == 3 || $cmd == 4) {
         format_popup();
@@ -175,4 +177,3 @@ try {
 } catch (Exception $e) {
     echo $e->getMessage() . "<br/>";
 }
-?>

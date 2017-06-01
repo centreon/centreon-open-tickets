@@ -52,7 +52,7 @@ $centreon_provider = new $classname($rule, $centreon_path, $centreon_open_ticket
 
 // We get Host or Service
 $selected_values = explode(',', $get_information['form']['selection']);
-$db_storage = new centreonDBManager('centstorage');
+$db_storage = $dependencyInjector['realtime_db'];
 
 $problems = array();
 $tickets = array();
@@ -159,7 +159,7 @@ try {
 } catch (Exception $e) {
     $resultat['code'] = 1;
     $resultat['msg'] = $e->getMessage();
-    $db->rollback();
+    $dependencyInjector['configuration_db']->rollback();
 }
 
 $resultat['msg'] = '

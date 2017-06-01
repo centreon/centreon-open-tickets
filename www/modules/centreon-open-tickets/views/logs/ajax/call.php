@@ -21,14 +21,16 @@
 
 
 require_once dirname(__FILE__) . '/../../../centreon-open-tickets.conf.php';
+require_once $centreon_path . 'bootstrap.php';
 require_once $centreon_path . 'www/modules/centreon-open-tickets/class/centreonDBManager.class.php';
 require_once $centreon_path . 'www/modules/centreon-open-tickets/class/ticketLog.php';
 require_once $centreon_path . "www/class/centreonXMLBGRequest.class.php";
 $centreon_open_tickets_path = $centreon_path . "www/modules/centreon-open-tickets/";
 
 session_start();
-$centreon_bg = new CentreonXMLBGRequest(session_id(), 1, 1, 0, 1);
-$db = new centreonDBManager('centstorage');
+$centreon_bg = new CentreonXMLBGRequest($dependencyInjector, session_id(), 1, 1, 0, 1);
+//$db = new centreonDBManager('centstorage');
+$db = $dependencyInjector['realtime_db'];
 $ticket_log = new Centreon_OpenTickets_Log($db);
 
 if (isset($_SESSION['centreon'])) {

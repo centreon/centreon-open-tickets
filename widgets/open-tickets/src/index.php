@@ -20,6 +20,7 @@
  */
 
 require_once "../../require.php";
+require_once $centreon_path . 'bootstrap.php';
 require_once $centreon_path . 'www/class/centreon.class.php';
 require_once $centreon_path . 'www/class/centreonSession.class.php';
 require_once $centreon_path . 'www/class/centreonDB.class.php';
@@ -42,7 +43,7 @@ if (!isset($_SESSION['centreon']) || !isset($_REQUEST['widgetId']) || !isset($_R
     exit;
 }
 
-$db = new CentreonDB();
+$db = $dependencyInjector['configuration_db'];
 if (CentreonSession::checkSession(session_id(), $db) == 0) {
     exit();
 }
@@ -54,7 +55,7 @@ $template = initSmartyTplForPopup($centreon_path . "www/widgets/open-tickets/src
 /* Init Objects */
 $criticality = new CentreonCriticality($db);
 $media = new CentreonMedia($db);
-$rule = new Centreon_OpenTickets_Rule($db);
+$rule = new Centreon_OpenTickets_Rule($dependencyInjector);
 
 $centreon = $_SESSION['centreon'];
 $widgetId = $_REQUEST['widgetId'];

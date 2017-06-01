@@ -20,6 +20,7 @@
  */
 
 require_once "../require.php";
+require_once $centreon_path . 'bootstrap.php';
 require_once $centreon_path . 'www/class/centreon.class.php';
 require_once $centreon_path . 'www/class/centreonSession.class.php';
 require_once $centreon_path . 'www/class/centreonDB.class.php';
@@ -41,14 +42,14 @@ $template = new Smarty();
 $template = initSmartyTplForPopup($path, $template, "/", $centreon_path);
 
 try {
-    $db = new CentreonDB();
+    $db = $dependencyInjector['configuration_db'];
     $widgetObj = new CentreonWidget($centreon, $db);
     $preferences = $widgetObj->getWidgetPreferences($widgetId);
     $autoRefresh = 0;
     if (isset($preferences['refresh_interval'])) {
         $autoRefresh = $preferences['refresh_interval'];
     }
-    $rule = new Centreon_OpenTickets_Rule($db);
+    $rule = new Centreon_OpenTickets_Rule($dependencyInjector);
     $result = $rule->getAliasAndProviderId($preferences['rule']);
     if (!isset($preferences['rule']) || is_null($preferences['rule']) || $preferences['rule'] == '' ||
     !isset($result['provider_id'])) {
@@ -68,4 +69,3 @@ if ($preferences['more_views']) {
 $template->assign('more_views', $bMoreViews);
 
 $template->display('index.ihtml');
-?>

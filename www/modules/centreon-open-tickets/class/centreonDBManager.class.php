@@ -24,7 +24,7 @@ require_once $centreon_path . "/www/class/centreonDB.class.php";
 class CentreonDBManager extends CentreonDB {
     
     public function autocommit($mode = false) {
-        $this->db->autoCommit($mode);
+        $this->autoCommit($mode);
         # Need raise exception
         $this->debug = 0;
     }
@@ -38,11 +38,11 @@ class CentreonDBManager extends CentreonDB {
     }
     
     public function commit() {
-        $this->db->commit();
+        $this->commit();
     }
     
     public function rollback() {
-        $this->db->rollback();
+        $this->rollback();
     }
 }
 

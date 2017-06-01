@@ -36,10 +36,10 @@ $queryCount = $query;
 $query .= " ORDER BY r.alias";
 $query .= " LIMIT ".$num * $limit.", ".$limit;
 
-$resCount = $db->query($queryCount);
+$resCount = $dependencyInjector['configuration_db']->query($queryCount);
 $rows = $resCount->rowCount();
 
-$res = $db->query($query);
+$res = $dependencyInjector['configuration_db']->query($query);
 $elemArr = array();
 $tdStyle = "list_one";
 $ruleStr = "";

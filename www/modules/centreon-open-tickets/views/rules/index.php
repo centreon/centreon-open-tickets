@@ -20,10 +20,11 @@
  */
 
 require_once './modules/centreon-open-tickets/centreon-open-tickets.conf.php';
+require_once $centreon_path . 'bootstrap.php';
 
-$db = new CentreonDBManager();
+$db = $dependencyInjector['configuration_db'];
 $request = new Centreon_OpenTickets_Request();
-$rule = new Centreon_OpenTickets_Rule($db);
+$rule = new Centreon_OpenTickets_Rule($dependencyInjector);
 
 $o = $request->getParam('o');
 if (!$o) {

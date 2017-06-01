@@ -20,6 +20,7 @@
  */
 
 require_once dirname(__FILE__) . '/../../../centreon-open-tickets.conf.php';
+require_once $centreon_path . 'bootstrap.php';
 require_once $centreon_path . 'www/modules/centreon-open-tickets/class/centreonDBManager.class.php';
 require_once $centreon_path . 'www/modules/centreon-open-tickets/class/rule.php';
 require_once $centreon_path . 'www/modules/centreon-open-tickets/providers/register.php';
@@ -28,9 +29,9 @@ $centreon_open_tickets_path = $centreon_path . "www/modules/centreon-open-ticket
 require_once $centreon_open_tickets_path . 'providers/Abstract/AbstractProvider.class.php';
 
 session_start();
-$centreon_bg = new CentreonXMLBGRequest(session_id(), 1, 1, 0, 1);
-$db = new centreonDBManager();
-$rule = new Centreon_OpenTickets_Rule($db);
+$centreon_bg = new CentreonXMLBGRequest($dependencyInjector, session_id(), 1, 1, 0, 1);
+$db = $dependencyInjector['configuration_db'];
+$rule = new Centreon_OpenTickets_Rule($dependencyInjector);
 
 if (isset($_SESSION['centreon'])) {
     $centreon = $_SESSION['centreon'];
@@ -63,5 +64,3 @@ if (!isset($_POST['data'])) {
 
 header("Content-type: text/plain");
 echo json_encode($resultat);
-
-?>

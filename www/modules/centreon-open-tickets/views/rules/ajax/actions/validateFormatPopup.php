@@ -55,7 +55,7 @@ try {
 } catch (Exception $e) {
     $resultat['code'] = 1;
     $resultat['msg'] = $e->getMessage();
-    $db->rollback();
+    $dependencyInjector['configuration_db']->rollback();
 }
 
 ?>

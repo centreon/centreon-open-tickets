@@ -57,11 +57,12 @@ $classname = $provider_name . 'Provider';
 $centreon_provider = new $classname($rule, $centreon_path, $centreon_open_tickets_path, $get_information['rule_id'], $get_information['form'], $get_information['provider_id']);
 
 try {
+    $dependencyInjector['configuration_db']->beginTransaction();
     $resultat['result'] = $centreon_provider->saveConfig();
 } catch (Exception $e) {
     $resultat['code'] = 1;
     $resultat['msg'] = $e->getMessage();
-    $db->rollback();
+    $dependencyInjector['configuration_db']->rollback();
 }
 
 ?>
