@@ -327,7 +327,7 @@ $query .= "ORDER BY $orderby";
 $query .= " LIMIT ".($page * $preferences['entries']).",".$preferences['entries'];
 
 $res = $dbb->query($query);
-$nbRows = $dbb->rowCount();
+$nbRows = $res->rowCount();
 $data = array();
 $outputLength = $preferences['output_length'] ? $preferences['output_length'] : 50;
 
