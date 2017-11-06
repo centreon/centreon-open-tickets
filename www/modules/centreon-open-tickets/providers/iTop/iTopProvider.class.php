@@ -313,14 +313,14 @@ class iTopProvider extends AbstractProvider {
         $aData['auth_pwd'] = $this->rule_data['password'];
         $aData['json_data'] = json_encode($aOperations);
 
-        if ($this->callSOAP($aData) == 1) {
+        if ($this->callRestAPI($aData) == 1) {
             return -1;
         }
 
         return 0;
     }
 
-    protected function callSOAP($data) {
+    protected function callRestAPI($data) {
         error_log($data['json_data']);
         $proto = 'http';
         $ssl = 0;
