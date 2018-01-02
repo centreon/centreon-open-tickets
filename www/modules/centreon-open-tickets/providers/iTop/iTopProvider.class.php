@@ -2,15 +2,15 @@
 /*
  * Copyright 2017 Centreon (http://www.centreon.com/)
  *
- * Centreon is a full-fledged industry-strength solution that meets 
- * the needs in IT infrastructure and application monitoring for 
+ * Centreon is a full-fledged industry-strength solution that meets
+ * the needs in IT infrastructure and application monitoring for
  * service performance.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0  
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,*
@@ -29,6 +29,9 @@ class iTopProvider extends AbstractProvider {
     const ARG_SERVICE_ID = 7;
     const ARG_CI = 8;
 
+    const ITOP_LIST_ORGANIZATION = 21;
+    const ITOP_LIST_SERVICE = 22;
+
     protected $_internal_arg_name = array(
         self::ARG_TITLE => 'title',
         self::ARG_CONTENT => 'content',
@@ -36,43 +39,52 @@ class iTopProvider extends AbstractProvider {
         self::ARG_URGENCY => 'urgency',
     );
 
-    function __destruct() {
-    }
-
     /**
-     * Set default extra value 
+     * Set default extra value
      *
      * @return void
      */
     protected function _setDefaultValueExtra() {
-        $this->default_data['address'] = 'proto.combodo.com';
-        $this->default_data['apiurl'] = '/neurones-csi-2.3.3/webservices/rest.php?version=1.1';
-        $this->default_data['ticketurl'] = '/neurones-csi-2.3.3/pages/UI.php?operation=details&class=Incident&id=';
+        $this->default_data['address'] = 'itop.localdomain.tld';
+        $this->default_data['apiurl'] = '/itop/webservices/rest.php?version=1.1';
+        $this->default_data['ticketurl'] = '/itop/pages/UI.php?operation=details&class=Incident&id=';
         $this->default_data['https'] = 1;
-        $this->default_data['callerid'] = 'Nagios Administration';
-        $this->default_data['organisationid'] = 'SOGEPROM';
+        $this->default_data['callerid'] = 'Centreon Administration';
         $this->default_data['timeout'] = 60;
 
         $this->default_data['clones']['mappingTicket'] = array(
             array('Arg' => self::ARG_TITLE, 'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers/Abstract/templates/display_title.ihtml"}'),
             array('Arg' => self::ARG_CONTENT, 'Value' => '{$body}'),
-            array('Arg' => self::ARG_IMPACT, 'Value' => '{$select.impact.value}'),
+            array('Arg' => self::ARG_IMPACT, 'Value' => '{$select.impact.value}')
         );
     }
 
     protected function _setDefaultValueMain() {
         parent::_setDefaultValueMain();
 
-        $this->default_data['url'] = 'https://{$address}{$ticketur}{$ticket_id}';
+        $this->default_data['url'] = 'https://{$address}{$ticketurl}{$ticket_id}';
 
         $this->default_data['clones']['groupList'] = array(
-            array('Id' => 'impact', 'Label' => _('Impact'), 'Type' => self::CUSTOM_TYPE, 'Filter' => '', 'Mandatory' => ''),
+            array('Id' => 'impact', 'Label' => _('Impact'), 'Type' => self::CUSTOM_TYPE, 'Filter' => '', 'Mandatory' => true)
         );
         $this->default_data['clones']['customList'] = array(
             array('Id' => 'impact', 'Value' => '1', 'Default' => ''),
             array('Id' => 'impact', 'Value' => '2', 'Default' => ''),
             array('Id' => 'impact', 'Value' => '3', 'Default' => ''),
         );
+
+        $this->default_data['format_popup'] = $this->change_html_tags('<table class="table">
+<tr>
+    <td class="FormHeader" colspan="2"><h3 style="color: #00bfb3;">{$title}</h3></td>
+</tr>
+<tr>
+    <td class="FormRowField" style="padding-left:15px;">{$custom_message.label}</td>
+    <td class="FormRowValue" style="padding-left:15px;"><textarea id="custom_message" name="custom_message" cols="50" rows="6"></textarea></td>
+</tr>
+{include file="file:$centreon_open_tickets_path/providers/iTop/templates/format_popup_requiredFields.ihtml"}
+{include file="file:$centreon_open_tickets_path/providers/Abstract/templates/groups.ihtml"}
+</table>
+');
     }
 
     /**
@@ -83,7 +95,7 @@ class iTopProvider extends AbstractProvider {
     protected function _checkConfigForm() {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
-        
+
         $this->_checkFormValue('address', "Please set 'Address' value");
         $this->_checkFormValue('apiurl', "Please set 'API URL path' value");
         $this->_checkFormValue('ticketurl', "Please set 'ticket URL path' value");
@@ -91,7 +103,6 @@ class iTopProvider extends AbstractProvider {
         $this->_checkFormValue('username', "Please set 'Username' value");
         $this->_checkFormValue('password', "Please set 'Password' value");
         $this->_checkFormValue('callerid', "Please set 'Caller ID' value");
-        $this->_checkFormValue('organisationid', "Please set 'Organisation ID' value");
         $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
         $this->_checkFormInteger('timeout', "'Timeout' must be a number");
         $this->_checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
@@ -115,6 +126,7 @@ class iTopProvider extends AbstractProvider {
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("itop" => _("iTop")));
+        $tpl->assign('webServiceUrl', './api/internal.php');
 
         // Form
         $address_html = '<input size="50" name="address" type="text" value="' . $this->_getFormValue('address') . '" />';
@@ -123,7 +135,6 @@ class iTopProvider extends AbstractProvider {
         $username_html = '<input size="50" name="username" type="text" value="' . $this->_getFormValue('username') . '" />';
         $password_html = '<input size="50" name="password" type="password" value="' . $this->_getFormValue('password') . '" autocomplete="off" />';
         $callerid_html = '<input size="50" name="callerid" type="text" value="' . $this->_getFormValue('callerid') . '" />';
-        $organisationid_html = '<input size="50" name="organisationid" type="text" value="' . $this->_getFormValue('organisationid') . '" />';
         $https_html = '<input type="checkbox" name="https" value="yes" ' . ($this->_getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
         $timeout_html = '<input size="2" name="timeout" type="text" value="' . $this->_getFormValue('timeout') . '" />';
 
@@ -134,7 +145,6 @@ class iTopProvider extends AbstractProvider {
             'username' => array('label' => _("Username") . $this->_required_field, 'html' => $username_html),
             'password' => array('label' => _("Password") . $this->_required_field, 'html' => $password_html),
             'callerid' => array('label' => _("Caller ID") . $this->_required_field, 'html' => $callerid_html),
-            'organisationid' => array('label' => _("Organisation ID") . $this->_required_field, 'html' =>$organisationid_html),
             'https' => array('label' => _("Use https"), 'html' => $https_html),
             'timeout' => array('label' => _("Timeout"), 'html' => $timeout_html),
             'mappingticket' => array('label' => _("Mapping ticket arguments")),
@@ -146,16 +156,17 @@ class iTopProvider extends AbstractProvider {
         '<option value="' . self::ARG_TITLE . '">' . _('Title') . '</options>' .
         '<option value="' . self::ARG_CONTENT . '">' . _('Content') . '</options>' .
         '<option value="' . self::ARG_IMPACT . '">' . _('Impact') . '</options>' .
+        '<option value="' . self::ARG_ORGANISATION_ID . '">' . _('Organization') . '</options>' .
         '</select>';
         $array_form['mappingTicket'] = array(
             array('label' => _("Argument"), 'html' => $mappingTicketArg_html),
             array('label' => _("Value"), 'html' => $mappingTicketValue_html),
         );
-        
+
         $tpl->assign('form', $array_form);
-        
+
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        
+
         $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
     }
 
@@ -165,7 +176,7 @@ class iTopProvider extends AbstractProvider {
      * @return void
      */
     protected function _getConfigContainer2Extra() {
-        
+
     }
 
     protected function saveConfigExtra() {
@@ -175,19 +186,18 @@ class iTopProvider extends AbstractProvider {
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
         $this->_save_config['simple']['callerid'] = $this->_submitted_config['callerid'];
-        $this->_save_config['simple']['organisationid'] = $this->_submitted_config['organisationid'];
-        $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes') ? 
+        $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes') ?
             $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
-        
+
         $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
     }
 
     public function validateFormatPopup() {
         $result = array('code' => 0, 'message' => 'ok');
-        
+
         $this->validateFormatPopupLists($result);
-        
+
         return $result;
     }
 
@@ -242,15 +252,15 @@ class iTopProvider extends AbstractProvider {
         }
 
         return $status;
-    } 
+    }
 
     protected function doSubmit($db_storage, $contact, $host_problems, $service_problems, $extra_ticket_arguments=array()) {
         $result = array('ticket_id' => null, 'ticket_error_message' => null,
                         'ticket_is_ok' => 0, 'ticket_time' => time());
-        
+
         $tpl = new Smarty();
         $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/Abstract/templates', $this->_centreon_path);
-        
+
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
@@ -262,14 +272,26 @@ class iTopProvider extends AbstractProvider {
             foreach ($this->rule_data['clones']['mappingTicket'] as $value) {
                 $tpl->assign('string', $value['Value']);
                 $result_str = $tpl->fetch('eval.ihtml');
-                
+
                 if ($result_str == '') {
                     $result_str = null;
                 }
-                
+
                 $ticket_arguments[$this->_internal_arg_name[$value['Arg']]] = $result_str;
             }
         }
+
+        /* Mini fix for get organization id and service id */
+        $form = json_decode($_POST['data'], true);
+        $form = $form['form'];
+        if (!isset($form['select_itop_organization']) || !is_numeric($form['select_itop_organization']) || $form['select_itop_organization'] === -1) {
+            throw new \Exception('Bad arguments.');
+        }
+        if (!isset($form['select_itop_service']) || !is_numeric($form['select_itop_service']) || $form['select_itop_service'] === -1) {
+            throw new \Exception('Bad arguments.');
+        }
+        $ticket_arguments['itop_organization'] = $form['select_itop_organization'];
+        $ticket_arguments['itop_service'] = $form['select_itop_service'];
 
         $code = $this->createTicketiTop($ticket_arguments, $host_problems, $service_problems);
         if ($code == -1) {
@@ -278,7 +300,7 @@ class iTopProvider extends AbstractProvider {
         }
 
         $this->saveHistory($db_storage, $result, array('contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems,
-            'ticket_value' => $this->_ticket_number, 'subject' => $ticket_arguments[$this->_internal_arg_name[self::ARG_TITLE]], 
+            'ticket_value' => $this->_ticket_number, 'subject' => $ticket_arguments[$this->_internal_arg_name[self::ARG_TITLE]],
             'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode(array('arguments' => $ticket_arguments))));
 
         return $result;
@@ -290,22 +312,23 @@ class iTopProvider extends AbstractProvider {
      *
      */
     protected function setWsError($error) {
+        error_log($error);
         $this->ws_error = $error;
     }
 
     protected function createTicketiTop($ticket_arguments, $host_problems, $service_problems) {
+
+
         $aOperations = array(
             'operation' => 'centreon/create_ticket',
             'caller_id' => $this->rule_data['callerid'],
-            'organisation_id' => $this->rule_data['organisationid'],
             'title' => $ticket_arguments[$this->_internal_arg_name[self::ARG_TITLE]],
-            'description' => $ticket_arguments[$this->_internal_arg_name[self::ARG_CONTENT]],
+            'description' => nl2br($ticket_arguments[$this->_internal_arg_name[self::ARG_CONTENT]]),
             'impact' => $ticket_arguments[$this->_internal_arg_name[self::ARG_IMPACT]],
-            //'urgence' => $ticket_arguments[$this->_internal_arg_name[self::ARG_URGENCY]],
             'urgence' => $this->getMaxStatus($host_problems, $service_problems),
-            'service_id' => 779,
-            'ci' => array('SOGE_30-ESX04'),
-            //'ci' => $this->getListOfCI($host_problems, $service_problems),
+            'organisation_id' => $ticket_arguments['itop_organization'],
+            'service_id' => $ticket_arguments['itop_service'],
+            'ci' => $this->getListOfCI($host_problems, $service_problems)
         );
 
         $aData = array();
@@ -313,15 +336,141 @@ class iTopProvider extends AbstractProvider {
         $aData['auth_pwd'] = $this->rule_data['password'];
         $aData['json_data'] = json_encode($aOperations);
 
-        if ($this->callRestAPI($aData) == 1) {
+        $data = $this->callRestAPI($aData);
+
+        if ($data === 1) {
             return -1;
         }
 
+        if (isset($data["ref"]) && $data["ref"]) {
+            $this->_ticket_number = preg_replace('/I\-/', '', $data["ref"]);
+        } else if (isset($data['code']) && $data['code'] === 100) {
+            $this->setWsError("The CI matching with the hostname doesn't exists.");
+            return -1;
+        } else {
+            $this->setWsError("Can't extract Ticket ID");
+            return -1;
+        }
         return 0;
     }
 
+    /**
+     * Get the list of iTop organization
+     *
+     * @return array
+     */
+    public function getOrganization($data = array()) {
+        $aData = array(
+            'auth_user' => $this->rule_data['username'],
+            'auth_pwd' => $this->rule_data['password']
+        );
+        $organizations = $this->getCache('itop-organization');
+        if (is_null($organizations)) {
+            $aData['json_data'] = json_encode(array(
+                'operation' => 'centreon/get_organization',
+                'caller_id' => $this->rule_data['callerid']
+            ));
+            $returnValues = $this->callRestAPI($aData);
+            if ($returnValues === 1) {
+                throw new \Exception('Error during getting organizations.');
+            }
+            $objects = $returnValues['objects'];
+            foreach ($objects as $name => $values) {
+                $organizations[$values['key']] = $values['fields']['friendlyname'];
+            }
+            $this->setCache('itop-organization', $organizations, 24 * 3600);
+        }
+        return $organizations;
+    }
+
+    /**
+     * Get the list of iTop organization
+     *
+     * @return array
+     */
+    public function getService($data = array()) {
+        $aData = array(
+            'auth_user' => $this->rule_data['username'],
+            'auth_pwd' => $this->rule_data['password']
+        );
+        $organizationId = $data['organizationId'];
+        if (is_null($organizationId) || $organizationId === -1) {
+            throw new \Exception('Not organization set.');
+        }
+        $services = $this->getCache('itop-service-' . $organizationId);
+        $aData['json_data'] = json_encode(array(
+            'operation' => 'centreon/get_service',
+            'caller_id' => $this->rule_data['callerid'],
+            'org_id' => $organizationId
+        ));
+        $returnValues = $this->callRestAPI($aData);
+        if ($returnValues === 1) {
+            throw new \Exception('Error during getting services');
+        }
+        $objects = $returnValues['objects'];
+        foreach ($objects as $name => $values) {
+            $services[$values['key']] = $values['fields']['friendlyname'];
+        }
+        $this->setCache('itop-service-' . $organizationId, $services, 24 * 3600);
+        return $services;
+    }
+
+    /**
+     * Test the service iTop
+     *
+     * @param array $info The post information for webservice configuration
+     * @return boolean
+     */
+    static public function test($info) {
+        /* Test arguments */
+        if (!isset($info['https']) ||
+            !isset($info['address']) ||
+            !isset($info['apiurl']) ||
+            !isset($info['username']) ||
+            !isset($info['password'])) {
+            throw new \Exception('Missing arguments.');
+        }
+
+        $proto = 'http';
+        $ssl = 0;
+        if (isset($info['https']) && $info['https'] == 'yes') {
+            $proto = 'https';
+            $ssl = 1;
+        }
+
+        $url = $proto . '://' . $info['address'] . $info['apiurl'];
+
+        $data = array(
+            'json_data' => json_encode(array(
+                'operation' => 'core/check_credentials',
+                'user' => $info['username'],
+                'password' => $info['password']
+            )),
+            'auth_user' => $info['username'],
+            'auth_pwd' => $info['password']
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $returnJson = curl_exec($ch);
+        if ($returnJson === false) {
+            return false;
+        }
+
+        $data = json_decode($returnJson, true);
+
+        if ($data['code'] === 0 && $data['authorized']) {
+             return true;
+        }
+
+        return false;
+    }
+
     protected function callRestAPI($data) {
-        error_log($data['json_data']);
         $proto = 'http';
         $ssl = 0;
         if (isset($this->rule_data['https']) && $this->rule_data['https'] == 'yes') {
@@ -362,7 +511,7 @@ class iTopProvider extends AbstractProvider {
         $result = curl_exec($ch);
 
         if ($result == false) {
-            $this->setWsError(curl_error($ch));    
+            $this->setWsError(curl_error($ch));
             return 1;
         }
 
@@ -375,13 +524,6 @@ class iTopProvider extends AbstractProvider {
             return 1;
         }
 
-        if (isset($data["ref"]) && $data["ref"]) {
-            $this->_ticket_number = preg_replace('/I\-/', '', $data["ref"]);
-        } else {
-            $this->setWsError("Can't extract Ticket ID");
-            return 1;
-        }
-
-        return 0;
+        return $data;
     }
 }

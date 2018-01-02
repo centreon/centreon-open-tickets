@@ -122,7 +122,6 @@ A new form appear and define dedicated field linked to the provider:
 .. image:: /_static/provider_guide/glpi/configure.png
     :align: center
 
-
 ServiceNow
 ----------
 
@@ -142,4 +141,33 @@ A new form appear and define dedicated field linked to the provider:
 * **OAuth username** and **OAuth password** is the user used
 
 .. image:: /_static/provider_guide/servicenow/configure.png
+    :align: center
+
+iTop
+----
+
+Introduction
+~~~~~~~~~~~~
+
+This provider allows to create ticket to iTop Incident Management.
+
+Pre-requisites
+~~~~~~~~~~~~~~
+
+To connect Centreon Open Ticket to iTop, you must have installed the iTop plugins Centreon and have an user who will open the tickets.
+
+Configuration
+~~~~~~~~~~~~~
+
+Define *Rule name* and select *iTop*. A new form appear and define dedicated field linked to the provider:
+
+* *Address* is the dns or ip address of the iTop serveur
+* *Caller ID* is the user who create the ticket
+* *API URL path* Is the url to the iTop REST API
+* *Ticket URL path* Is the url to the iTop ticket page
+* *Username* is used for connect on the webservice
+* *Password* is used for connect on the webservice
+* *Use https* is for connect on iTop in https
+
+.. image:: /_static/provider_guide/itop/configure.png
     :align: center

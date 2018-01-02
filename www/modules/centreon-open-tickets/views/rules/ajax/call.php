@@ -2,15 +2,15 @@
 /*
  * Copyright 2015 Centreon (http://www.centreon.com/)
  *
- * Centreon is a full-fledged industry-strength solution that meets 
- * the needs in IT infrastructure and application monitoring for 
+ * Centreon is a full-fledged industry-strength solution that meets
+ * the needs in IT infrastructure and application monitoring for
  * service performance.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0  
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,*
@@ -50,12 +50,13 @@ $actions = array("get-form-config" => dirname(__FILE__) . "/actions/getFormConfi
                  "close-ticket" => dirname(__FILE__) . "/actions/closeTicket.php",
                  "service-ack" => dirname(__FILE__) . "/actions/serviceAck.php",
                  "upload-file" => dirname(__FILE__) . "/actions/uploadFile.php",
-                 "remove-file" => dirname(__FILE__) . "/actions/removeFile.php");
+                 "remove-file" => dirname(__FILE__) . "/actions/removeFile.php",
+                 "provider-call-func" => dirname(__FILE__) . "/actions/providerCallFunc.php");
 if (!isset($_POST['data']) && !isset($_REQUEST['action'])) {
     $resultat = array("code" => 1, "msg" => "POST 'data' needed.");
 } else {
     $get_information = isset($_POST['data']) ? json_decode($_POST['data'], true): null;
-    $action = !is_null($get_information) && isset($get_information['action']) ? 
+    $action = !is_null($get_information) && isset($get_information['action']) ?
         $get_information['action'] : (isset($_REQUEST['action']) ? $_REQUEST['action'] : 'none');
     if (!isset($actions[$action])) {
         $resultat = array("code" => 1, "msg" => "Action not good.");

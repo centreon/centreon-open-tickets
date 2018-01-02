@@ -1,0 +1,114 @@
+<tr>
+  <td class="FormRowField" style="padding-left:15px;">
+    {t}iTop Origanization{/t}&nbsp;<font color="red" size="1">*</font>
+  </td>
+  <td class="FormRowValue" style="padding-left:15px;">
+    <select name="select_itop_organization" id="itop-organization">
+      <option value="-1">Loading ... </option>
+    </select>
+  </td>
+</tr>
+<tr>
+  <td class="FormRowField" style="padding-left:15px;">
+    {t}iTop Service{/t}&nbsp;<font color="red" size="1">*</font>
+  </td>
+  <td class="FormRowValue" style="padding-left:15px;">
+    <select name="select_itop_service" id="itop-service">
+      <option value="-1">Loading ... </option>
+    </select>
+  </td>
+</tr>
+{literal}
+<script>
+jQuery(function () {
+  jQuery('#itop-organization').on('change', function () {
+    var data = {
+      rule_id: jQuery('#rule_id').val(),
+      provider_id: jQuery('#provider_id').val(),
+      provider_func: 'getService',
+      provider_data: {
+        organizationId: jQuery('#itop-organization').val()
+      }
+    }
+    if (jQuery('#itop-organization').val() !== -1) {
+      jQuery('#form_error').empty();
+      jQuery.ajax({
+        url: './modules/centreon-open-tickets/views/rules/ajax/call.php',
+        type: 'post',
+        data: {
+          action: 'provider-call-func',
+          data: JSON.stringify(data)
+        },
+        success: function (data) {
+          jQuery('#itop-service').empty();
+          jQuery('<option>')
+            .attr('value', -1)
+            .text('-- select --')
+            .appendTo('#itop-service');
+          data = JSON.parse(data);
+          if (data.code !== 0) {
+            jQuery('#form_error').text(data.msg + ' Please contact your administrator.');
+            return;
+          }
+          if (!data.data) {
+            jQuery('#form_error').text('No service found for this organization. Please contact your administrator.');
+            return;
+          }
+          jQuery('#itop-service').empty();
+          jQuery('<option>')
+            .attr('value', -1)
+            .text('-- select --')
+            .appendTo('#itop-service');
+
+          var keys = Object.keys(data.data);
+          for (var i = 0; i < keys.length; i++) {
+            jQuery('<option>')
+              .attr('value', keys[i])
+              .text(data.data[keys[i]])
+              .appendTo('#itop-service');
+          }
+        }
+      });
+    }
+  });
+
+  var data = {
+    rule_id: jQuery('#rule_id').val(),
+    provider_id: jQuery('#provider_id').val(),
+    provider_func: 'getOrganization'
+  }
+  jQuery.ajax({
+    url: './modules/centreon-open-tickets/views/rules/ajax/call.php',
+    type: 'post',
+    data: {
+      action: 'provider-call-func',
+      data: JSON.stringify(data)
+    },
+    success: function (data) {
+      data = JSON.parse(data);
+      if (data.code !== 0) {
+        jQuery('#form_error').text(data.msg + ' Please contact your administrator.');
+        return;
+      }
+      if (!data.data) {
+        jQuery('#form_error').text('Missing data. Please contact your administrator.');
+        return;
+      }
+      jQuery('#itop-organization').empty();
+      jQuery('<option>')
+        .attr('value', -1)
+        .text('-- select --')
+        .appendTo('#itop-organization');
+
+      var keys = Object.keys(data.data);
+      for (var i = 0; i < keys.length; i++) {
+        jQuery('<option>')
+          .attr('value', keys[i])
+          .text(data.data[keys[i]])
+          .appendTo('#itop-organization');
+      }
+    }
+  });
+});
+</script>
+{/literal}

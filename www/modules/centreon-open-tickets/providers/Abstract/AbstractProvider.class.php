@@ -1125,4 +1125,54 @@ Output: {$service.output|substr:0:1024}
             $tickets[$k]['status'] = 1;
         }
     }
+
+    /**
+     * Add a value to the cache
+     *
+     * @param string $key The cache key name
+     * @param mixed $value The value to cache
+     * @param int|null $ttl The ttl of expire this cache, if it's null no expire
+     */
+    protected function setCache($key, $value, $ttl = null) {
+        $cacheFile = $this->getCacheFilename($key);
+        file_put_contents($cacheFile, json_encode(array(
+            'value' => $value,
+            'ttl' => $ttl,
+            'created' => time()
+        )));
+    }
+
+    /**
+     * Get a cache value
+     *
+     * @param string $key The cache key name
+     * @return mixed The cache value or null if not found or expired
+     */
+    protected function getCache($key) {
+        $cacheFile = $this->getCacheFilename($key);
+        if (!file_exists($cacheFile)) {
+            return null;
+        }
+        $cacheJson = file_get_contents($cacheFile);
+        $cache = json_decode($cacheJson, true);
+        if (!is_null($cache['ttl'])) {
+            $timeTtl = $cache['ttl'] + $cache['created'];
+            if ($timeTtl < time()) {
+                unlink($cacheFile);
+                return null;
+            }
+        }
+        return $cache['value'];
+    }
+
+    /**
+     * Get the cache file name
+     *
+     * @param string $key The cache key name
+     * @return string The full path to the cache file
+     */
+    protected function getCacheFilename($key) {
+        $tmpDir = sys_get_temp_dir();
+        return $tmpDir . '/cache_' . $key;
+    }
 }
