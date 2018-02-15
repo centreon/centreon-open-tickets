@@ -212,6 +212,14 @@ if (isset($preferences['hide_down_host']) && $preferences['hide_down_host']) {
 if (isset($preferences['hide_unreachable_host']) && $preferences['hide_unreachable_host']) {
     $query = CentreonUtils::conditionBuilder($query, " h.state != 2 ");}
 
+if (isset($preferences['h_disabled_notif']) && $preferences['h_disabled_notif']) {
+        $query = CentreonUtils::conditionBuilder($query, " h.notify != 0 ");
+}
+
+if (isset($preferences['s_disabled_notif']) && $preferences['s_disabled_notif']) {
+        $query = CentreonUtils::conditionBuilder($query, " s.notify != 0 ");
+}
+
 # For Open Tickets
 if (!isset($preferences['opened_tickets']) || $preferences['opened_tickets'] == 0) {
     $query .= " AND mop1.timestamp IS NULL ";
