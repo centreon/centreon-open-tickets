@@ -33,7 +33,8 @@ require_once $centreon_path . 'www/class/centreonService.class.php';
 require_once $centreon_path . 'www/class/centreonMedia.class.php';
 require_once $centreon_path . 'www/class/centreonCriticality.class.php';
 
-require_once $centreon_path . "GPL_LIB/Smarty/libs/Smarty.class.php";
+$smartyDir = __DIR__ . '/../../../../vendor/smarty/smarty/';
+require_once $smartyDir . 'libs/Smarty.class.php';
 
 require_once $centreon_path . 'www/modules/centreon-open-tickets/class/rule.php';
 

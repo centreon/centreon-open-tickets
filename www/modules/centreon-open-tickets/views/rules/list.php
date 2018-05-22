@@ -26,7 +26,7 @@ $rows = 0;
 $nbRule = 0;
 include("./include/common/autoNumLimit.php");
 
-$form = new HTML_QuickForm('select_form', 'POST', "?p=".$p);
+$form = new HTML_QuickFormCustom('select_form', 'POST', "?p=".$p);
 
 $query = "SELECT r.rule_id, r.activate, r.alias FROM mod_open_tickets_rule r";
 if ($search) {
