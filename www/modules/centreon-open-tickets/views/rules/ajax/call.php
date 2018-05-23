@@ -38,8 +38,6 @@ if (isset($_SESSION['centreon'])) {
     exit;
 }
 
-define('SMARTY_DIR', "$centreon_path/GPL_LIB/Smarty/libs/");
-require_once SMARTY_DIR . "Smarty.class.php";
 require_once $centreon_path . 'www/include/common/common-Func.php';
 
 $resultat = array("code" => 0, "msg" => "");
