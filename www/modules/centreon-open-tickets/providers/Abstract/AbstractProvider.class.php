@@ -208,6 +208,7 @@ abstract class AbstractProvider {
     protected function _setDefaultValueMain($body_html = 0) {
         $this->default_data['macro_ticket_id'] = 'TICKET_ID';
         $this->default_data['ack'] = 'yes';
+        $this->default_data['schedule_check'] = 'no';
         #$this->default_data['close_ticket_enable'] = 'yes';
 
         $this->default_data['format_popup'] = '
@@ -476,6 +477,7 @@ Output: {$service.output|substr:0:1024}
         $url_html = '<input size="50" name="url" type="text" value="' . $this->_getFormValue('url') . '" />';
         $message_confirm_html = '<textarea rows="8" cols="70" name="message_confirm">' . $this->_getFormValue('message_confirm') . '</textarea>';
         $ack_html = '<input type="checkbox" name="ack" value="yes" ' . ($this->_getFormValue('ack') == 'yes' ? 'checked' : '') . '/>';
+        $schedule_check_html = '<input type="checkbox" name="schedule_check" value="no" ' . ($this->_getFormValue('schedule_check') == 'yes' ? 'checked' : '') . '/>';
         $close_ticket_enable_html = '<input type="checkbox" name="close_ticket_enable" value="yes" ' . ($this->_getFormValue('close_ticket_enable') == 'yes' ? 'checked' : '') . '/>';
         $error_close_centreon_html = '<input type="checkbox" name="error_close_centreon" value="yes" ' . ($this->_getFormValue('error_close_centreon') == 'yes' ? 'checked' : '') . '/>';
 
@@ -483,6 +485,7 @@ Output: {$service.output|substr:0:1024}
             'url' => array('label' => _("Url"), 'html' => $url_html),
             'message_confirm' => array('label' => _("Confirm message popup"), 'html' => $message_confirm_html),
             'ack' => array('label' => _("Acknowledge"), 'html' => $ack_html),
+            'schedule_check' => array('label' => _("Submit check"), 'html' => $schedule_check_html),
             'close_ticket_enable' => array('label' => _("Enable"), 'enable' => $this->_close_advanced, 'html' => $close_ticket_enable_html),
             'error_close_centreon' => array('label' => _("On error continue close Centreon"), 'html' => $error_close_centreon_html),
             'grouplist' => array('label' => _("Lists")),
@@ -634,6 +637,8 @@ Output: {$service.output|substr:0:1024}
         $this->_save_config['simple']['confirm_autoclose'] = $this->_submitted_config['confirm_autoclose'];
         $this->_save_config['simple']['ack'] = (isset($this->_submitted_config['ack']) && $this->_submitted_config['ack'] == 'yes') ?
             $this->_submitted_config['ack'] : '';
+        $this->_save_config['simple']['schedule_check'] = (isset($this->_submitted_config['schedule_check']) && $this->_submitted_config['schedule_check'] == 'yes') ?
+            $this->_submitted_config['schedule_check'] : '';
         $this->_save_config['simple']['attach_files'] = (isset($this->_submitted_config['attach_files']) && $this->_submitted_config['attach_files'] == 'yes') ?
             $this->_submitted_config['attach_files'] : '';
         $this->_save_config['simple']['close_ticket_enable'] = (isset($this->_submitted_config['close_ticket_enable']) && $this->_submitted_config['close_ticket_enable'] == 'yes') ?
@@ -836,6 +841,14 @@ Output: {$service.output|substr:0:1024}
 
     public function doAck() {
         if (isset($this->rule_data['ack']) && $this->rule_data['ack'] == 'yes') {
+            return 1;
+        }
+
+        return 0;
+    }
+    
+    public function scheduleCheck() {
+        if(isset($this->rule_data['schedule_check']) && $this->rule_data['schedule_check'] == 'yes') {
             return 1;
         }
 
