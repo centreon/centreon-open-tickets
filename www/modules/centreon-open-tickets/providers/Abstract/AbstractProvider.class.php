@@ -485,7 +485,7 @@ Output: {$service.output|substr:0:1024}
             'url' => array('label' => _("Url"), 'html' => $url_html),
             'message_confirm' => array('label' => _("Confirm message popup"), 'html' => $message_confirm_html),
             'ack' => array('label' => _("Acknowledge"), 'html' => $ack_html),
-            'schedule_check' => array('label' => _("Submit check"), 'html' => $schedule_check_html),
+            'schedule_check' => array('label' => _("Schedule check"), 'html' => $schedule_check_html),
             'close_ticket_enable' => array('label' => _("Enable"), 'enable' => $this->_close_advanced, 'html' => $close_ticket_enable_html),
             'error_close_centreon' => array('label' => _("On error continue close Centreon"), 'html' => $error_close_centreon_html),
             'grouplist' => array('label' => _("Lists")),
