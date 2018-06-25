@@ -153,6 +153,7 @@ class EasyvistaProvider extends AbstractProvider {
         $password_html = '<input size="50" name="password" type="password" value="' . $this->_getFormValue('password') . '" autocomplete="off" />';
         $https_html = '<input type="checkbox" name="https" value="yes" ' . ($this->_getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
         $timeout_html = '<input size="2" name="timeout" type="text" value="' . $this->_getFormValue('timeout') . '" />';
+        $proxy_html = '<input size="50" name="proxy" type="text" value="' . $this->_getFormValue('proxy') . '" />';
 
         $array_form = array(
             'address' => array('label' => _("Address") . $this->_required_field, 'html' => $address_html),
@@ -162,6 +163,7 @@ class EasyvistaProvider extends AbstractProvider {
             'https' => array('label' => _("Use https"), 'html' => $https_html),
             'timeout' => array('label' => _("Timeout"), 'html' => $timeout_html),
             'mappingticket' => array('label' => _("Mapping ticket arguments")),
+            'proxy' => array('label' => _("Proxy"), 'html' => $proxy_html),
         );
         
         // mapping Ticket clone
@@ -224,6 +226,7 @@ class EasyvistaProvider extends AbstractProvider {
         $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes') ? 
             $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
+        $this->_save_config['simple']['proxy'] = $this->_submitted_config['proxy'];
         
         $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
     }
@@ -398,10 +401,13 @@ class EasyvistaProvider extends AbstractProvider {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        if(isset($this->rule_data['proxy'])) {
+            curl_setopt($ch, CURLOPT_PROXY, $this->rule_data['proxy']);
+            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+        }
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type:  text/xml;charset=UTF-8',
-            'SOAPAction: ' . $soap_action,
-            'Content-Length: ' . strlen($data))
+            'SOAPAction: ' . $soap_action)
         );
         $this->soap_result = curl_exec($ch);
         

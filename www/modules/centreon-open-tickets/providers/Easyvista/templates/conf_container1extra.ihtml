@@ -51,6 +51,14 @@
         {$form.timeout.html}
     </td>
 </tr>
+<tr class="list_two">
+    <td class="FormRowField">
+        {$form.proxy.label}
+    </td>
+    <td class="FormRowValue">
+        {$form.proxy.html}
+    </td>
+</tr>
 <tr class="list_one">
     <td class="FormRowField">
         {$form.mappingticket.label}
