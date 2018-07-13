@@ -22,17 +22,18 @@
 class Centreon_OpenTickets_Log
 {
     protected $_db;
-    protected $_db_storage;
+    protected $_dbStorage;
 
     /**
      * Constructor
      *
      * @param CentreonDB $db
+     * @param CentreonDB $dbStorage
      * @return void
      */
-    public function __construct($db, $db_storage) {
+    public function __construct($db, $dbStorage) {
         $this->_db = $db;
-        $this->_db_storage = $db_storage;
+        $this->_dbStorage = $dbStorage;
     }
 
     protected function getTime($start_date, $start_time, $end_date, $end_time, $period) {
@@ -159,7 +160,7 @@ class Centreon_OpenTickets_Log
         }
 
 
-        $stmt = $this->_db_storage->prepare($query);
+        $stmt = $this->_dbStorage->prepare($query);
         $stmt->execute();
         $result['tickets'] = $stmt->fetchAll();
         $rows = $stmt->rowCount();
