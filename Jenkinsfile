@@ -8,6 +8,11 @@ stage('Source') {
     source = readProperties file: 'source.properties'
     env.VERSION = "${source.VERSION}"
     env.RELEASE = "${source.RELEASE}"
+    if (env.BRANCH_NAME == '1.2.x') {
+      withSonarQubeEnv('SonarQube') {
+        sh './centreon-build/jobs/open-tickets/3.4/mon-open-tickets-analysis.sh'
+      }
+    }
   }
 }
 
