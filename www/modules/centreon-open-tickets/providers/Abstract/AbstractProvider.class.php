@@ -1096,12 +1096,12 @@ Output: {$service.output|substr:0:1024}
             }
 
             foreach ($extra_args['host_problems'] as $row) {
-                $db_storage->query("INSERT INTO mod_open_tickets_link (`ticket_id`, `host_id`, `host_state`, `hostname`) VALUES
-    ('" . $db_storage->escape($result['ticket_id']) . "', '" . $db_storage->escape($row['host_id']) . "', '" . $db_storage->escape($row['host_state']) . "', '" . $db_storage->escape($row['name']) . "')");
+                $db_storage->query("INSERT INTO mod_open_tickets_link (`ticket_id`, `host_id`, `host_state`, `hostname`, `last_hard_state_change`) VALUES
+    ('" . $db_storage->escape($result['ticket_id']) . "', '" . $db_storage->escape($row['host_id']) . "', '" . $db_storage->escape($row['host_state']) . "', '" . $db_storage->escape($row['name']) . "', '" . $db_storage->escape($row['last_hard_state_change']) . "')");
             }
             foreach ($extra_args['service_problems'] as $row) {
-                $db_storage->query("INSERT INTO mod_open_tickets_link (`ticket_id`, `host_id`, `host_state`, `hostname`, `service_id`, `service_state`, `service_description`) VALUES
-    ('" . $db_storage->escape($result['ticket_id']) . "', '" . $db_storage->escape($row['host_id']) . "', '" . $db_storage->escape($row['host_state']) . "', '" . $db_storage->escape($row['host_name']) . "', '" . $db_storage->escape($row['service_id']) . "', '" . $db_storage->escape($row['service_state']) . "', '" . $db_storage->escape($row['description']) . "')");
+                $db_storage->query("INSERT INTO mod_open_tickets_link (`ticket_id`, `host_id`, `host_state`, `hostname`, `service_id`, `service_state`, `service_description`, `last_hard_state_change`) VALUES
+    ('" . $db_storage->escape($result['ticket_id']) . "', '" . $db_storage->escape($row['host_id']) . "', '" . $db_storage->escape($row['host_state']) . "', '" . $db_storage->escape($row['host_name']) . "', '" . $db_storage->escape($row['service_id']) . "', '" . $db_storage->escape($row['service_state']) . "', '" . $db_storage->escape($row['description']) . "', '" . $db_storage->escape($row['last_hard_state_change']) . "')");
             }
 
             if (!is_null($extra_args['data_type']) && !is_null($extra_args['data'])) {

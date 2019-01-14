@@ -85,7 +85,8 @@ CREATE TABLE IF NOT EXISTS centreon_storage.`mod_open_tickets_link` (
     `host_state` int(11),
     `service_state` int(11),
     `hostname` VARCHAR(1024),
-    `service_description` VARCHAR(1024) DEFAULT NULL
+    `service_description` VARCHAR(1024) DEFAULT NULL,
+    `last_hard_state_change` INT(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE centreon_storage.`mod_open_tickets_link`
