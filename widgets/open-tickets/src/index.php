@@ -441,13 +441,36 @@ while ($row = $res->fetch()) {
     }
 }
 
-$template->assign('widgetId', $widgetId);
-$template->assign('autoRefresh', $preferences['refresh_interval']);
-$template->assign('preferences', $preferences);
-$template->assign('page', $page);
-$template->assign('dataJS', count($data));
-$template->assign('nbRows', $nbRows);
-$template->assign('centreon_web_path', $centreon->optGen['oreon_web_path']);
-$template->assign('preferences', $preferences);
-$template->assign('data', $data);
-$template->display('table.ihtml');
+if (isset($_REQUEST['auto']) && $_REQUEST['auto'] === 'true') {
+    $provider_infos = $rule->getAliasAndProviderId($preferences['rule']);
+    $title = _("Open Service Ticket");
+    foreach ($data as $ticket) {
+        $get_information = array(
+            "action" => "submit-ticket",
+            "rule_id" => $preferences['rule'],
+            "provider_id" => $provider_infos['provider_id'],
+            "form" => array(
+                "widgetId" => $widgetId,
+                "title" => $title,
+                "cmd" => "3",
+                "selection" => $ticket['host_id'] . ';' . $ticket['service_id']
+            )
+        );
+
+        global $register_providers;
+
+        include $centreon_path . "www/modules/centreon-open-tickets/views/rules/ajax/call.php";
+    }
+
+} else {
+	$template->assign('widgetId', $widgetId);
+	$template->assign('autoRefresh', $preferences['refresh_interval']);
+	$template->assign('preferences', $preferences);
+	$template->assign('page', $page);
+	$template->assign('dataJS', count($data));
+	$template->assign('nbRows', $nbRows);
+	$template->assign('centreon_web_path', $centreon->optGen['oreon_web_path']);
+	$template->assign('preferences', $preferences);
+	$template->assign('data', $data);
+	$template->display('table.ihtml');
+}
