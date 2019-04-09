@@ -228,6 +228,24 @@ if (isset($preferences['svc_unknown']) && $preferences['svc_unknown']) {
 if (count($stateTab)) {
     $query = CentreonUtils::conditionBuilder($query, " s.state IN (" . implode(',', $stateTab) . ")");
 }
+
+if (isset($preferences['duration_filter']) && $preferences['duration_filter'] != "") {
+    $tab = split(" ", $preferences['duration_filter']);
+    $op = $tab[0];
+    //For results to be correct we have to rotate operands
+    if($op === 'gt') $op = 'lt';
+    else if($op == 'lt') $op = 'gt';
+    else if($op == 'gte') $op = 'lte';
+    else if($op == 'lte') $op = 'gte';
+    if (isset($tab[1])) {
+        $search = $tab[1];
+        $search = time() - $search;
+    }
+    if ($op && isset($search) && $search != "") {
+        $query = CentreonUtils::conditionBuilder($query, "s.last_state_change ".CentreonUtils::operandToMysqlFormat($op)." '".$dbb->escape($search)."' ");
+    }
+}
+
 if (isset($preferences['hide_down_host']) && $preferences['hide_down_host']) {
     $query = CentreonUtils::conditionBuilder($query, " h.state != 1 ");
 }
