@@ -19,11 +19,19 @@
  * limitations under the License.
  */
 
-function get_contact_information() {
+function get_contact_information()
+{
     global $db, $centreon_bg;
 
     $result = array('alias' => '', 'email' => '', 'name' => '');
-    $dbResult = $db->query("SELECT contact_name as `name`, contact_alias as `alias`, contact_email as email FROM contact WHERE contact_id = '" . $centreon_bg->user_id . "' LIMIT 1");
+    $dbResult = $db->query(
+        "SELECT
+            contact_name as `name`,
+            contact_alias as `alias`,
+            contact_email as email
+        FROM contact
+        WHERE contact_id = '" . $centreon_bg->user_id . "' LIMIT 1"
+    );
     if (($row = $dbResult->fetch())) {
         $result = $row;
     }
@@ -31,8 +39,14 @@ function get_contact_information() {
     return $result;
 }
 
-function get_provider_class($rule_id) {
-    global $register_providers, $centreon_open_tickets_path, $rule, $centreon_path, $get_information;
+function get_provider_class($rule_id)
+{
+    global
+        $register_providers,
+        $centreon_open_tickets_path,
+        $rule,
+        $centreon_path,
+        $get_information;
 
     $provider = $rule->getAliasAndProviderId($rule_id);
     $provider_name = null;
@@ -47,14 +61,22 @@ function get_provider_class($rule_id) {
         return null;
     }
 
-    require_once $centreon_open_tickets_path . 'providers/' . $provider_name . '/' . $provider_name . 'Provider.class.php';
+    require_once $centreon_open_tickets_path . 'providers/' . $provider_name .
+        '/' . $provider_name . 'Provider.class.php';
     $classname = $provider_name . 'Provider';
-    $provider_class = new $classname($rule, $centreon_path, $centreon_open_tickets_path, $rule_id, $get_information['form'],
-        $provider['provider_id']);
+    $provider_class = new $classname(
+        $rule,
+        $centreon_path,
+        $centreon_open_tickets_path,
+        $rule_id,
+        $get_information['form'],
+        $provider['provider_id']
+    );
     return $provider_class;
 }
 
-function do_chain_rules($rule_list, $db_storage, $contact_infos, $selected) {
+function do_chain_rules($rule_list, $db_storage, $contact_infos, $selected)
+{
     $loop_check = array();
 
     while (($provider = array_shift($rule_list))) {
@@ -67,7 +89,12 @@ function do_chain_rules($rule_list, $db_storage, $contact_infos, $selected) {
         }
 
         $loop_check[$provider['Provider']] = 1;
-        $provider_class->submitTicket($db_storage, $contact_infos, $selected['host_selected'], $selected['service_selected']);
+        $provider_class->submitTicket(
+            $db_storage,
+            $contact_infos,
+            $selected['host_selected'],
+            $selected['service_selected']
+        );
         array_unshift($rule_list, $provider_class->getChainRuleList());
     }
 }
@@ -92,12 +119,19 @@ foreach ($register_providers as $name => $id) {
     }
 }
 
-if (is_null($provider_name) || !file_exists($centreon_open_tickets_path . 'providers/' . $provider_name . '/' . $provider_name . 'Provider.class.php')) {
+if (is_null($provider_name)
+    || !file_exists(
+        $centreon_open_tickets_path . 'providers/' . $provider_name . '/' . $provider_name . 'Provider.class.php'
+    )
+) {
     $resultat['code'] = 1;
     $resultat['msg'] = 'Please set a provider';
     return ;
 }
-if (!isset($get_information['form']['widgetId']) || is_null($get_information['form']['widgetId']) || $get_information['form']['widgetId'] == '') {
+if (!isset($get_information['form']['widgetId'])
+    || is_null($get_information['form']['widgetId'])
+    || $get_information['form']['widgetId'] == ''
+) {
     $resultat['code'] = 1;
     $resultat['msg'] = 'Please set widgetId';
     return ;
@@ -106,7 +140,14 @@ if (!isset($get_information['form']['widgetId']) || is_null($get_information['fo
 require_once $centreon_open_tickets_path . 'providers/' . $provider_name . '/' . $provider_name . 'Provider.class.php';
 
 $classname = $provider_name . 'Provider';
-$centreon_provider = new $classname($rule, $centreon_path, $centreon_open_tickets_path, $get_information['rule_id'], $get_information['form'], $get_information['provider_id']);
+$centreon_provider = new $classname(
+    $rule,
+    $centreon_path,
+    $centreon_open_tickets_path,
+    $get_information['rule_id'],
+    $get_information['form'],
+    $get_information['provider_id']
+);
 $centreon_provider->setWidgetId($get_information['form']['widgetId']);
 $centreon_provider->setUniqId($get_information['form']['uniqId']);
 
@@ -116,11 +157,20 @@ require_once $centreon_path . 'www/class/centreonDuration.class.php';
 $selected_values = explode(',', $get_information['form']['selection']);
 $db_storage = new centreonDBManager('centstorage');
 
-$selected = $rule->loadSelection($db_storage, $get_information['form']['cmd'], $get_information['form']['selection']);
+$selected = $rule->loadSelection(
+    $db_storage,
+    $get_information['form']['cmd'],
+    $get_information['form']['selection']
+);
 
 try {
     $contact_infos = get_contact_information();
-    $resultat['result'] = $centreon_provider->submitTicket($db_storage, $contact_infos, $selected['host_selected'], $selected['service_selected']);
+    $resultat['result'] = $centreon_provider->submitTicket(
+        $db_storage,
+        $contact_infos,
+        $selected['host_selected'],
+        $selected['service_selected']
+    );
 
     if ($resultat['result']['ticket_is_ok'] == 1) {
         do_chain_rules($centreon_provider->getChainRuleList(), $db_storage, $contact_infos, $selected);
@@ -135,18 +185,70 @@ try {
 
         foreach ($selected['host_selected'] as $value) {
             $command = "CHANGE_CUSTOM_HOST_VAR;%s;%s;%s";
-            call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command, $value['name'], $centreon_provider->getMacroTicketId(), $resultat['result']['ticket_id']), $value['instance_id']));
+            call_user_func_array(
+                array($external_cmd, $method_external_name),
+                array(
+                    sprintf(
+                        $command,
+                        $value['name'],
+                        $centreon_provider->getMacroTicketId(),
+                        $resultat['result']['ticket_id']
+                    ),
+                    $value['instance_id']
+                )
+            );
             if ($centreon_provider->doAck()) {
                 $command = "ACKNOWLEDGE_HOST_PROBLEM;%s;%s;%s;%s;%s;%s";
-                call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command, $value['name'], 2, 0, 1, $contact_infos['alias'], 'open ticket: ' . $resultat['result']['ticket_id']), $value['instance_id']));
+                call_user_func_array(
+                    array($external_cmd, $method_external_name),
+                    array(
+                        sprintf(
+                            $command,
+                            $value['name'],
+                            2,
+                            0,
+                            1,
+                            $contact_infos['alias'],
+                            'open ticket: ' . $resultat['result']['ticket_id']
+                        ),
+                        $value['instance_id']
+                    )
+                );
             }
         }
         foreach ($selected['service_selected'] as $value) {
             $command = "CHANGE_CUSTOM_SVC_VAR;%s;%s;%s;%s";
-            call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command, $value['host_name'], $value['description'], $centreon_provider->getMacroTicketId(), $resultat['result']['ticket_id']), $value['instance_id']));
+            call_user_func_array(
+                array($external_cmd, $method_external_name),
+                array(
+                    sprintf(
+                        $command,
+                        $value['host_name'],
+                        $value['description'],
+                        $centreon_provider->getMacroTicketId(),
+                        $resultat['result']['ticket_id']
+                    ),
+                    $value['instance_id']
+                )
+            );
             if ($centreon_provider->doAck()) {
                 $command = "ACKNOWLEDGE_SVC_PROBLEM;%s;%s;%s;%s;%s;%s;%s";
-                call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command, $value['host_name'], $value['description'], 2, 0, 1, $contact_infos['alias'], 'open ticket: ' . $resultat['result']['ticket_id']), $value['instance_id']));
+                call_user_func_array(
+                    array($external_cmd, $method_external_name),
+                    array(
+                        sprintf(
+                            $command,
+                            $value['host_name'],
+                            $value['description'],
+                            2,
+                            0,
+                            1,
+                            $contact_infos['alias'],
+                            'open ticket: ' . $resultat['result']['ticket_id']
+                        ),
+                        $value['instance_id']
+                    )
+                );
             }
         }
 
@@ -159,5 +261,3 @@ try {
     $resultat['msg'] = $e->getMessage();
     $db->rollback();
 }
-
-?>

@@ -33,56 +33,106 @@ $tpl = initSmartyTpl($path, $tpl);
  */
 $form = new HTML_QuickFormCustom('FormTicketLogs', 'get', "?p=".$p);
 
-$periods = array(""=>"",
-                "10800"=>_("Last 3 Hours"),
-                "21600"=>_("Last 6 Hours"),
-                "43200"=>_("Last 12 Hours"),
-                "86400"=>_("Last 24 Hours"),
-                "172800"=>_("Last 2 Days"),
-                "302400"=>_("Last 4 Days"),
-                "604800"=>_("Last 7 Days"),
-                "1209600"=>_("Last 14 Days"),
-                "2419200"=>_("Last 28 Days"),
-                "2592000"=>_("Last 30 Days"),
-                "2678400"=>_("Last 31 Days"),
-                "5184000"=>_("Last 2 Months"),
-                "10368000"=>_("Last 4 Months"),
-                "15552000"=>_("Last 6 Months"),
-                "31104000"=>_("Last Year"));
+$periods = array(
+    ""=>"",
+    "10800" => _("Last 3 Hours"),
+    "21600" => _("Last 6 Hours"),
+    "43200" => _("Last 12 Hours"),
+    "86400" => _("Last 24 Hours"),
+    "172800" => _("Last 2 Days"),
+    "302400" => _("Last 4 Days"),
+    "604800" => _("Last 7 Days"),
+    "1209600" => _("Last 14 Days"),
+    "2419200" => _("Last 28 Days"),
+    "2592000" => _("Last 30 Days"),
+    "2678400" => _("Last 31 Days"),
+    "5184000" => _("Last 2 Months"),
+    "10368000" => _("Last 4 Months"),
+    "15552000" => _("Last 6 Months"),
+    "31104000" => _("Last Year")
+);
 
-$form->addElement('select', 'period', _("Log Period"), $periods);
-$form->addElement('text', 'StartDate', '', array("id" => "StartDate", "class" => "datepicker", "size"=>8));
-$form->addElement('text', 'StartTime', '', array("id" => "StartTime", "class" => "timepicker", "size"=>5));
-$form->addElement('text', 'EndDate', '', array("id" => "EndDate", "class" => "datepicker", "size"=>8));
-$form->addElement('text', 'EndTime', '', array("id" => "EndTime", "class" => "timepicker", "size"=>5));
-$form->addElement('text', 'subject', _("Subject"), array("id" => "subject", "style" => "width: 203px;", "size" => 15, "value" => ''));
-$form->addElement('text', 'ticket_id', _("Ticket ID"), array("id" => "ticket_id", "style" => "width: 203px;", "size" => 15, "value" => ''));
+$form->addElement(
+    'select',
+    'period',
+    _("Log Period"),
+    $periods
+);
+$form->addElement(
+    'text',
+    'StartDate',
+    '',
+    array("id" => "StartDate", "class" => "datepicker", "size"=>8)
+);
+$form->addElement(
+    'text',
+    'StartTime',
+    '',
+    array("id" => "StartTime", "class" => "timepicker", "size"=>5)
+);
+$form->addElement(
+    'text',
+    'EndDate',
+    '',
+    array("id" => "EndDate", "class" => "datepicker", "size"=>8)
+);
+$form->addElement(
+    'text',
+    'EndTime',
+    '',
+    array("id" => "EndTime", "class" => "timepicker", "size"=>5)
+);
+$form->addElement(
+    'text',
+    'subject',
+    _("Subject"),
+    array("id" => "subject", "style" => "width: 203px;", "size" => 15, "value" => '')
+);
+$form->addElement(
+    'text',
+    'ticket_id',
+    _("Ticket ID"),
+    array("id" => "ticket_id", "style" => "width: 203px;", "size" => 15, "value" => '')
+);
 
-$form->addElement('submit', 'graph', _("Apply"), array("onclick" => "return applyForm();", "class" => "btc bt_success"));
+$form->addElement(
+    'submit',
+    'graph',
+    _("Apply"),
+    array("onclick" => "return applyForm();", "class" => "btc bt_success")
+);
 
 $attrHosts = array(
     'datasourceOrigin' => 'ajax',
     'allowClear' => false,
-    'availableDatasetRoute' => './include/common/webServices/rest/internal.php?object=centreon_configuration_host&action=list',
+    'availableDatasetRoute' => './include/common/webServices/rest/internal.php' .
+        '?object=centreon_configuration_host&action=list',
     'multiple' => true
 );
-$attrHost1 = array_merge(
-    $attrHosts /*,
-    array('defaultDatasetRoute' => './include/common/webServices/rest/internal.php?object=centreon_configuration_host&action=defaultValues&target=host&field=host_parents&id=')*/
+$attrHost1 = array_merge($attrHosts);
+$form->addElement(
+    'select2',
+    'host_filter',
+    _("Hosts"),
+    array(),
+    $attrHost1
 );
-$form->addElement('select2', 'host_filter', _("Hosts"), array(), $attrHost1);
 
 $attrService = array(
     'datasourceOrigin' => 'ajax',
     'allowClear' => false,
-    'availableDatasetRoute' => './include/common/webServices/rest/internal.php?object=centreon_configuration_service&action=list',
+    'availableDatasetRoute' => './include/common/webServices/rest/internal.php' .
+        '?object=centreon_configuration_service&action=list',
     'multiple' => true
 );
-$attrService1 = array_merge(
-    $attrService /*,
-    array('defaultDatasetRoute' => './include/common/webServices/rest/internal.php?object=centreon_configuration_service&action=defaultValues&target=service&field=service_sgs&id=')*/
+$attrService1 = array_merge($attrService);
+$form->addElement(
+    'select2',
+    'service_filter',
+    _("Services"),
+    array(),
+    $attrService1
 );
-$form->addElement('select2', 'service_filter', _("Services"), array(), $attrService1);
 
 $form->setDefaults(array("period" => '10800'));
 

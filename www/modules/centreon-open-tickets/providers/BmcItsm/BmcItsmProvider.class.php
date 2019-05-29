@@ -19,40 +19,51 @@
  * limitations under the License.
  */
 
-class BmcItsmProvider extends AbstractProvider {
+class BmcItsmProvider extends AbstractProvider
+{
     protected $_set_empty_xml = 1;
 
     protected $_itsm_fields = array(
         'Assigned_Group', 'Assigned_Group_Shift_Name', 'Assigned_Support_Company', 'Assigned_Support_Organization',
-        'Assignee', 'Categorization_Tier_1', 'Categorization_Tier_2', 'Categorization_Tier_3', 'CI_Name', 'Closure_Manufacturer',
-        'Closure_Product_Category_Tier1', 'Closure_Product_Category_Tier2', 'Closure_Product_Category_Tier3', 'Closure_Product_Model_Version',
-        'Closure_Product_Name', 'Department', 'First_Name', 'Impact', 'Last_Name', 'Lookup_Keyword', 'Manufacturer',
-        'Product_Categorization_Tier_1', 'Product_Categorization_Tier_2', 'Product_Categorization_Tier_3', 'Product_Model_Version',
-        'Product_Name', 'Reported_Source', 'Resolution', 'Resolution_Category_Tier_1', 'Resolution_Category_Tier_2',
+        'Assignee', 'Categorization_Tier_1', 'Categorization_Tier_2', 'Categorization_Tier_3', 'CI_Name',
+        'Closure_Manufacturer', 'Closure_Product_Category_Tier1', 'Closure_Product_Category_Tier2',
+        'Closure_Product_Category_Tier3', 'Closure_Product_Model_Version', 'Closure_Product_Name', 'Department',
+        'First_Name', 'Impact', 'Last_Name', 'Lookup_Keyword', 'Manufacturer', 'Product_Categorization_Tier_1',
+        'Product_Categorization_Tier_2', 'Product_Categorization_Tier_3', 'Product_Model_Version', 'Product_Name',
+        'Reported_Source', 'Resolution', 'Resolution_Category_Tier_1', 'Resolution_Category_Tier_2',
         'Resolution_Category_Tier_3', 'Service_Type', 'Status', 'z1D_Action', 'Flag_Create_Request', 'Description',
-        'Detailed_Decription', 'Urgency', 'z1D_WorklogDetails', 'z1D_Details', 'z1D_Activity_Type', 'z1D_ActivityDate_tab',
-        'z1D_CommunicationSource', 'z1D_Secure_Log', 'z1D_View_Access', 'AccessMode', 'AppInstanceServer', 'AppInterfaceForm',
-        'AppLogin', 'AppPassword', 'Area_Business', 'Assigned_Group_ID', 'Assigned_To', 'Assignee_Groups', 'Assignee_Login_ID',
-        'Attachment_4_attachmentName', 'Attachment_4_attachmentData', 'Attachment_4_attachmentOrigSize', 'Attachment_5_attachmentName',
-        'Attachment_5_attachmentData', 'Attachment_5_attachmentOrigSize', 'Attachment_6_attachmentName', 'Attachment_6_attachmentData',
-        'Attachment_6_attachmentOrigSize', 'Attachment_7_attachmentName', 'Attachment_7_attachmentData', 'Attachment_7_attachmentOrigSize',
-        'Attachment_8_attachmentName', 'Attachment_8_attachmentData', 'Attachment_8_attachmentOrigSize', 'Attachment_9_attachmentName',
-        'Attachment_9_attachmentData', 'Attachment_9_attachmentOrigSize', 'BiiARS_01', 'BiiARS_02', 'BiiARS_03', 'BiiARS_04', 'BiiARS_05',
-        'bOrphanedRoot', 'CC_Business', 'cell_name', 'Client_Sensitivity', 'Client_Type', 'ClientLocale', 'Company', 'Component_ID',
-        'Contact_Company', 'Created_By', 'Created_From_flag', 'DatasetId', 'DataTags', 'Default_City', 'Default_Country', 'Desk_Location',
-        'Direct_Contact_Company', 'Direct_Contact_Department', 'Direct_Contact_First_Name', 'Direct_Contact_Internet_E-mail', 'Direct_Contact_Last_Name',
-        'Direct_Contact_Middle_Initial', 'Direct_Contact_Organization', 'Direct_Contact_Phone_Number', 'Direct_Contact_Site', 'Extension_Business',
-        'first_name2', 'Generic_Categorization_Tier_1', 'Global_OR_Custom_Mapping', 'Impact_OR_Root', 'Incident_Number', 'Incident_Entry_ID', 'InstanceId',
-        'Internet_E-mail', 'last_name2', 'Local_Business', 'Login_ID', 'Mail_Station', 'MaxRetries', 'mc_ueid', 'Middle_Initial', 'OptionForClosingIncident',
-        'Organization', 'Person_ID', 'Phone_Number', 'policy_name', 'PortNumber', 'Priority', 'Priority_Weight', 'Protocol', 'ReconciliationIdentity',
-        'Region', 'Reported_Date', 'Required_Resolution_DateTime', 'Resolution_Method', 'root_component_id_list', 'root_incident_id_list', 'Schema_Name', 'Short_Description',
-        'Site', 'Site_Group', 'Site_ID', 'SRID', 'SRInstanceID', 'SRMS_Registry_Instance_ID', 'SRMSAOIGuid', 'status_incident', 'Status_Reason', 'status_reason2',
-        'Submitter', 'TemplateID', 'TemplateID2', 'Unavailability_Type', 'Unavailability_Priority', 'Unknown_User', 'use_case', 'Vendor_Group', 'Vendor_Group_ID',
-        'Vendor_Name', 'Vendor_Organization', 'Vendor_Ticket_Number', 'VIP', 'z1D_Char01', 'z1D_Permission_Group_ID', 'z1D_Permission_Group_List',
-        'z1D_Char02', 'z1D_CIUAAssignGroup', 'z1D_CIUASupportCompany', 'z1D_CIUASupportOrg', 'z1D_Command', 'z1D_SRMInteger', 'z1D_SupportGroupID',
-        'z1D_UAAssignmentMethod', 'z2AF_Act_Attachment_1_attachmentName', 'z2AF_Act_Attachment_1_attachmentData', 'z2AF_Act_Attachment_1_attachmentOrigSize',
-        'z2Attachment_2_attachmentName', 'z2Attachment_2_attachmentData', 'z2Attachment_2_attachmentOrigSize', 'z2Attachment_3_attachmentName',
-        'z2Attachment_3_attachmentData', 'z2Attachment_3_attachmentOrigSize', 'zTmpEventGUID'
+        'Detailed_Decription', 'Urgency', 'z1D_WorklogDetails', 'z1D_Details', 'z1D_Activity_Type',
+        'z1D_ActivityDate_tab', 'z1D_CommunicationSource', 'z1D_Secure_Log', 'z1D_View_Access', 'AccessMode',
+        'AppInstanceServer', 'AppInterfaceForm', 'AppLogin', 'AppPassword', 'Area_Business', 'Assigned_Group_ID',
+        'Assigned_To', 'Assignee_Groups', 'Assignee_Login_ID', 'Attachment_4_attachmentName',
+        'Attachment_4_attachmentData', 'Attachment_4_attachmentOrigSize', 'Attachment_5_attachmentName',
+        'Attachment_5_attachmentData', 'Attachment_5_attachmentOrigSize', 'Attachment_6_attachmentName',
+        'Attachment_6_attachmentData', 'Attachment_6_attachmentOrigSize', 'Attachment_7_attachmentName',
+        'Attachment_7_attachmentData', 'Attachment_7_attachmentOrigSize', 'Attachment_8_attachmentName',
+        'Attachment_8_attachmentData', 'Attachment_8_attachmentOrigSize', 'Attachment_9_attachmentName',
+        'Attachment_9_attachmentData', 'Attachment_9_attachmentOrigSize', 'BiiARS_01', 'BiiARS_02', 'BiiARS_03',
+        'BiiARS_04', 'BiiARS_05', 'bOrphanedRoot', 'CC_Business', 'cell_name', 'Client_Sensitivity', 'Client_Type',
+        'ClientLocale', 'Company', 'Component_ID', 'Contact_Company', 'Created_By', 'Created_From_flag', 'DatasetId',
+        'DataTags', 'Default_City', 'Default_Country', 'Desk_Location', 'Direct_Contact_Company',
+        'Direct_Contact_Department', 'Direct_Contact_First_Name', 'Direct_Contact_Internet_E-mail',
+        'Direct_Contact_Last_Name', 'Direct_Contact_Middle_Initial', 'Direct_Contact_Organization',
+        'Direct_Contact_Phone_Number', 'Direct_Contact_Site', 'Extension_Business', 'first_name2',
+        'Generic_Categorization_Tier_1', 'Global_OR_Custom_Mapping', 'Impact_OR_Root', 'Incident_Number',
+        'Incident_Entry_ID', 'InstanceId', 'Internet_E-mail', 'last_name2', 'Local_Business', 'Login_ID',
+        'Mail_Station', 'MaxRetries', 'mc_ueid', 'Middle_Initial', 'OptionForClosingIncident', 'Organization',
+        'Person_ID', 'Phone_Number', 'policy_name', 'PortNumber', 'Priority', 'Priority_Weight', 'Protocol',
+        'ReconciliationIdentity', 'Region', 'Reported_Date', 'Required_Resolution_DateTime', 'Resolution_Method',
+        'root_component_id_list', 'root_incident_id_list', 'Schema_Name', 'Short_Description', 'Site', 'Site_Group',
+        'Site_ID', 'SRID', 'SRInstanceID', 'SRMS_Registry_Instance_ID', 'SRMSAOIGuid', 'status_incident',
+        'Status_Reason', 'status_reason2', 'Submitter', 'TemplateID', 'TemplateID2', 'Unavailability_Type',
+        'Unavailability_Priority', 'Unknown_User', 'use_case', 'Vendor_Group', 'Vendor_Group_ID', 'Vendor_Name',
+        'Vendor_Organization', 'Vendor_Ticket_Number', 'VIP', 'z1D_Char01', 'z1D_Permission_Group_ID',
+        'z1D_Permission_Group_List', 'z1D_Char02', 'z1D_CIUAAssignGroup', 'z1D_CIUASupportCompany',
+        'z1D_CIUASupportOrg', 'z1D_Command', 'z1D_SRMInteger', 'z1D_SupportGroupID', 'z1D_UAAssignmentMethod',
+         'z2AF_Act_Attachment_1_attachmentName', 'z2AF_Act_Attachment_1_attachmentData',
+         'z2AF_Act_Attachment_1_attachmentOrigSize', 'z2Attachment_2_attachmentName', 'z2Attachment_2_attachmentData',
+         'z2Attachment_2_attachmentOrigSize', 'z2Attachment_3_attachmentName', 'z2Attachment_3_attachmentData',
+         'z2Attachment_3_attachmentOrigSize', 'zTmpEventGUID'
     );
 
     protected $_internal_arguments = array(
@@ -71,7 +82,8 @@ class BmcItsmProvider extends AbstractProvider {
         'Assigned Group' => array('id' => 13, 'soap' => 'Assigned_Group'),
     );
 
-    function __destruct() {
+    function __destruct()
+    {
     }
 
     /**
@@ -79,13 +91,19 @@ class BmcItsmProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _setDefaultValueExtra() {
-        $this->default_data['endpoint'] = 'http://127.0.0.1/arsys/services/ARService?server=XXXX&webService=HPD_IncidentInterface_Create_WS';
+    protected function _setDefaultValueExtra()
+    {
+        $this->default_data['endpoint'] = 'http://127.0.0.1/arsys/services/' .
+            'ARService?server=XXXX&webService=HPD_IncidentInterface_Create_WS';
         $this->default_data['namespace'] = 'IncidentInterface_Create_WS';
         $this->default_data['timeout'] = 60;
 
         $this->default_data['clones']['mappingTicket'] = array(
-            array('Arg' => $this->_internal_arguments['Subject']['id'], 'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers/Abstract/templates/display_title.ihtml"}'),
+            array(
+                'Arg' => $this->_internal_arguments['Subject']['id'],
+                'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers' .
+                    '/Abstract/templates/display_title.ihtml"}'
+            ),
             array('Arg' => $this->_internal_arguments['Content']['id'], 'Value' => '{$body}'),
             array('Arg' => $this->_internal_arguments['Action']['id'], 'Value' => 'CREATE'),
             array('Arg' => $this->_internal_arguments['Status']['id'], 'Value' => 'Assigned'),
@@ -94,7 +112,8 @@ class BmcItsmProvider extends AbstractProvider {
         );
     }
 
-    protected function _setDefaultValueMain($body_html = 0) {
+    protected function _setDefaultValueMain($body_html = 0)
+    {
         parent::_setDefaultValueMain($body_html);
 
         $this->default_data['message_confirm'] = '
@@ -105,7 +124,9 @@ class BmcItsmProvider extends AbstractProvider {
 {if $ticket_is_ok == 1}
     <tr><td class="FormRowField" style="padding-left:15px;">New ticket opened: {$ticket_id}.</td></tr>
 {else}
-    <tr><td class="FormRowField" style="padding-left:15px;">Error to open the ticket: <xmp>{$ticket_error_message}</xmp></td></tr>
+    <tr>
+    <td class="FormRowField" style="padding-left:15px;">Error to open the ticket: <xmp>{$ticket_error_message}</xmp>
+    </td></tr>
 {/if}
 </table>
 ';
@@ -118,7 +139,8 @@ class BmcItsmProvider extends AbstractProvider {
      *
      * @return a string
      */
-    protected function _checkConfigForm() {
+    protected function _checkConfigForm()
+    {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
 
@@ -143,7 +165,8 @@ class BmcItsmProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra() {
+    protected function _getConfigContainer1Extra()
+    {
         $tpl = $this->initSmartyTemplate('providers/BmcItsm/templates');
 
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
@@ -151,11 +174,16 @@ class BmcItsmProvider extends AbstractProvider {
         $tpl->assign("header", array("bmcitsm" => _("BMC ITSM")));
 
         // Form
-        $endpoint_html = '<input size="50" name="endpoint" type="text" value="' . $this->_getFormValue('endpoint') . '" />';
-        $namespace_html = '<input size="50" name="namespace" type="text" value="' . $this->_getFormValue('namespace') . '" />';
-        $username_html = '<input size="50" name="username" type="text" value="' . $this->_getFormValue('username') . '" />';
-        $password_html = '<input size="50" name="password" type="password" value="' . $this->_getFormValue('password') . '" autocomplete="off" />';
-        $timeout_html = '<input size="2" name="timeout" type="text" value="' . $this->_getFormValue('timeout') . '" />';
+        $endpoint_html = '<input size="50" name="endpoint" type="text" value="' .
+            $this->_getFormValue('endpoint') . '" />';
+        $namespace_html = '<input size="50" name="namespace" type="text" value="' .
+            $this->_getFormValue('namespace') . '" />';
+        $username_html = '<input size="50" name="username" type="text" value="' .
+            $this->_getFormValue('username') . '" />';
+        $password_html = '<input size="50" name="password" type="password" value="' .
+            $this->_getFormValue('password') . '" autocomplete="off" />';
+        $timeout_html = '<input size="2" name="timeout" type="text" value="' .
+            $this->_getFormValue('timeout') . '" />';
 
         $array_form = array(
             'endpoint' => array('label' => _("Endpoint") . $this->_required_field, 'html' => $endpoint_html),
@@ -167,8 +195,10 @@ class BmcItsmProvider extends AbstractProvider {
         );
 
         // mapping Ticket clone
-        $mappingTicketValue_html = '<input id="mappingTicketValue_#index#" name="mappingTicketValue[#index#]" size="20"  type="text" />';
-        $mappingTicketArg_html = '<select id="mappingTicketArg_#index#" name="mappingTicketArg[#index#]" type="select-one">';
+        $mappingTicketValue_html = '<input id="mappingTicketValue_#index#" name="mappingTicketValue[#index#]" ' .
+            'size="20"  type="text" />';
+        $mappingTicketArg_html = '<select id="mappingTicketArg_#index#" name="mappingTicketArg[#index#]" ' .
+            'type="select-one">';
         ksort($this->_internal_arguments);
         foreach ($this->_internal_arguments as $label => $array) {
             $mappingTicketArg_html .= '<option value="' . $array['id'] . '">' . _($label) . '</options>';
@@ -180,9 +210,7 @@ class BmcItsmProvider extends AbstractProvider {
         );
 
         $tpl->assign('form', $array_form);
-
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-
         $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
     }
 
@@ -191,33 +219,41 @@ class BmcItsmProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra() {
+    protected function _getConfigContainer2Extra()
+    {
     }
 
-    public function validateFormatPopup() {
+    public function validateFormatPopup()
+    {
         $result = array('code' => 0, 'message' => 'ok');
-
         $this->validateFormatPopupLists($result);
-
         return $result;
     }
 
-    protected function saveConfigExtra() {
+    protected function saveConfigExtra()
+    {
         $this->_save_config['simple']['endpoint'] = $this->_submitted_config['endpoint'];
         $this->_save_config['simple']['namespace'] = $this->_submitted_config['namespace'];
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
+        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted(
+            'mappingTicket',
+            array('Arg', 'Value')
+        );
     }
 
-    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems) {
-        $result = array('ticket_id' => null, 'ticket_error_message' => null,
-                        'ticket_is_ok' => 0, 'ticket_time' => time());
+    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems)
+    {
+        $result = array(
+            'ticket_id' => null,
+            'ticket_error_message' => null,
+            'ticket_is_ok' => 0,
+            'ticket_time' => time()
+        );
 
         $tpl = $this->initSmartyTemplate();
-
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
@@ -275,13 +311,16 @@ class BmcItsmProvider extends AbstractProvider {
      * REST API
      *
      */
-    protected function setWsError($error) {
+    protected function setWsError($error)
+    {
         $this->ws_error = $error;
     }
 
-    protected function createTicketBmcItsm($ticket_arguments) {
+    protected function createTicketBmcItsm($ticket_arguments)
+    {
         $data = "<?xml version=\"1.0\"?>
-<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:" . $this->rule_data['namespace'] . "\">
+<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:" .
+            $this->rule_data['namespace'] . "\">
    <soapenv:Header>
       <urn:AuthenticationInfo>
          <urn:userName>" . $this->rule_data['username'] . "</urn:userName>
@@ -300,7 +339,7 @@ class BmcItsmProvider extends AbstractProvider {
         foreach ($this->_itsm_fields as $field) {
             if (isset($ticket_arguments[$field]) && $ticket_arguments[$field] != '') {
                 $data .= "<urn:" . $field . ">" . $ticket_arguments[$field] . "</urn:" . $field . ">";
-            } else if ($this->_set_empty_xml == 1) {
+            } elseif ($this->_set_empty_xml == 1) {
                 $data .= "<urn:" . $field . "></urn:" . $field . ">";
             }
         }
@@ -316,7 +355,8 @@ class BmcItsmProvider extends AbstractProvider {
         return 0;
     }
 
-    protected function callSOAP($data) {
+    protected function callSOAP($data)
+    {
         $this->_otrs_call_response = null;
 
         $base_url = $this->rule_data['endpoint'];

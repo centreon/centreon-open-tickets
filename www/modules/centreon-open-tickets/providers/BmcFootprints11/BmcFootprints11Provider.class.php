@@ -19,7 +19,8 @@
  * limitations under the License.
  */
 
-class BmcFootprints11Provider extends AbstractProvider {
+class BmcFootprints11Provider extends AbstractProvider
+{
     const ARG_TITLE = 1;
     const ARG_DESCRIPTION = 2;
     const ARG_STATUS = 3;
@@ -36,7 +37,8 @@ class BmcFootprints11Provider extends AbstractProvider {
         self::ARG_ASSIGNEE => 'Assignee',
     );
 
-    function __destruct() {
+    function __destruct()
+    {
     }
 
     /**
@@ -44,7 +46,8 @@ class BmcFootprints11Provider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _setDefaultValueExtra() {
+    protected function _setDefaultValueExtra()
+    {
         $this->default_data['address'] = '127.0.0.1';
         $this->default_data['wspath'] = '/MRcgi/MRWebServices.pl';
         $this->default_data['action'] = '/MRWebServices';
@@ -52,7 +55,11 @@ class BmcFootprints11Provider extends AbstractProvider {
         $this->default_data['timeout'] = 60;
 
         $this->default_data['clones']['mappingTicket'] = array(
-            array('Arg' => self::ARG_TITLE, 'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers/Abstract/templates/display_title.ihtml"}'),
+            array(
+                'Arg' => self::ARG_TITLE,
+                'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers' . '
+                    /Abstract/templates/display_title.ihtml"}'
+            ),
             array('Arg' => self::ARG_DESCRIPTION, 'Value' => '{$body}'),
             array('Arg' => self::ARG_STATUS, 'Value' => 'Open'),
             array('Arg' => self::ARG_PROJECTID, 'Value' => '1'),
@@ -60,7 +67,8 @@ class BmcFootprints11Provider extends AbstractProvider {
         );
     }
 
-    protected function _setDefaultValueMain($body_html = 0) {
+    protected function _setDefaultValueMain($body_html = 0)
+    {
         parent::_setDefaultValueMain($body_html);
 
         $this->default_data['url'] = 'http://{$address}/TicketNumber={$ticket_id}';
@@ -71,7 +79,8 @@ class BmcFootprints11Provider extends AbstractProvider {
      *
      * @return a string
      */
-    protected function _checkConfigForm() {
+    protected function _checkConfigForm()
+    {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
 
@@ -97,7 +106,8 @@ class BmcFootprints11Provider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra() {
+    protected function _getConfigContainer1Extra()
+    {
         $tpl = $this->initSmartyTemplate('providers/BmcFootprints11/templates');
 
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
@@ -105,13 +115,20 @@ class BmcFootprints11Provider extends AbstractProvider {
         $tpl->assign("header", array("bmc" => _("BMC Footprints 11")));
 
         // Form
-        $address_html = '<input size="50" name="address" type="text" value="' . $this->_getFormValue('address') . '" />';
-        $wspath_html = '<input size="50" name="wspath" type="text" value="' . $this->_getFormValue('wspath') . '" />';
-        $action_html = '<input size="50" name="action" type="text" value="' . $this->_getFormValue('action') . '" />';
-        $username_html = '<input size="50" name="username" type="text" value="' . $this->_getFormValue('username') . '" />';
-        $password_html = '<input size="50" name="password" type="password" value="' . $this->_getFormValue('password') . '" autocomplete="off" />';
-        $https_html = '<input type="checkbox" name="https" value="yes" ' . ($this->_getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
-        $timeout_html = '<input size="2" name="timeout" type="text" value="' . $this->_getFormValue('timeout') . '" />';
+        $address_html = '<input size="50" name="address" type="text" value="' .
+            $this->_getFormValue('address') . '" />';
+        $wspath_html = '<input size="50" name="wspath" type="text" value="' .
+            $this->_getFormValue('wspath') . '" />';
+        $action_html = '<input size="50" name="action" type="text" value="' .
+            $this->_getFormValue('action') . '" />';
+        $username_html = '<input size="50" name="username" type="text" value="' .
+            $this->_getFormValue('username') . '" />';
+        $password_html = '<input size="50" name="password" type="password" value="' .
+            $this->_getFormValue('password') . '" autocomplete="off" />';
+        $https_html = '<input type="checkbox" name="https" value="yes" ' .
+            ($this->_getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
+        $timeout_html = '<input size="2" name="timeout" type="text" value="' .
+            $this->_getFormValue('timeout') . '" />';
 
         $array_form = array(
             'address' => array('label' => _("Address") . $this->_required_field, 'html' => $address_html),
@@ -126,8 +143,10 @@ class BmcFootprints11Provider extends AbstractProvider {
         );
 
         // mapping Ticket clone
-        $mappingTicketValue_html = '<input id="mappingTicketValue_#index#" name="mappingTicketValue[#index#]" size="20"  type="text" />';
-        $mappingTicketArg_html = '<select id="mappingTicketArg_#index#" name="mappingTicketArg[#index#]" type="select-one">' .
+        $mappingTicketValue_html = '<input id="mappingTicketValue_#index#" name="mappingTicketValue[#index#]" ' .
+            'size="20"  type="text" />';
+        $mappingTicketArg_html = '<select id="mappingTicketArg_#index#" name="mappingTicketArg[#index#]" ' .
+            'type="select-one">' .
         '<option value="' . self::ARG_TITLE . '">' . _('Title') . '</options>' .
         '<option value="' . self::ARG_DESCRIPTION . '">' . _('Description') . '</options>' .
         '<option value="' . self::ARG_STATUS . '">' . _('Status') . '</options>' .
@@ -141,8 +160,10 @@ class BmcFootprints11Provider extends AbstractProvider {
         );
 
         // mapping Ticket ProjectField
-        $mappingTicketProjectFieldName_html = '<input id="mappingTicketProjectFieldName_#index#" name="mappingTicketProjectFieldName[#index#]" size="20"  type="text" />';
-        $mappingTicketProjectFieldValue_html = '<input id="mappingTicketProjectFieldValue_#index#" name="mappingTicketProjectFieldValue[#index#]" size="20"  type="text" />';
+        $mappingTicketProjectFieldName_html = '<input id="mappingTicketProjectFieldName_#index#" ' .
+            'name="mappingTicketProjectFieldName[#index#]" size="20"  type="text" />';
+        $mappingTicketProjectFieldValue_html = '<input id="mappingTicketProjectFieldValue_#index#" ' .
+            'name="mappingTicketProjectFieldValue[#index#]" size="20"  type="text" />';
         $array_form['mappingTicketProjectField'] = array(
             array('label' => _("Name"), 'html' => $mappingTicketProjectFieldName_html),
             array('label' => _("Value"), 'html' => $mappingTicketProjectFieldValue_html),
@@ -161,10 +182,12 @@ class BmcFootprints11Provider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra() {
+    protected function _getConfigContainer2Extra()
+    {
     }
 
-    protected function saveConfigExtra() {
+    protected function saveConfigExtra()
+    {
         $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
         $this->_save_config['simple']['wspath'] = $this->_submitted_config['wspath'];
         $this->_save_config['simple']['action'] = $this->_submitted_config['action'];
@@ -175,11 +198,18 @@ class BmcFootprints11Provider extends AbstractProvider {
         ) ? $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
-        $this->_save_config['clones']['mappingTicketProjectField'] = $this->_getCloneSubmitted('mappingTicketProjectField', array('Name', 'Value'));
+        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted(
+            'mappingTicket',
+            array('Arg', 'Value')
+        );
+        $this->_save_config['clones']['mappingTicketProjectField'] = $this->_getCloneSubmitted(
+            'mappingTicketProjectField',
+            array('Name', 'Value')
+        );
     }
 
-    public function validateFormatPopup() {
+    public function validateFormatPopup()
+    {
         $result = array('code' => 0, 'message' => 'ok');
 
         $this->validateFormatPopupLists($result);
@@ -187,9 +217,14 @@ class BmcFootprints11Provider extends AbstractProvider {
         return $result;
     }
 
-    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems) {
-        $result = array('ticket_id' => null, 'ticket_error_message' => null,
-                        'ticket_is_ok' => 0, 'ticket_time' => time());
+    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems)
+    {
+        $result = array(
+            'ticket_id' => null,
+            'ticket_error_message' => null,
+            'ticket_is_ok' => 0,
+            'ticket_time' => time()
+        );
 
         $tpl = $this->initSmartyTemplate();
 
@@ -263,11 +298,13 @@ class BmcFootprints11Provider extends AbstractProvider {
      * SOAP API
      *
      */
-    protected function setWsError($error) {
+    protected function setWsError($error)
+    {
         $this->ws_error = $error;
     }
 
-    protected function createTicket($ticket_arguments, $ticket_project_fields) {
+    protected function createTicket($ticket_arguments, $ticket_project_fields)
+    {
         $project_fields = "";
 
         foreach ($ticket_project_fields as $entry) {
@@ -275,7 +312,8 @@ class BmcFootprints11Provider extends AbstractProvider {
             if (preg_match('/^[0-9]+$/', $entry['Value'])) {
                 $type = 'integer';
             }
-            $project_fields .= '<' . $entry['Name'] . ' xsi:type="xsd:' . $type . '">' . $entry['Value'] . '</' . $entry['Name'] . '>';
+            $project_fields .= '<' . $entry['Name'] . ' xsi:type="xsd:' . $type . '">' .
+                $entry['Value'] . '</' . $entry['Name'] . '>';
         }
 
         if ($project_fields != '') {
@@ -304,15 +342,22 @@ class BmcFootprints11Provider extends AbstractProvider {
         <c-gensym9>
             <assignees
                 soapenc:arrayType="xsd:string[1]" xsi:type="soapenc:Array">
-                <item xsi:type="xsd:string">' . $ticket_arguments[$this->_internal_arg_name[self::ARG_ASSIGNEE]] . '</item>
+                <item xsi:type="xsd:string">' .
+                    $ticket_arguments[$this->_internal_arg_name[self::ARG_ASSIGNEE]] . '</item>
             </assignees>
             ' . $project_fields .
             (isset($ticket_arguments[$this->_internal_arg_name[self::ARG_PRIORITYNUMBER]]) ?
-                '<priorityNumber xsi:type="xsd:int">' . $ticket_arguments[$this->_internal_arg_name[self::ARG_PRIORITYNUMBER]] . '</priorityNumber>' : '') . '
-            <status xsi:type="xsd:string">' . $ticket_arguments[$this->_internal_arg_name[self::ARG_STATUS]] . '</status>
-            <projectID xsi:type="xsd:int">' . $ticket_arguments[$this->_internal_arg_name[self::ARG_PROJECTID]] . '</projectID>
-            <title xsi:type="xsd:string"><![CDATA[' . $ticket_arguments[$this->_internal_arg_name[self::ARG_TITLE]] . ']]></title>
-            <description xsi:type="xsd:string"><![CDATA[' . $ticket_arguments[$this->_internal_arg_name[self::ARG_DESCRIPTION]] . ']]></description>
+                '<priorityNumber xsi:type="xsd:int">' .
+                    $ticket_arguments[$this->_internal_arg_name[self::ARG_PRIORITYNUMBER]] .
+                    '</priorityNumber>' : '') . '
+            <status xsi:type="xsd:string">' .
+                $ticket_arguments[$this->_internal_arg_name[self::ARG_STATUS]] . '</status>
+            <projectID xsi:type="xsd:int">' .
+                $ticket_arguments[$this->_internal_arg_name[self::ARG_PROJECTID]] . '</projectID>
+            <title xsi:type="xsd:string"><![CDATA[' .
+                $ticket_arguments[$this->_internal_arg_name[self::ARG_TITLE]] . ']]></title>
+            <description xsi:type="xsd:string"><![CDATA[' .
+                $ticket_arguments[$this->_internal_arg_name[self::ARG_DESCRIPTION]] . ']]></description>
         </c-gensym9>
     </MRWebServices__createIssue>
 </soap:Body>
@@ -326,7 +371,8 @@ class BmcFootprints11Provider extends AbstractProvider {
         return 0;
     }
 
-    protected function callSOAP($data, $url) {
+    protected function callSOAP($data, $url)
+    {
 
         $proto = 'http';
         if (isset($this->rule_data['https']) && $this->rule_data['https'] == 'yes') {

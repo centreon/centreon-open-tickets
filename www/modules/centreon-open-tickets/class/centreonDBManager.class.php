@@ -21,9 +21,10 @@
 
 require_once $centreon_path . "/www/class/centreonDB.class.php";
 
-class CentreonDBManager extends CentreonDB {
-
-    public function lastinsertId($name = null) {
+class CentreonDBManager extends CentreonDB
+{
+    public function lastinsertId($name = null)
+    {
         $dbResult = $this->query("SELECT LAST_INSERT_ID() as last_id FROM " . $name);
         if (!($row = $dbResult->fetch())) {
             throw new Exception('Cannot get last id');

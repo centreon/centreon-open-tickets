@@ -31,14 +31,18 @@ if (file_exists(_CENTREON_PATH_ . '/www/include/common/webServices/rest/webServi
 
 define('CENTREON_OPENTICKET_PATH', _CENTREON_PATH_ . '/www/modules/centreon-open-tickets');
 
-class CentreonOpenticket extends CentreonWebService {
-    public function postTestProvider() {
+class CentreonOpenticket extends CentreonWebService
+{
+    public function postTestProvider()
+    {
         if (!isset($this->arguments['service'])) {
             throw new RestBadRequestException('Missing service argument');
         }
         $service = $this->arguments['service'];
 
-        if (!file_exists(CENTREON_OPENTICKET_PATH . '/providers/' . $service . '/' . $service . 'Provider.class.php')) {
+        if (!file_exists(
+            CENTREON_OPENTICKET_PATH . '/providers/' . $service . '/' . $service . 'Provider.class.php'
+        )) {
             throw new RestBadRequestException('The service provider does not exists.');
         }
         include_once CENTREON_OPENTICKET_PATH . '/providers/Abstract/AbstractProvider.class.php';

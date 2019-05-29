@@ -39,7 +39,11 @@ foreach ($register_providers as $name => $id) {
     }
 }
 
-if (is_null($provider_name) || !file_exists($centreon_open_tickets_path . 'providers/' . $provider_name . '/' . $provider_name . 'Provider.class.php')) {
+if (is_null($provider_name)
+    || !file_exists(
+        $centreon_open_tickets_path . 'providers/' . $provider_name . '/' . $provider_name . 'Provider.class.php'
+    )
+) {
     $resultat['code'] = 1;
     $resultat['msg'] = 'Please set a provider';
     return ;
@@ -48,7 +52,14 @@ if (is_null($provider_name) || !file_exists($centreon_open_tickets_path . 'provi
 require_once $centreon_open_tickets_path . 'providers/' . $provider_name . '/' . $provider_name . 'Provider.class.php';
 
 $classname = $provider_name . 'Provider';
-$centreon_provider = new $classname($rule, $centreon_path, $centreon_open_tickets_path, $get_information['rule_id'], $get_information['form'], $get_information['provider_id']);
+$centreon_provider = new $classname(
+    $rule,
+    $centreon_path,
+    $centreon_open_tickets_path,
+    $get_information['rule_id'],
+    $get_information['form'],
+    $get_information['provider_id']
+);
 
 try {
     $resultat['result'] = $centreon_provider->validateFormatPopup();

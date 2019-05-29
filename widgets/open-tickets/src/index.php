@@ -164,30 +164,39 @@ $query = "SELECT SQL_CALC_FOUND_ROWS h.host_id,
         cv2.value AS criticality_id,
         cv.value AS criticality_level,
         h.icon_image
-";
 
-$query .= " FROM hosts h ";
-$query .= " LEFT JOIN customvariables cv5 ON (h.host_id = cv5.host_id AND cv5.service_id IS NULL AND cv5.name = '" .
-    $macro_tickets['ticket_id'] . "') ";
-$query .= " LEFT JOIN mod_open_tickets mop1 ON (cv5.value = mop1.ticket_value AND (mop1.timestamp > h.last_time_up OR h.last_time_up is NULL)) ";
-$query .= " LEFT JOIN mod_open_tickets_data mopd1 ON (mop1.ticket_id = mopd1.ticket_id) ";
-$query .= ", services s ";
-$query .= " LEFT JOIN customvariables cv ON (s.service_id = cv.service_id AND s.host_id = cv.host_id " .
-    "AND cv.name = 'CRITICALITY_LEVEL') ";
-$query .= " LEFT JOIN customvariables cv2 ON (s.service_id = cv2.service_id AND s.host_id = cv2.host_id " .
-    "AND cv2.name = 'CRITICALITY_ID') ";
-$query .= " LEFT JOIN customvariables cv3 ON (s.service_id = cv3.service_id AND s.host_id = cv3.host_id " .
-    "AND cv3.name = '" . $macro_tickets['ticket_id'] . "') ";
-$query .= " LEFT JOIN mod_open_tickets mop2 ON (cv3.value = mop2.ticket_value AND (mop2.timestamp > s.last_time_ok OR s.last_time_ok IS NULL)) ";
-$query .= " LEFT JOIN mod_open_tickets_data mopd2 ON (mop2.ticket_id = mopd2.ticket_id) ";
+    FROM hosts h
+    LEFT JOIN customvariables cv5 ON (
+        h.host_id = cv5.host_id AND cv5.service_id IS NULL AND cv5.name = '" . $macro_tickets['ticket_id'] . "'
+    )
+    LEFT JOIN mod_open_tickets mop1 ON (
+        cv5.value = mop1.ticket_value AND (
+            mop1.timestamp > h.last_time_up OR h.last_time_up is NULL
+        )
+    )
+    LEFT JOIN mod_open_tickets_data mopd1 ON (mop1.ticket_id = mopd1.ticket_id), services s
+    LEFT JOIN customvariables cv ON (
+        s.service_id = cv.service_id AND s.host_id = cv.host_id AND cv.name = 'CRITICALITY_LEVEL'
+    )
+    LEFT JOIN customvariables cv2 ON (
+        s.service_id = cv2.service_id AND s.host_id = cv2.host_id AND cv2.name = 'CRITICALITY_ID'
+    )
+    LEFT JOIN customvariables cv3 ON (
+        s.service_id = cv3.service_id AND s.host_id = cv3.host_id AND cv3.name = '" . $macro_tickets['ticket_id'] . "'
+    )
+    LEFT JOIN mod_open_tickets mop2 ON (
+        cv3.value = mop2.ticket_value AND (
+            mop2.timestamp > s.last_time_ok OR s.last_time_ok IS NULL
+        )
+    )
+    LEFT JOIN mod_open_tickets_data mopd2 ON (mop2.ticket_id = mopd2.ticket_id)";
 
 if (!$centreon->user->admin) {
     $query .= " , centreon_acl acl ";
 }
-$query .= " WHERE s.host_id = h.host_id ";
-
-$query .= " AND h.enabled = 1 AND h.name NOT LIKE '_Module_%' ";
-$query .= " AND s.enabled = 1 ";
+$query .= " WHERE s.host_id = h.host_id
+    AND h.enabled = 1 AND h.name NOT LIKE '_Module_%'
+    AND s.enabled = 1 ";
 if (isset($preferences['host_name_search']) && $preferences['host_name_search'] != "") {
     $tab = explode(" ", $preferences['host_name_search']);
     $op = $tab[0];
@@ -377,7 +386,6 @@ while ($row = $res->fetch()) {
     foreach ($row as $key => $value) {
         if ($key == "last_check") {
             $value = $gmt->getDate("Y-m-d H:i:s", $value);
-            //$value = date("Y-m-d H:i:s", $value);
         } elseif ($key == "last_state_change" || $key == "last_hard_state_change") {
             $value = time() - $value;
             $value = CentreonDuration::toString($value);
@@ -399,7 +407,7 @@ while ($row = $res->fetch()) {
         } elseif ($key == "criticality_id" && $value != '') {
             $critData = $criticality->getData($row["criticality_id"], 1);
             $value = "<img src='../../img/media/" . $media->getFilename($critData['icon_id']) .
-                "' title='" . $critData["sc_name"] . "' width='16' height='16'>";
+            "' title='" . $critData["sc_name"] . "' width='16' height='16'>";
         }
         $data[$row['host_id'] . "_" . $row['service_id']][$key] = $value;
     }
@@ -421,8 +429,10 @@ while ($row = $res->fetch()) {
             $ticket_id = '<a href="' . $url . '" target="_blank">' . $ticket_id . '</a>';
         }
         $data[$row['host_id'] . "_" . $row['service_id']]['ticket_id'] = $ticket_id;
-        $data[$row['host_id'] . "_" . $row['service_id']]['ticket_time'] =
-            $gmt->getDate("Y-m-d H:i:s", $row['host_ticket_time']);
+        $data[$row['host_id'] . "_" . $row['service_id']]['ticket_time'] = $gmt->getDate(
+            "Y-m-d H:i:s",
+            $row['host_ticket_time']
+        );
         $data[$row['host_id'] . "_" . $row['service_id']]['ticket_subject'] = $row['host_ticket_subject'];
     } elseif ($row['service_ticket_time'] > $row['last_time_ok'] &&
         isset($row['service_ticket_id']) &&
@@ -435,8 +445,10 @@ while ($row = $res->fetch()) {
             $ticket_id = '<a href="' . $url . '" target="_blank">' . $ticket_id . '</a>';
         }
         $data[$row['host_id'] . "_" . $row['service_id']]['ticket_id'] = $ticket_id;
-        $data[$row['host_id'] . "_" . $row['service_id']]['ticket_time'] =
-            $gmt->getDate("Y-m-d H:i:s", $row['service_ticket_time']);
+        $data[$row['host_id'] . "_" . $row['service_id']]['ticket_time'] = $gmt->getDate(
+            "Y-m-d H:i:s",
+            $row['service_ticket_time']
+        );
         $data[$row['host_id'] . "_" . $row['service_id']]['ticket_subject'] = $row['service_ticket_subject'];
     }
 }

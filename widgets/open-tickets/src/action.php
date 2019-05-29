@@ -40,7 +40,8 @@ $centreon_bg = new CentreonXMLBGRequest($dependencyInjector, session_id(), 1, 1,
 
 <?php
 
-function service_ack() {
+function service_ack()
+{
     global $cmd, $centreon, $centreon_path;
 
     $path = $centreon_path . "www/widgets/open-tickets/src/";
@@ -92,7 +93,8 @@ function service_ack() {
     $template->display('acknowledge.ihtml');
 }
 
-function format_popup() {
+function format_popup()
+{
     global $cmd, $widgetId, $rule, $preferences, $centreon, $centreon_path;
 
     $uniq_id = uniqid();
@@ -102,13 +104,20 @@ function format_popup() {
         $title = _("Open Host Ticket");
     }
 
-    $result = $rule->getFormatPopupProvider($preferences['rule'],
-                                            array('title' => $title,
-                                                  'user' => array(
-                                                                  'alias' => $centreon->user->alias,
-                                                                  'email' => $centreon->user->email),
-                                                 )
-                                            , $widgetId, $uniq_id, $_REQUEST['cmd'], $_REQUEST['selection']);
+    $result = $rule->getFormatPopupProvider(
+        $preferences['rule'],
+        array(
+            'title' => $title,
+            'user' => array(
+                'alias' => $centreon->user->alias,
+                'email' => $centreon->user->email
+            )
+        ),
+        $widgetId,
+        $uniq_id,
+        $_REQUEST['cmd'],
+        $_REQUEST['selection']
+    );
 
     $path = $centreon_path . "www/widgets/open-tickets/src/";
     $template = new Smarty();
@@ -124,16 +133,28 @@ function format_popup() {
     $template->assign('cmd', $cmd);
     $template->assign('selection', $_REQUEST['selection']);
     $template->assign('continue', (!is_null($result) && isset($result['format_popup'])) ? 0 : 1);
-    $template->assign('attach_files_enable', (!is_null($result) && isset($result['attach_files_enable']) && $result['attach_files_enable'] === 'yes') ? 1 : 0);
+    $template->assign(
+        'attach_files_enable',
+        (!is_null($result)
+            && isset($result['attach_files_enable'])
+            && $result['attach_files_enable'] === 'yes'
+        ) ? 1 : 0
+    );
 
-    $template->assign('formatPopupProvider', (!is_null($result) && isset($result['format_popup'])) ? $result['format_popup'] : '');
+    $template->assign(
+        'formatPopupProvider',
+        (!is_null($result)
+            && isset($result['format_popup'])
+        ) ? $result['format_popup'] : ''
+    );
 
     $template->assign('submitLabel', _("Open"));
 
     $template->display('formatpopup.ihtml');
 }
 
-function remove_tickets() {
+function remove_tickets()
+{
     global $cmd, $widgetId, $rule, $preferences, $centreon, $centreon_path, $centreon_bg;
 
     $path = $centreon_path . "www/widgets/open-tickets/src/";
@@ -171,9 +192,9 @@ try {
 
     if ($cmd == 3 || $cmd == 4) {
         format_popup();
-    } else if ($cmd == 10) {
+    } elseif ($cmd == 10) {
         remove_tickets();
-    } else if ($cmd == 70) {
+    } elseif ($cmd == 70) {
         service_ack();
     }
 } catch (Exception $e) {

@@ -41,7 +41,6 @@ $template = new Smarty();
 $template = initSmartyTplForPopup($path, $template, "/", $centreon_path);
 
 try {
-
     $db = new CentreonDB();
     $widgetObj = new CentreonWidget($centreon, $db);
     $preferences = $widgetObj->getWidgetPreferences($widgetId);
@@ -54,12 +53,23 @@ try {
     $rule = new Centreon_OpenTickets_Rule($db);
     $result = $rule->getAliasAndProviderId($preferences['rule']);
 
-    if (!isset($preferences['rule']) || is_null($preferences['rule']) || $preferences['rule'] == '' ||
-    !isset($result['provider_id'])) {
-        $template->assign('error', "<center><div class='update' style='text-align:center;width:350px;'>"._("Please select a rule first")."</div></center>");
+    if (!isset($preferences['rule'])
+        || is_null($preferences['rule'])
+        || $preferences['rule'] == ''
+        || !isset($result['provider_id'])
+    ) {
+        $template->assign(
+            'error',
+            "<center><div class='update' style='text-align:center;width:350px;'>" .
+            _("Please select a rule first") . "</div></center>"
+        );
     }
 } catch (Exception $e) {
-    $template->assign('error', "<center><div class='update' style='text-align:center;width:350px;'>" . $e->getMessage() . "</div></center>");
+    $template->assign(
+        'error',
+        "<center><div class='update' style='text-align:center;width:350px;'>" .
+        $e->getMessage() . "</div></center>"
+    );
 }
 
 $template->assign('widgetId', $widgetId);

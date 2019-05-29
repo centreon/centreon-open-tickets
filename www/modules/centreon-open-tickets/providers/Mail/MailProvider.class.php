@@ -21,17 +21,20 @@
 
 require_once __DIR__ . '/library/class.phpmailer.php';
 
-class MailProvider extends AbstractProvider {
+class MailProvider extends AbstractProvider
+{
     protected $_attach_files = 1;
 
-    protected function _setDefaultValueMain($body_html = 0) {
+    protected function _setDefaultValueMain($body_html = 0)
+    {
         parent::_setDefaultValueMain(1);
     }
 
-    protected function _setDefaultValueExtra() {
+    protected function _setDefaultValueExtra()
+    {
         $this->default_data['from'] = '{$user.email}';
-        $this->default_data['subject'] = 'Issue {$ticket_id} - {include file="file:$centreon_open_tickets_path/providers/Abstract/templates/display_title.ihtml"}';
-
+        $this->default_data['subject'] = 'Issue {$ticket_id} - {include file="file:$centreon_open_tickets_path' .
+            '/providers/Abstract/templates/display_title.ihtml"}';
         $this->default_data['clones']['headerMail'] = array();
         $this->default_data['ishtml'] = 'yes';
     }
@@ -41,10 +44,10 @@ class MailProvider extends AbstractProvider {
      *
      * @return a string
      */
-    protected function _checkConfigForm() {
+    protected function _checkConfigForm()
+    {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
-
         $this->_checkFormValue('from', "Please set 'From' value");
         $this->_checkFormValue('to', "Please set 'To' value");
         $this->_checkFormValue('subject', "Please set 'Subject' value");
@@ -63,7 +66,8 @@ class MailProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra() {
+    protected function _getConfigContainer1Extra()
+    {
         $tpl = $this->initSmartyTemplate('providers/Mail/templates');
 
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
@@ -73,8 +77,10 @@ class MailProvider extends AbstractProvider {
         // Form
         $from_html = '<input size="50" name="from" type="text" value="' . $this->_getFormValue('from') . '" />';
         $to_html = '<input size="50" name="to" type="text" value="' . $this->_getFormValue('to') . '" />';
-        $subject_html = '<input size="50" name="subject" type="text" value="' . htmlentities($this->_getFormValue('subject')) . '" />';
-        $ishtml_html = '<input type="checkbox" name="ishtml" value="yes" ' . ($this->_getFormValue('ishtml') == 'yes' ? 'checked' : '') . '/>';
+        $subject_html = '<input size="50" name="subject" type="text" value="' .
+            htmlentities($this->_getFormValue('subject')) . '" />';
+        $ishtml_html = '<input type="checkbox" name="ishtml" value="yes" ' .
+            ($this->_getFormValue('ishtml') == 'yes' ? 'checked' : '') . '/>';
 
         $array_form = array(
             'from' => array('label' => _("From") . $this->_required_field, 'html' => $from_html),
@@ -85,17 +91,17 @@ class MailProvider extends AbstractProvider {
         );
 
         // Clone part
-        $headerMailName_html = '<input id="headerMailName_#index#" size="20" name="headerMailName[#index#]" type="text" />';
-        $headerMailValue_html = '<input id="headerMailValue_#index#" size="20" name="headerMailValue[#index#]" type="text" />';
+        $headerMailName_html = '<input id="headerMailName_#index#" size="20" name="headerMailName[#index#]" ' .
+            'type="text" />';
+        $headerMailValue_html = '<input id="headerMailValue_#index#" size="20" name="headerMailValue[#index#]" ' .
+            'type="text" />';
         $array_form['headerMail'] = array(
             array('label' => _("Name"), 'html' => $headerMailName_html),
             array('label' => _("Value"), 'html' => $headerMailValue_html),
         );
 
         $tpl->assign('form', $array_form);
-
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-
         $this->_config['clones']['headerMail'] = $this->_getCloneValue('headerMail');
     }
 
@@ -104,35 +110,43 @@ class MailProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra() {
-
+    protected function _getConfigContainer2Extra()
+    {
     }
 
-    protected function saveConfigExtra() {
+    protected function saveConfigExtra()
+    {
         $this->_save_config['clones']['headerMail'] = $this->_getCloneSubmitted('headerMail', array('Name', 'Value'));
         $this->_save_config['simple']['from'] = $this->_submitted_config['from'];
         $this->_save_config['simple']['to'] = $this->_submitted_config['to'];
         $this->_save_config['simple']['subject'] = $this->_submitted_config['subject'];
-        $this->_save_config['simple']['ishtml'] = (isset($this->_submitted_config['ishtml'])
-            && $this->_submitted_config['ishtml'] == 'yes')
-            ? $this->_submitted_config['ishtml'] : '';
+        $this->_save_config['simple']['ishtml'] = (
+            isset($this->_submitted_config['ishtml'])
+            && $this->_submitted_config['ishtml'] == 'yes'
+        ) ? $this->_submitted_config['ishtml'] : '';
     }
 
-    public function validateFormatPopup() {
+    public function validateFormatPopup()
+    {
         $result = array('code' => 0, 'message' => 'ok');
-
         $this->validateFormatPopupLists($result);
         return $result;
     }
 
-    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems) {
-        $result = array('ticket_id' => null, 'ticket_error_message' => null,
-                        'ticket_is_ok' => 0, 'ticket_time' => time());
+    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems)
+    {
+        $result = array(
+            'ticket_id' => null,
+            'ticket_error_message' => null,
+            'ticket_is_ok' => 0,
+            'ticket_time' => time()
+        );
 
         try {
-            $query = "INSERT INTO mod_open_tickets
-  (`timestamp`, `user`) VALUES ('" . $result['ticket_time'] . "', '" . $db_storage->escape($contact['name']) . "')";
-            $db_storage->query($query);
+            $db_storage->query(
+                "INSERT INTO mod_open_tickets (`timestamp`, `user`) VALUES
+                ('" . $result['ticket_time'] . "', '" . $db_storage->escape($contact['name']) . "')"
+            );
             $result['ticket_id'] = $db_storage->lastinsertId('mod_open_tickets');
         } catch (Exception $e) {
             $result['ticket_error_message'] = $e->getMessage();
@@ -140,7 +154,6 @@ class MailProvider extends AbstractProvider {
         }
 
         $tpl = $this->initSmartyTemplate();
-
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);

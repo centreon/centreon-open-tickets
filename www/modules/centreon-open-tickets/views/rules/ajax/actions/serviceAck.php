@@ -49,25 +49,35 @@ foreach ($selected_values as $value) {
     }
 }
 
-$query = "(SELECT DISTINCT services.description, hosts.name as host_name, hosts.instance_id FROM services, hosts";
-$query .= " WHERE (" . $selected_str . ') AND services.host_id = hosts.host_id';
+$query = "(SELECT DISTINCT services.description, hosts.name as host_name, hosts.instance_id FROM services, hosts
+    WHERE (" . $selected_str . ') AND services.host_id = hosts.host_id';
 if (!$centreon_bg->is_admin) {
-    $query .= " AND EXISTS(SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (" . $centreon_bg->grouplistStr . ") AND hosts.host_id = centreon_acl.host_id
-    AND services.service_id = centreon_acl.service_id)";
+    $query .= " AND EXISTS(
+        SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (" .
+            $centreon_bg->grouplistStr . "
+        )
+        AND hosts.host_id = centreon_acl.host_id
+        AND services.service_id = centreon_acl.service_id
+    )";
 }
-$query .= ") UNION ALL (";
-$query .= "SELECT DISTINCT NULL as description, hosts.name as host_name, hosts.instance_id FROM hosts";
-$query .= " WHERE hosts.host_id IN (" . $hosts_selected_str . ")";
+$query .= ") UNION ALL (
+    SELECT DISTINCT NULL as description, hosts.name as host_name, hosts.instance_id
+    FROM hosts
+    WHERE hosts.host_id IN (" .
+        $hosts_selected_str . "
+    )";
 if (!$centreon_bg->is_admin) {
-    $query .= " AND EXISTS(SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (" . $centreon_bg->grouplistStr . ") AND hosts.host_id = centreon_acl.host_id)";
+    $query .= " AND EXISTS(
+        SELECT * FROM centreon_acl
+        WHERE centreon_acl.group_id IN (" .
+            $centreon_bg->grouplistStr . "
+        )
+        AND hosts.host_id = centreon_acl.host_id
+    )";
 }
 $query .= ") ORDER BY `host_name`, `description`";
 
 $hosts_done = array();
-
-//$fp = fopen('/tmp/debug.txt', 'a+');
-//fwrite($fp, "===$query===\n");
-//fwrite($fp, print_r($selected_values, true) . "==\n");
 
 $dbResult = $db_storage->query($query);
 while (($row = $dbResult->fetch())) {
@@ -99,7 +109,7 @@ try {
     $external_cmd = new CentreonExternalCommand($oreon);
     $method_external_name = 'set_process_command';
     if (method_exists($external_cmd, $method_external_name) == false) {
-       $method_external_name = 'setProcessCommand';
+        $method_external_name = 'setProcessCommand';
     }
 
     $error_msg = array();
@@ -107,15 +117,41 @@ try {
     foreach ($problems as $row) {
         if (is_null($row['description']) || $row['description'] == '') {
             $command = "ACKNOWLEDGE_HOST_PROBLEM;%s;%s;%s;%s;%s;%s";
-            call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command,
-                $row['host_name'], $sticky, $notify, $persistent, $get_information['form']['author'], $get_information['form']['comment']), $row['instance_id']));
+            call_user_func_array(
+                array($external_cmd, $method_external_name),
+                array(
+                    sprintf(
+                        $command,
+                        $row['host_name'],
+                        $sticky,
+                        $notify,
+                        $persistent,
+                        $get_information['form']['author'],
+                        $get_information['form']['comment']
+                    ),
+                    $row['instance_id']
+                )
+            );
             continue;
         }
 
         $command = "ACKNOWLEDGE_SVC_PROBLEM;%s;%s;%s;%s;%s;%s;%s";
-        call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command,
-            $row['host_name'], $row['description'], $sticky, $notify, $persistent, $get_information['form']['author'], $get_information['form']['comment']), $row['instance_id']));
-
+        call_user_func_array(
+            array($external_cmd, $method_external_name),
+            array(
+                sprintf(
+                    $command,
+                    $row['host_name'],
+                    $row['description'],
+                    $sticky,
+                    $notify,
+                    $persistent,
+                    $get_information['form']['author'],
+                    $get_information['form']['comment']
+                ),
+                $row['instance_id']
+            )
+        );
     }
 
     $external_cmd->write();
@@ -134,5 +170,3 @@ $resultat['msg'] = '
         <td class="FormRowField" style="padding-left:15px;">Service acknowlegded</td>
     </tr>';
 $resultat['msg'] .= '</table>';
-
-?>

@@ -40,5 +40,3 @@ foreach ($_FILES as $file) {
         $_SESSION['ot_upload_files'][$uniq_id][$file_dst] = 1;
     }
 }
-
-?>

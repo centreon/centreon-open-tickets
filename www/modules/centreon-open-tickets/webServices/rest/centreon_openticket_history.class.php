@@ -22,7 +22,6 @@
 global $centreon_path;
 require_once _CENTREON_PATH_ . "/www/class/centreonDB.class.php";
 
-
 if (file_exists($centreon_path . "/www/include/common/webServices/rest/webService.class.php")) {
     // Centreon < 2.8
     include_once $centreon_path . "/www/include/common/webServices/rest/webService.class.php";
@@ -31,7 +30,8 @@ if (file_exists($centreon_path . "/www/include/common/webServices/rest/webServic
     include_once $centreon_path . "/www/api/class/webService.class.php";
 }
 
-class CentreonOpenticketHistory extends CentreonWebService {
+class CentreonOpenticketHistory extends CentreonWebService
+{
     /**
      *
      * @var type
@@ -95,14 +95,16 @@ class CentreonOpenticketHistory extends CentreonWebService {
         foreach ($this->arguments['links'] as $link) {
             if (isset($link['hostname']) && isset($link['service_description'])) {
                 $res = $this->pearDBMonitoring->execute(
-                    $stmt_service, array($link['hostname'], $link['service_description'])
+                    $stmt_service,
+                    array($link['hostname'], $link['service_description'])
                 );
                 if ($row = $res->fetch()) {
                     $links_ok[] = array_merge(
-                        $link, array('service_id' => $row['service_id'], 'host_id' => $row['host_id'])
+                        $link,
+                        array('service_id' => $row['service_id'], 'host_id' => $row['host_id'])
                     );
                 }
-            } else if (isset($link['hostname'])) {
+            } elseif (isset($link['hostname'])) {
                 $res = $this->pearDBMonitoring->execute($stmt_host, array($link['hostname']));
                 if ($row = $res->fetch()) {
                     $links_ok[] = array_merge($link, array('host_id' => $row['host_id']));

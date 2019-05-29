@@ -19,13 +19,15 @@
  * limitations under the License.
  */
 
-class SimpleProvider extends AbstractProvider {
+class SimpleProvider extends AbstractProvider
+{
 
-    protected function _setDefaultValueExtra() {
-
+    protected function _setDefaultValueExtra()
+    {
     }
 
-    protected function _setDefaultValueMain($body_html = 0) {
+    protected function _setDefaultValueMain($body_html = 0)
+    {
         parent::_setDefaultValueMain($body_html);
         $this->default_data['format_popup'] = '';
     }
@@ -35,7 +37,8 @@ class SimpleProvider extends AbstractProvider {
      *
      * @return a string
      */
-    protected function _checkConfigForm() {
+    protected function _checkConfigForm()
+    {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
 
@@ -54,7 +57,8 @@ class SimpleProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra() {
+    protected function _getConfigContainer1Extra()
+    {
     }
 
     /**
@@ -62,21 +66,23 @@ class SimpleProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra() {
-
+    protected function _getConfigContainer2Extra()
+    {
     }
 
-    protected function saveConfigExtra() {
+    protected function saveConfigExtra()
+    {
     }
 
-    public function validateFormatPopup() {
+    public function validateFormatPopup()
+    {
         $result = array('code' => 0, 'message' => 'ok');
-
         $this->validateFormatPopupLists($result);
         return $result;
     }
 
-    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems) {
+    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems)
+    {
         $result = array(
             'ticket_id' => null,
             'ticket_error_message' => null,

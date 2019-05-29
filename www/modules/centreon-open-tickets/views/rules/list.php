@@ -50,12 +50,21 @@ while ($row = $res->fetch()) {
     $elemArr[$row['rule_id']]['name'] = $row['alias'];
     $elemArr[$row['rule_id']]['status'] = $row['activate'] ? _('Enabled') : _('Disabled');
     $elemArr[$row['rule_id']]['style'] = $tdStyle;
-    $dupElements = $form->addElement('text', 'duplicateNb['.$row['rule_id'].']', null, array("id" => "duplicateNb[".$row['rule_id']."]", "size" => "3", "value" => "1"));
+    $dupElements = $form->addElement(
+        'text',
+        'duplicateNb['.$row['rule_id'].']',
+        null,
+        array("id" => "duplicateNb[".$row['rule_id']."]", "size" => "3", "value" => "1")
+    );
     $moptions = "";
     if ($row['activate']) {
-        $moptions .= "<a href='main.php?p=".$p."&o=ds&rule_id=".$row['rule_id']."&limit=".$limit."&num=".$num."'><img class='ico-14' src='img/icons/disabled.png' border='0' alt='"._("Disabled")."'></a>";
+        $moptions .= "<a href='main.php?p=" . $p . "&o=ds&rule_id=" . $row['rule_id'] . "&limit=" . $limit .
+            "&num=" . $num . "'><img class='ico-14' src='img/icons/disabled.png' border='0' alt='" .
+            _("Disabled") . "'></a>";
     } else {
-        $moptions .= "<a href='main.php?p=".$p."&o=e&rule_id=".$row['rule_id']."&limit=".$limit."&num=".$num."'><img class='ico-14' src='img/icons/enabled.png' border='0' alt='"._("Enabled")."'></a>";
+        $moptions .= "<a href='main.php?p=" . $p . "&o=e&rule_id=" . $row['rule_id'] . "&limit=" .
+            $limit . "&num=" . $num . "'><img class='ico-14' src='img/icons/enabled.png' border='0' alt='" .
+            _("Enabled")."'></a>";
     }
     $elemArr[$row['rule_id']]['dup'] = $moptions . "&nbsp;" . $dupElements->toHtml();
     if ($tdStyle == "list_one") {
@@ -70,7 +79,15 @@ while ($row = $res->fetch()) {
     $nbRule++;
 }
 
-$tpl->assign('msg', array ("addL"=>"?p=".$p."&o=a", "add"=>_("Add"), "delConfirm"=>_("Do you confirm the deletion ?"), "img" => "./modules/centreon-autodiscovery-server/images/add2.png"));
+$tpl->assign(
+    'msg',
+    array(
+        "addL" => "?p=" . $p . "&o=a",
+        "add" => _("Add"),
+        "delConfirm" => _("Do you confirm the deletion ?"),
+        "img" => "./modules/centreon-autodiscovery-server/images/add2.png"
+    )
+);
 ?>
 <script type="text/javascript">
     function setO(_i) {
@@ -81,7 +98,7 @@ $tpl->assign('msg', array ("addL"=>"?p=".$p."&o=a", "add"=>_("Add"), "delConfirm
 <?php
 $attrs1 = array(
     'onchange'=>"javascript: " .
-        "if (this.form.elements['o1'].selectedIndex == 1 && confirm('"._("Do you confirm the deletion ?")."')) {" .
+        "if (this.form.elements['o1'].selectedIndex == 1 && confirm('" . _("Do you confirm the deletion ?")."')) {" .
         "     setO(this.form.elements['o1'].value); submit();} " .
         "else if (this.form.elements['o1'].selectedIndex == 2) {" .
         "     setO(this.form.elements['o1'].value); submit();} " .
@@ -91,7 +108,19 @@ $attrs1 = array(
         "     setO(this.form.elements['o1'].value); submit();} " .
         "this.form.elements['o1'].selectedIndex = 0"
 );
-$form->addElement('select', 'o1', null, array(null => _("More actions..."), "d"=>_("Delete"), "e"=>_("Enable"), "ds"=>_("Disable"), "dp"=>_("Duplicate")), $attrs1);
+$form->addElement(
+    'select',
+    'o1',
+    null,
+    array(
+        null => _("More actions..."),
+        "d" => _("Delete"),
+        "e" => _("Enable"),
+        "ds" => _("Disable"),
+        "dp" => _("Duplicate")
+    ),
+    $attrs1
+);
 
 $attrs2 = array(
     'onchange'=>"javascript: " .
@@ -105,7 +134,19 @@ $attrs2 = array(
         "     setO(this.form.elements['o2'].value); submit();} " .
         "this.form.elements['o1'].selectedIndex = 0"
 );
-$form->addElement('select', 'o2', null, array(null => _("More actions..."), "d"=>_("Delete"), "e"=>_("Enable"), "ds"=>_("Disable"), "dp"=>_("Duplicate")), $attrs2);
+$form->addElement(
+    'select',
+    'o2',
+    null,
+    array(
+        null => _("More actions..."),
+        "d" => _("Delete"),
+        "e" => _("Enable"),
+        "ds" => _("Disable"),
+        "dp" => _("Duplicate")
+    ),
+    $attrs2
+);
 
 $o1 = $form->getElement('o1');
 $o1->setValue(null);

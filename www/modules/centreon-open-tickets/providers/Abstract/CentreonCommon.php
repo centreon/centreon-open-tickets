@@ -19,7 +19,8 @@
  * limitations under the License.
  */
 
-function smarty_function_host_get_hostgroups($params, &$smarty) {
+function smarty_function_host_get_hostgroups($params, &$smarty)
+{
     include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
     include_once __DIR__ . '/../../class/centreonDBManager.class.php';
 
@@ -40,7 +41,8 @@ function smarty_function_host_get_hostgroups($params, &$smarty) {
     $smarty->assign('host_get_hostgroups_result', $result);
 }
 
-function smarty_function_host_get_severity($params, &$smarty) {
+function smarty_function_host_get_severity($params, &$smarty)
+{
     include_once __DIR__ . '/../../centreon-open-tickets.conf.php' ;
     include_once __DIR__ . '/../../class/centreonDBManager.class.php';
 
@@ -51,15 +53,16 @@ function smarty_function_host_get_severity($params, &$smarty) {
     $db = new CentreonDBManager();
 
     $result = array();
-    $query = "SELECT
-                    hc_id, hc_name, level
-                FROM hostcategories_relation, hostcategories
-                WHERE hostcategories_relation.host_host_id = " . $params['host_id'] . "
-                AND hostcategories_relation.hostcategories_hc_id = hostcategories.hc_id
-                AND level IS NOT NULL AND hc_activate = '1'
-                ORDER BY level DESC
-                LIMIT 1";
-    $dbResult = $db->query($query);
+    $dbResult = $db->query(
+        "SELECT
+            hc_id, hc_name, level
+        FROM hostcategories_relation, hostcategories
+        WHERE hostcategories_relation.host_host_id = " . $params['host_id'] . "
+        AND hostcategories_relation.hostcategories_hc_id = hostcategories.hc_id
+        AND level IS NOT NULL AND hc_activate = '1'
+        ORDER BY level DESC
+        LIMIT 1"
+    );
     while (($row = $dbResult->fetch())) {
         $result[$row['hc_id']] = array('name' => $row['hc_name'], 'level' => $row['level']);
     }
@@ -75,7 +78,8 @@ function smarty_function_host_get_severity($params, &$smarty) {
  *      {/foreach}
  *
  */
-function smarty_function_host_get_hostcategories($params, &$smarty) {
+function smarty_function_host_get_hostcategories($params, &$smarty)
+{
     include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
     include_once __DIR__ . '/../../class/centreonDBManager.class.php';
 
@@ -96,7 +100,8 @@ function smarty_function_host_get_hostcategories($params, &$smarty) {
         $query = "SELECT htr.host_tpl_id, hcr.hostcategories_hc_id, hostcategories.hc_name FROM host
             LEFT JOIN host_template_relation htr ON host.host_id = htr.host_host_id
             LEFT JOIN hostcategories_relation hcr ON htr.host_host_id = hcr.host_host_id
-            LEFT JOIN hostcategories ON hostcategories.hc_id = hcr.hostcategories_hc_id AND hostcategories.hc_activate = '1'
+            LEFT JOIN hostcategories ON hostcategories.hc_id = hcr.hostcategories_hc_id
+            AND hostcategories.hc_activate = '1'
             WHERE host.host_id = " . $host_id . " ORDER BY `order` ASC";
         $dbResult = $db->query($query);
         while (($row = $dbResult->fetch())) {
@@ -120,7 +125,8 @@ function smarty_function_host_get_hostcategories($params, &$smarty) {
  *      {/foreach}
  *
  */
-function smarty_function_service_get_servicecategories($params, &$smarty) {
+function smarty_function_service_get_servicecategories($params, &$smarty)
+{
     include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
     include_once __DIR__ . '/../../class/centreonDBManager.class.php';
 
@@ -164,7 +170,8 @@ function smarty_function_service_get_servicecategories($params, &$smarty) {
  *      {/foreach}
  *
  */
-function smarty_function_service_get_servicegroups($params, &$smarty) {
+function smarty_function_service_get_servicegroups($params, &$smarty)
+{
     include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
     include_once __DIR__ . '/../../class/centreonDBManager.class.php';
 
@@ -177,7 +184,8 @@ function smarty_function_service_get_servicegroups($params, &$smarty) {
     $result = array();
     $service_id_tpl = $params['service_id'];
     if (isset($params['host_id'])) {
-        $query = "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias FROM servicegroup_relation sgr
+        $query = "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias
+            FROM servicegroup_relation sgr
             LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id AND sg.sg_activate = '1'
             LEFT JOIN service ON service.service_id = sgr.service_service_id
             WHERE sgr.host_host_id = " . $params['host_id'] . " AND sgr.service_service_id = " . $params['service_id'];
@@ -196,7 +204,8 @@ function smarty_function_service_get_servicegroups($params, &$smarty) {
             break;
         }
         $loop_array[$service_id_tpl] = 1;
-        $query = "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias FROM servicegroup_relation sgr
+        $query = "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias
+            FROM servicegroup_relation sgr
             LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id AND sg.sg_activate = '1'
             LEFT JOIN service ON service.service_id = sgr.service_service_id
             WHERE sgr.service_service_id = " . $service_id_tpl;
@@ -212,7 +221,8 @@ function smarty_function_service_get_servicegroups($params, &$smarty) {
     $smarty->assign('service_get_servicegroups_result', $result);
 }
 
-function smarty_function_host_get_macro_value_in_config($params, &$smarty) {
+function smarty_function_host_get_macro_value_in_config($params, &$smarty)
+{
     include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
     include_once __DIR__ . '/../../class/centreonDBManager.class.php';
 
@@ -248,13 +258,14 @@ function smarty_function_host_get_macro_value_in_config($params, &$smarty) {
             break;
         }
         $loop[$host_entry['host_id']] = 1;
-        $query = "SELECT
-                    host_tpl_id, macro.host_macro_value
-                FROM host_template_relation
-                LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id
-                AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
-                WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . " ORDER BY `order` DESC";
-        $dbResult = $db->query($query);
+        $dbResult = $db->query(
+            "SELECT
+                host_tpl_id, macro.host_macro_value
+            FROM host_template_relation
+            LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id
+            AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
+            WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . " ORDER BY `order` DESC"
+        );
         while (($row = $dbResult->fetch())) {
             $entry = array('host_id' => $row['host_tpl_id'], 'macro_value' => null);
             if (!is_null($row['host_macro_value'])) {
@@ -267,7 +278,8 @@ function smarty_function_host_get_macro_value_in_config($params, &$smarty) {
     $smarty->assign('host_get_macro_value_in_config_result', $result);
 }
 
-function smarty_function_host_get_macro_values_in_config($params, &$smarty) {
+function smarty_function_host_get_macro_values_in_config($params, &$smarty)
+{
     include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
     include_once __DIR__ . '/../../class/centreonDBManager.class.php';
 
@@ -283,16 +295,20 @@ function smarty_function_host_get_macro_values_in_config($params, &$smarty) {
     $result = array();
 
     // Get level 1
-    $query = "SELECT
-                    host_tpl_id, macro.host_macro_value
-                FROM host_template_relation
-                LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id
-                AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
-                WHERE host_template_relation.host_host_id = " . $params['host_id'] . " ORDER BY `order` ASC";
-    $dbresult1 = $db->query($query);
+    $dbresult1 = $db->query(
+        "SELECT
+            host_tpl_id, macro.host_macro_value
+        FROM host_template_relation
+        LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id
+        AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
+        WHERE host_template_relation.host_host_id = " . $params['host_id'] . " ORDER BY `order` ASC"
+    );
     while (($row_entry_level1 = $dbresult1->fetch())) {
         $loop = array();
-        $array_stack = array(array('host_id' => $row_entry_level1['host_tpl_id'], 'macro_value' => $row_entry_level1['host_macro_value']));
+        $array_stack = array(array(
+            'host_id' => $row_entry_level1['host_tpl_id'],
+            'macro_value' => $row_entry_level1['host_macro_value']
+        ));
         while (($host_entry = array_pop($array_stack))) {
             if (isset($loop[$host_entry['host_id']])) {
                 continue;
@@ -302,13 +318,14 @@ function smarty_function_host_get_macro_values_in_config($params, &$smarty) {
                 break;
             }
             $loop[$host_entry['host_id']] = 1;
-            $query = "SELECT
-                        host_tpl_id, macro.host_macro_value
-                    FROM host_template_relation
-                    LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id
-                    AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
-                    WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . " ORDER BY `order` DESC";
-            $dbResult = $db->query($query);
+            $dbResult = $db->query(
+                "SELECT
+                    host_tpl_id, macro.host_macro_value
+                FROM host_template_relation
+                LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id
+                AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
+                WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . " ORDER BY `order` DESC"
+            );
             while (($row = $dbResult->fetch())) {
                 $entry = array('host_id' => $row['host_tpl_id'], 'macro_value' => null);
                 if (!is_null($row['host_macro_value'])) {

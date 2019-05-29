@@ -19,7 +19,8 @@
  * limitations under the License.
  */
 
-class GlpiProvider extends AbstractProvider {
+class GlpiProvider extends AbstractProvider
+{
     protected $_glpi_connected = 0;
     protected $_glpi_session = null;
 
@@ -51,7 +52,8 @@ class GlpiProvider extends AbstractProvider {
         self::ARG_TITLE => 'title',
     );
 
-    function __destruct() {
+    function __destruct()
+    {
         $this->logoutGlpi();
     }
 
@@ -60,14 +62,19 @@ class GlpiProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _setDefaultValueExtra() {
+    protected function _setDefaultValueExtra()
+    {
         $this->default_data['address'] = '127.0.0.1';
         $this->default_data['path'] = '/glpi/plugins/webservices/xmlrpc.php';
         $this->default_data['https'] = 0;
         $this->default_data['timeout'] = 60;
 
         $this->default_data['clones']['mappingTicket'] = array(
-            array('Arg' => self::ARG_TITLE, 'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers/Abstract/templates/display_title.ihtml"}'),
+            array(
+                'Arg' => self::ARG_TITLE,
+                'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers' .
+                    '/Abstract/templates/display_title.ihtml"}'
+            ),
             array('Arg' => self::ARG_CONTENT, 'Value' => '{$body}'),
             array('Arg' => self::ARG_ENTITY, 'Value' => '{$select.gpli_entity.id}'),
             array('Arg' => self::ARG_CATEGORY, 'Value' => '{$select.glpi_itil_category.id}'),
@@ -78,17 +85,47 @@ class GlpiProvider extends AbstractProvider {
         );
     }
 
-    protected function _setDefaultValueMain($body_html = 0) {
+    protected function _setDefaultValueMain($body_html = 0)
+    {
         parent::_setDefaultValueMain($body_html);
 
         $this->default_data['url'] = 'http://{$address}/glpi/front/ticket.form.php?id={$ticket_id}';
 
         $this->default_data['clones']['groupList'] = array(
-            array('Id' => 'gpli_entity', 'Label' => _('Entity'), 'Type' => self::GPLI_ENTITIES_TYPE, 'Filter' => '', 'Mandatory' => ''),
-            array('Id' => 'glpi_group', 'Label' => _('Glpi group'), 'Type' => self::GPLI_GROUPS_TYPE, 'Filter' => '', 'Mandatory' => ''),
-            array('Id' => 'glpi_itil_category', 'Label' => _('Itil category'), 'Type' => self::GLPI_ITIL_CATEGORIES_TYPE, 'Filter' => '', 'Mandatory' => ''),
-            array('Id' => 'urgency', 'Label' => _('Urgency'), 'Type' => self::CUSTOM_TYPE, 'Filter' => '', 'Mandatory' => ''),
-            array('Id' => 'impact', 'Label' => _('Impact'), 'Type' => self::CUSTOM_TYPE, 'Filter' => '', 'Mandatory' => ''),
+            array(
+                'Id' => 'gpli_entity',
+                'Label' => _('Entity'),
+                'Type' => self::GPLI_ENTITIES_TYPE,
+                'Filter' => '',
+                'Mandatory' => ''
+            ),
+            array(
+                'Id' => 'glpi_group',
+                'Label' => _('Glpi group'),
+                'Type' => self::GPLI_GROUPS_TYPE,
+                'Filter' => '', 'Mandatory' => ''
+            ),
+            array(
+                'Id' => 'glpi_itil_category',
+                'Label' => _('Itil category'),
+                'Type' => self::GLPI_ITIL_CATEGORIES_TYPE,
+                'Filter' => '',
+                'Mandatory' => ''
+            ),
+            array(
+                'Id' => 'urgency',
+                'Label' => _('Urgency'),
+                'Type' => self::CUSTOM_TYPE,
+                'Filter' => '',
+                'Mandatory' => ''
+            ),
+            array(
+                'Id' => 'impact',
+                'Label' => _('Impact'),
+                'Type' => self::CUSTOM_TYPE,
+                'Filter' => '',
+                'Mandatory' => ''
+            ),
         );
         $this->default_data['clones']['customList'] = array(
             array('Id' => 'urgency', 'Value' => '1', 'Default' => ''),
@@ -109,10 +146,10 @@ class GlpiProvider extends AbstractProvider {
      *
      * @return a string
      */
-    protected function _checkConfigForm() {
+    protected function _checkConfigForm()
+    {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
-
         $this->_checkFormValue('address', "Please set 'Address' value");
         $this->_checkFormValue('timeout', "Please set 'Timeout' value");
         $this->_checkFormValue('username', "Please set 'Username' value");
@@ -133,7 +170,8 @@ class GlpiProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra() {
+    protected function _getConfigContainer1Extra()
+    {
         $tpl = $this->initSmartyTemplate('providers/Glpi/templates');
 
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
@@ -141,12 +179,18 @@ class GlpiProvider extends AbstractProvider {
         $tpl->assign("header", array("glpi" => _("Glpi")));
 
         // Form
-        $address_html = '<input size="50" name="address" type="text" value="' . $this->_getFormValue('address') . '" />';
-        $path_html = '<input size="50" name="path" type="text" value="' . $this->_getFormValue('path') . '" />';
-        $username_html = '<input size="50" name="username" type="text" value="' . $this->_getFormValue('username') . '" />';
-        $password_html = '<input size="50" name="password" type="password" value="' . $this->_getFormValue('password') . '" autocomplete="off" />';
-        $https_html = '<input type="checkbox" name="https" value="yes" ' . ($this->_getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
-        $timeout_html = '<input size="2" name="timeout" type="text" value="' . $this->_getFormValue('timeout') . '" />';
+        $address_html = '<input size="50" name="address" type="text" value="' .
+            $this->_getFormValue('address') . '" />';
+        $path_html = '<input size="50" name="path" type="text" value="' .
+            $this->_getFormValue('path') . '" />';
+        $username_html = '<input size="50" name="username" type="text" value="' .
+            $this->_getFormValue('username') . '" />';
+        $password_html = '<input size="50" name="password" type="password" value="' .
+            $this->_getFormValue('password') . '" autocomplete="off" />';
+        $https_html = '<input type="checkbox" name="https" value="yes" ' .
+            ($this->_getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
+        $timeout_html = '<input size="2" name="timeout" type="text" value="' .
+            $this->_getFormValue('timeout') . '" />';
 
         $array_form = array(
             'address' => array('label' => _("Address") . $this->_required_field, 'html' => $address_html),
@@ -159,8 +203,10 @@ class GlpiProvider extends AbstractProvider {
         );
 
         // mapping Ticket clone
-        $mappingTicketValue_html = '<input id="mappingTicketValue_#index#" name="mappingTicketValue[#index#]" size="20"  type="text" />';
-        $mappingTicketArg_html = '<select id="mappingTicketArg_#index#" name="mappingTicketArg[#index#]" type="select-one">' .
+        $mappingTicketValue_html = '<input id="mappingTicketValue_#index#" name="mappingTicketValue[#index#]" ' .
+            'size="20"  type="text" />';
+        $mappingTicketArg_html = '<select id="mappingTicketArg_#index#" name="mappingTicketArg[#index#]" ' .
+            'type="select-one">' .
         '<option value="' . self::ARG_TITLE . '">' . _('Title') . '</options>' .
         '<option value="' . self::ARG_CONTENT . '">' . _('Content') . '</options>' .
         '<option value="' . self::ARG_ENTITY . '">' . _('Entity') . '</options>' .
@@ -178,9 +224,7 @@ class GlpiProvider extends AbstractProvider {
         );
 
         $tpl->assign('form', $array_form);
-
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-
         $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
     }
 
@@ -189,35 +233,47 @@ class GlpiProvider extends AbstractProvider {
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra() {
-
+    protected function _getConfigContainer2Extra()
+    {
     }
 
-    protected function saveConfigExtra() {
+    protected function saveConfigExtra()
+    {
         $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
         $this->_save_config['simple']['path'] = $this->_submitted_config['path'];
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes') ?
-            $this->_submitted_config['https'] : '';
+        $this->_save_config['simple']['https'] = (
+            isset($this->_submitted_config['https'])
+            && $this->_submitted_config['https'] == 'yes'
+        ) ? $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
+        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted(
+            'mappingTicket',
+            array('Arg', 'Value')
+        );
     }
 
-    protected function getGroupListOptions() {
+    protected function getGroupListOptions()
+    {
         $str = '<option value="' . self::GPLI_ENTITIES_TYPE . '">Glpi entities</options>' .
         '<option value="' . self::GPLI_GROUPS_TYPE . '">Glpi groups</options>' .
         '<option value="' . self::GLPI_ITIL_CATEGORIES_TYPE . '">Glpi itil categories</options>';
         return $str;
     }
 
-    protected function assignGlpiEntities($entry, &$groups_order, &$groups) {
+    protected function assignGlpiEntities($entry, &$groups_order, &$groups)
+    {
         // no filter $entry['Filter']. preg_match used
         $code = $this->listEntitiesGlpi();
 
-        $groups[$entry['Id']] = array('label' => _($entry['Label']) .
-                                                        (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''));
+        $groups[$entry['Id']] = array(
+            'label' => _($entry['Label']) . (
+                isset($entry['Mandatory'])
+                && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+            )
+        );
         $groups_order[] = $entry['Id'];
 
         if ($code == -1) {
@@ -242,7 +298,8 @@ class GlpiProvider extends AbstractProvider {
         $groups[$entry['Id']]['values'] = $result;
     }
 
-    protected function assignGlpiGroups($entry, &$groups_order, &$groups) {
+    protected function assignGlpiGroups($entry, &$groups_order, &$groups)
+    {
         $filter = null;
         if (isset($entry['Filter']) && !is_null($entry['Filter']) && $entry['Filter'] != '') {
             $filter = $entry['Filter'];
@@ -270,7 +327,8 @@ class GlpiProvider extends AbstractProvider {
         $groups[$entry['Id']]['values'] = $result;
     }
 
-    protected function assignItilCategories($entry, &$groups_order, &$groups) {
+    protected function assignItilCategories($entry, &$groups_order, &$groups)
+    {
         $filter = null;
         if (isset($entry['Filter']) && !is_null($entry['Filter']) && $entry['Filter'] != '') {
             $filter = $entry['Filter'];
@@ -278,8 +336,9 @@ class GlpiProvider extends AbstractProvider {
         $code = $this->listItilCategoriesGlpi($filter);
 
         $groups[$entry['Id']] = array(
-            'label' => _($entry['Label']) .
-                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '')
+            'label' => _($entry['Label']) . (
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+            )
         );
         $groups_order[] = $entry['Id'];
 
@@ -298,33 +357,34 @@ class GlpiProvider extends AbstractProvider {
         $groups[$entry['Id']]['values'] = $result;
     }
 
-    protected function assignOthers($entry, &$groups_order, &$groups) {
+    protected function assignOthers($entry, &$groups_order, &$groups)
+    {
         if ($entry['Type'] == self::GPLI_ENTITIES_TYPE) {
             $this->assignGlpiEntities($entry, $groups_order, $groups);
-        } else if ($entry['Type'] == self::GPLI_GROUPS_TYPE) {
+        } elseif ($entry['Type'] == self::GPLI_GROUPS_TYPE) {
             $this->assignGlpiGroups($entry, $groups_order, $groups);
-        } else if ($entry['Type'] == self::GLPI_ITIL_CATEGORIES_TYPE) {
+        } elseif ($entry['Type'] == self::GLPI_ITIL_CATEGORIES_TYPE) {
             $this->assignItilCategories($entry, $groups_order, $groups);
         }
     }
 
-    public function validateFormatPopup() {
+    public function validateFormatPopup()
+    {
         $result = array('code' => 0, 'message' => 'ok');
-
         $this->validateFormatPopupLists($result);
-
         return $result;
     }
 
-    protected function assignSubmittedValuesSelectMore($select_input_id, $selected_id) {
+    protected function assignSubmittedValuesSelectMore($select_input_id, $selected_id)
+    {
         $session_name = null;
         foreach ($this->rule_data['clones']['groupList'] as $value) {
             if ($value['Id'] == $select_input_id) {
                 if ($value['Type'] == self::GPLI_ENTITIES_TYPE) {
                     $session_name = 'glpi_entities';
-                } else if ($value['Type'] == self::GPLI_GROUPS_TYPE) {
+                } elseif ($value['Type'] == self::GPLI_GROUPS_TYPE) {
                     $session_name = 'glpi_groups';
-                } else if ($value['Type'] == self::GLPI_ITIL_CATEGORIES_TYPE) {
+                } elseif ($value['Type'] == self::GLPI_ITIL_CATEGORIES_TYPE) {
                     $session_name = 'glpi_itil_categories';
                 }
             }
@@ -352,9 +412,19 @@ class GlpiProvider extends AbstractProvider {
         return array();
     }
 
-    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems, $extra_ticket_arguments=array()) {
-        $result = array('ticket_id' => null, 'ticket_error_message' => null,
-                        'ticket_is_ok' => 0, 'ticket_time' => time());
+    protected function doSubmit(
+        $db_storage,
+        $contact,
+        $host_problems,
+        $service_problems,
+        $extra_ticket_arguments = array()
+    ) {
+        $result = array(
+            'ticket_id' => null,
+            'ticket_error_message' => null,
+            'ticket_is_ok' => 0,
+            'ticket_time' => time()
+        );
 
         $tpl = $this->initSmartyTemplate();
 
@@ -408,11 +478,13 @@ class GlpiProvider extends AbstractProvider {
      * XML-RPC Calls
      *
      */
-    protected function setRpcError($error) {
+    protected function setRpcError($error)
+    {
         $this->rpc_error = $error;
     }
 
-    protected function requestRpc($method, $args=null) {
+    protected function requestRpc($method, $args = null)
+    {
         $array_result = array('code' => -1);
         if (is_null($args)) {
             $args = array();
@@ -459,7 +531,8 @@ class GlpiProvider extends AbstractProvider {
             return $array_result;
         }
         if (xmlrpc_is_fault($response)) {
-            $this->setRpcError("webservice '$method' error (" . $response['faultCode'] . "): " . $this->to_utf8($response['faultString']));
+            $this->setRpcError("webservice '$method' error (" . $response['faultCode'] . "): " .
+                $this->to_utf8($response['faultString']));
             return $array_result;
         }
 
@@ -468,7 +541,8 @@ class GlpiProvider extends AbstractProvider {
         return $array_result;
     }
 
-    protected function listEntitiesGlpi() {
+    protected function listEntitiesGlpi()
+    {
         if ($this->_glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
@@ -483,14 +557,18 @@ class GlpiProvider extends AbstractProvider {
         return 0;
     }
 
-    protected function listGroupsGlpi($filter=null) {
+    protected function listGroupsGlpi($filter = null)
+    {
         if ($this->_glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
             }
         }
 
-        $this->glpi_call_response = $this->requestRpc('glpi.listGroups', array('start' => 0, 'limit' => 100, 'name' => $filter));
+        $this->glpi_call_response = $this->requestRpc(
+            'glpi.listGroups',
+            array('start' => 0, 'limit' => 100, 'name' => $filter)
+        );
         if ($this->glpi_call_response['code'] == -1) {
             return -1;
         }
@@ -498,7 +576,8 @@ class GlpiProvider extends AbstractProvider {
         return 0;
     }
 
-    protected function listItilCategoriesGlpi($filter=null) {
+    protected function listItilCategoriesGlpi($filter = null)
+    {
         if ($this->_glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
@@ -522,7 +601,8 @@ class GlpiProvider extends AbstractProvider {
         return 0;
     }
 
-    protected function createTicketGlpi($arguments) {
+    protected function createTicketGlpi($arguments)
+    {
         if ($this->_glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
@@ -537,7 +617,8 @@ class GlpiProvider extends AbstractProvider {
         return 0;
     }
 
-    protected function listObjects($arguments) {
+    protected function listObjects($arguments)
+    {
         if ($this->_glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
@@ -552,7 +633,8 @@ class GlpiProvider extends AbstractProvider {
         return 0;
     }
 
-    protected function logoutGlpi() {
+    protected function logoutGlpi()
+    {
         if ($this->_glpi_connected == 0) {
             return 0;
         }
@@ -564,7 +646,8 @@ class GlpiProvider extends AbstractProvider {
         return 0;
     }
 
-    protected function loginGlpi() {
+    protected function loginGlpi()
+    {
         if ($this->_glpi_connected == 1) {
             return 0;
         }

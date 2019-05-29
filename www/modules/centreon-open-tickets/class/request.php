@@ -38,7 +38,8 @@ class Centreon_OpenTickets_Request
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->_postVar = array();
         $this->_getVar = array();
 
@@ -61,7 +62,8 @@ class Centreon_OpenTickets_Request
      * @param string $index
      * @return mixed
      */
-    public function getParam($index) {
+    public function getParam($index)
+    {
         if (isset($this->_getVar[$index])) {
             return $this->_getVar[$index];
         }
