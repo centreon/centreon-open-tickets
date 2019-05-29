@@ -412,8 +412,8 @@ Output: {$service.output|substr:0:1024}
     }
 
     protected function _checkFormInteger($uniq_id, $error_msg) {
-        if (isset($this->_submitted_config[$uniq_id]) 
-            && $this->_submitted_config[$uniq_id] != '' 
+        if (isset($this->_submitted_config[$uniq_id])
+            && $this->_submitted_config[$uniq_id] != ''
             && preg_match('/[^0-9]/', $this->_submitted_config[$uniq_id])
         ) {
             $this->_check_error_message .= $this->_check_error_message_append . $error_msg;
@@ -654,7 +654,7 @@ Output: {$service.output|substr:0:1024}
         $this->_save_config['clones']['bodyList'] = $this->_getCloneSubmitted('bodyList', array('Name', 'Value', 'Default'));
         $this->_save_config['clones']['chainruleList'] = $this->_getCloneSubmitted('chainruleList', array('Provider'));
         $this->_save_config['clones']['commandList'] = $this->_getCloneSubmitted('commandList', array('Cmd'));
-        
+
         $this->_save_config['simple']['proxy_address'] = isset($this->_submitted_config['proxy_address']) ? $this->_submitted_config['proxy_address'] : '';
         $this->_save_config['simple']['proxy_port'] = isset($this->_submitted_config['proxy_port']) ? $this->_submitted_config['proxy_port'] : '';
         $this->_save_config['simple']['proxy_username'] = isset($this->_submitted_config['proxy_username']) ? $this->_submitted_config['proxy_username'] : '';
@@ -744,8 +744,8 @@ Output: {$service.output|substr:0:1024}
         $default = '';
         if (isset($this->rule_data['clones']['customList'])) {
             foreach ($this->rule_data['clones']['customList'] as $values) {
-                if (isset($entry['Id']) && $entry['Id'] != '' 
-                    && isset($values['Id']) && $values['Id'] != '' 
+                if (isset($entry['Id']) && $entry['Id'] != ''
+                    && isset($values['Id']) && $values['Id'] != ''
                     && $values['Id'] == $entry['Id']
                 ) {
                     $result[] = $values['Value'];
@@ -770,7 +770,7 @@ Output: {$service.output|substr:0:1024}
         $default = '';
         if (isset($this->rule_data['clones']['bodyList'])) {
             foreach ($this->rule_data['clones']['bodyList'] as $values) {
-                if (isset($entry['Id']) && $entry['Id'] != '' 
+                if (isset($entry['Id']) && $entry['Id'] != ''
                     && isset($values['Name']) && $values['Name'] != ''
                 ) {
                     $result[] = $values['Name'];
@@ -838,7 +838,7 @@ Output: {$service.output|substr:0:1024}
     protected function validateFormatPopupLists(&$result) {
         if (isset($this->rule_data['clones']['groupList'])) {
             foreach ($this->rule_data['clones']['groupList'] as $values) {
-                if ($values['Mandatory'] == 1 && isset($this->_submitted_config['select_' . $values['Id']]) 
+                if ($values['Mandatory'] == 1 && isset($this->_submitted_config['select_' . $values['Id']])
                     && $this->_submitted_config['select_' . $values['Id']] == '-1'
                 ) {
                     $result['code'] = 1;
@@ -849,8 +849,8 @@ Output: {$service.output|substr:0:1024}
     }
 
     public function getFormatPopup($args) {
-        if (!isset($this->rule_data['format_popup']) 
-            || is_null($this->rule_data['format_popup']) 
+        if (!isset($this->rule_data['format_popup'])
+            || is_null($this->rule_data['format_popup'])
             || $this->rule_data['format_popup']  == ''
         ) {
             return null;
@@ -906,7 +906,7 @@ Output: {$service.output|substr:0:1024}
         if (isset($this->rule_data['clones']['groupList'])) {
             foreach ($this->rule_data['clones']['groupList'] as $values) {
                 // Maybe an error to get list
-                if ($values['Type'] == self::BODY_TYPE 
+                if ($values['Type'] == self::BODY_TYPE
                     || !isset($this->_submitted_config['select_' . $values['Id']])
                 ) {
                     continue;
@@ -984,8 +984,8 @@ Output: {$service.output|substr:0:1024}
     }
 
     protected function setConfirmMessage($host_problems, $service_problems, $submit_result) {
-        if (!isset($this->rule_data['message_confirm']) 
-            || is_null($this->rule_data['message_confirm']) 
+        if (!isset($this->rule_data['message_confirm'])
+            || is_null($this->rule_data['message_confirm'])
             || $this->rule_data['message_confirm']  == ''
         ) {
             return null;
@@ -1107,12 +1107,12 @@ Output: {$service.output|substr:0:1024}
 
     protected function saveHistory($db_storage, &$result, $extra_args=array()) {
         $default_values = array(
-            'contact' => '', 
-            'host_problems' => array(), 
+            'contact' => '',
+            'host_problems' => array(),
             'service_problems' => array(),
-            'ticket_value' => null, 
-            'subject' => null, 
-            'data_type' => null, 
+            'ticket_value' => null,
+            'subject' => null,
+            'data_type' => null,
             'data' => null,
             'no_create_ticket_id' => false
         );
@@ -1175,7 +1175,7 @@ Output: {$service.output|substr:0:1024}
             $tickets[$k]['status'] = 1;
         }
     }
-    
+
     /**
     * Add a value to the cache
     *
@@ -1190,14 +1190,14 @@ Output: {$service.output|substr:0:1024}
             'created' => time()
         );
     }
-    
+
     /**
      * Get a cache value
      *
      * @param string $key The cache key name
      * @return mixed The cache value or null if not found or expired
      */
-    protected function getCache($key) {        
+    protected function getCache($key) {
         if (!isset($_SESSION['ot_cache_' . $this->_rule_id][$key])) {
             return null;
         }
@@ -1213,12 +1213,12 @@ Output: {$service.output|substr:0:1024}
         }
         return $_SESSION['ot_cache_' . $this->_rule_id][$key]['value'];
     }
-    
+
     static protected function setProxy(&$ch, $info) {
         if (is_null($info['proxy_address']) || !isset($info['proxy_address']) || $info['proxy_address'] == '') {
             return 1;
         }
-        
+
         curl_setopt($ch, CURLOPT_PROXY, $info['proxy_address']);
         if (!is_null($info['proxy_port']) && isset($info['proxy_port']) && $info['proxy_port'] != '') {
             curl_setopt($ch, CURLOPT_PROXYPORT, $info['proxy_port']);
@@ -1226,7 +1226,7 @@ Output: {$service.output|substr:0:1024}
         if (!is_null($info['proxy_username']) && isset($info['proxy_username']) && $info['proxy_username'] != '') {
             curl_setopt($ch, CURLOPT_PROXYUSERPWD, $info['proxy_username'] . ':' . $info['proxy_password']);
         }
-        
+
         return 0;
     }
 }

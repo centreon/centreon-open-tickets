@@ -2,15 +2,15 @@
 /*
  * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
- * Centreon is a full-fledged industry-strength solution that meets 
- * the needs in IT infrastructure and application monitoring for 
+ * Centreon is a full-fledged industry-strength solution that meets
+ * the needs in IT infrastructure and application monitoring for
  * service performance.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0  
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,*
@@ -41,7 +41,7 @@ foreach ($selected_values as $value) {
     $str = explode(';', $value);
     $selected_str .= $selected_str_append . 'services.host_id = ' . $str[0] . ' AND services.service_id = ' . $str[1];
     $selected_str_append = ' OR ';
-    
+
     if (!isset($hosts_done[$str[0]])) {
         $hosts_selected_str .= $hosts_selected_str_append . $str[0];
         $hosts_selected_str_append = ', ';
@@ -52,7 +52,7 @@ foreach ($selected_values as $value) {
 $query = "(SELECT DISTINCT services.description, hosts.name as host_name, hosts.instance_id FROM services, hosts";
 $query .= " WHERE (" . $selected_str . ') AND services.host_id = hosts.host_id';
 if (!$centreon_bg->is_admin) {
-    $query .= " AND EXISTS(SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (" . $centreon_bg->grouplistStr . ") AND hosts.host_id = centreon_acl.host_id 
+    $query .= " AND EXISTS(SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (" . $centreon_bg->grouplistStr . ") AND hosts.host_id = centreon_acl.host_id
     AND services.service_id = centreon_acl.service_id)";
 }
 $query .= ") UNION ALL (";
@@ -92,7 +92,7 @@ if (isset($get_information['form']['notify'])) {
     $notify = 1;
 }
 
-try {   
+try {
     #fwrite($fp, print_r($problems, true) . "===\n");
     require_once $centreon_path . 'www/class/centreonExternalCommand.class.php';
     $oreon = $_SESSION['centreon'];
@@ -103,21 +103,21 @@ try {
     }
 
     $error_msg = array();
-      
-    foreach ($problems as $row) {        
+
+    foreach ($problems as $row) {
         if (is_null($row['description']) || $row['description'] == '') {
             $command = "ACKNOWLEDGE_HOST_PROBLEM;%s;%s;%s;%s;%s;%s";
-            call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command, 
+            call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command,
                 $row['host_name'], $sticky, $notify, $persistent, $get_information['form']['author'], $get_information['form']['comment']), $row['instance_id']));
             continue;
         }
 
         $command = "ACKNOWLEDGE_SVC_PROBLEM;%s;%s;%s;%s;%s;%s;%s";
-        call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command, 
+        call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command,
             $row['host_name'], $row['description'], $sticky, $notify, $persistent, $get_information['form']['author'], $get_information['form']['comment']), $row['instance_id']));
-       
+
     }
-    
+
     $external_cmd->write();
 } catch (Exception $e) {
     $resultat['code'] = 1;

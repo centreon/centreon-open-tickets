@@ -2,15 +2,15 @@
 /*
  * Copyright 2015-2019 Centreon (http://www.centreon.com/)
  *
- * Centreon is a full-fledged industry-strength solution that meets 
- * the needs in IT infrastructure and application monitoring for 
+ * Centreon is a full-fledged industry-strength solution that meets
+ * the needs in IT infrastructure and application monitoring for
  * service performance.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0  
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,*
@@ -128,7 +128,7 @@ $query = "SELECT SQL_CALC_FOUND_ROWS h.host_id,
         h.action_url as h_action_url,
         h.notes_url as h_notes_url,
         s.action_url as s_action_url,
-        s.notes_url as s_notes_url, 
+        s.notes_url as s_notes_url,
         cv2.value AS criticality_id,
         cv.value AS criticality_level
 ";
@@ -207,14 +207,14 @@ if (isset($preferences['state_type_filter']) && $preferences['state_type_filter'
 }
 
 if (isset($preferences['hostgroup']) && $preferences['hostgroup']) {
-    $query = CentreonUtils::conditionBuilder($query, 
+    $query = CentreonUtils::conditionBuilder($query,
     " s.host_id IN (
       SELECT host_host_id
       FROM ".$conf_centreon['db'].".hostgroup_relation
       WHERE hostgroup_hg_id = ".$dbb->escape($preferences['hostgroup']).")");
 }
 if (isset($preferences['servicegroup']) && $preferences['servicegroup']) {
-    $query = CentreonUtils::conditionBuilder($query, 
+    $query = CentreonUtils::conditionBuilder($query,
     " s.service_id IN (SELECT service_service_id
       FROM ".$conf_centreon['db'].".servicegroup_relation
       WHERE servicegroup_sg_id = ".$dbb->escape($preferences['servicegroup'])."
@@ -224,7 +224,7 @@ if (isset($preferences['servicegroup']) && $preferences['servicegroup']) {
       WHERE hsr.hostgroup_hg_id = sgr.hostgroup_hg_id
       AND sgr.servicegroup_sg_id = ".$dbb->escape($preferences['servicegroup']).") ");
 }
-if (isset($preferences["display_severities"]) && $preferences["display_severities"] 
+if (isset($preferences["display_severities"]) && $preferences["display_severities"]
     && isset($preferences['criticality_filter']) && $preferences['criticality_filter'] != "") {
   $tab = split(",", $preferences['criticality_filter']);
   $labels = "";
@@ -243,7 +243,7 @@ if (isset($preferences["display_severities"]) && $preferences["display_severitie
     }
     $idC .= $d1['sc_id'];
   }
-  $query .= " AND cv2.`value` IN ($idC) "; 
+  $query .= " AND cv2.`value` IN ($idC) ";
 }
 if (!$centreon->user->admin) {
     $pearDB = $db;
@@ -290,11 +290,11 @@ while ($row = $res->fetch()) {
             $value = $svcObj->replaceMacroInString($service_id, $value);
         } elseif ($key == "criticality_id" && $value != '') {
           $critData = $criticality->getData($row["criticality_id"], 1);
-          $value = $critData["hc_name"];        
+          $value = $critData["hc_name"];
         }
         $data[$row['host_id']."_".$row['service_id']][$key] = $value;
     }
-   
+
     if (isset($preferences['display_last_comment']) && $preferences['display_last_comment']) {
         $res2 = $dbb->query('SELECT data FROM comments where host_id = ' . $row['host_id'] . ' AND service_id = ' . $row['service_id'] . ' ORDER BY entry_time DESC LIMIT 1');
         if ($row2 = $res2->fetch()) {

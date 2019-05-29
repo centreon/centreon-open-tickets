@@ -2,15 +2,15 @@
 /*
  * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
- * Centreon is a full-fledged industry-strength solution that meets 
- * the needs in IT infrastructure and application monitoring for 
+ * Centreon is a full-fledged industry-strength solution that meets
+ * the needs in IT infrastructure and application monitoring for
  * service performance.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0  
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,*
@@ -68,7 +68,7 @@ foreach ($selected_values as $value) {
     $str = explode(';', $value);
     $selected_str .= $selected_str_append . 'services.host_id = ' . $str[0] . ' AND services.service_id = ' . $str[1];
     $selected_str_append = ' OR ';
-    
+
     if (!isset($hosts_done[$str[0]])) {
         $hosts_selected_str .= $hosts_selected_str_append . $str[0];
         $hosts_selected_str_append = ', ';
@@ -79,7 +79,7 @@ foreach ($selected_values as $value) {
 $query = "(SELECT DISTINCT services.description, hosts.name as host_name, hosts.instance_id, mot.ticket_value, mot.timestamp FROM services, hosts, mod_open_tickets_link as motl, mod_open_tickets as mot";
 $query .= " WHERE (" . $selected_str . ') AND services.host_id = hosts.host_id';
 if (!$centreon_bg->is_admin) {
-    $query .= " AND EXISTS(SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (" . $centreon_bg->grouplistStr . ") AND hosts.host_id = centreon_acl.host_id 
+    $query .= " AND EXISTS(SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (" . $centreon_bg->grouplistStr . ") AND hosts.host_id = centreon_acl.host_id
     AND services.service_id = centreon_acl.service_id)";
 }
 $query .= " AND motl.host_id = hosts.host_id AND motl.service_id = services.service_id AND motl.ticket_id = mot.ticket_id AND mot.timestamp > services.last_hard_state_change";
@@ -124,18 +124,18 @@ try {
 
     $removed_tickets = array();
     $error_msg = array();
-      
+
     foreach ($problems as $row) {
         # an error in ticket close
         if (isset($tickets[$row['ticket_value']]) && $tickets[$row['ticket_value']]['status'] == -1) {
             $error_msg[] = $tickets[$row['ticket_value']]['msg_error'];
             # We close in centreon if ContinueOnError is ok
-            if ($centreon_provider->doCloseTicket() && 
+            if ($centreon_provider->doCloseTicket() &&
                 $centreon_provider->doCloseTicketContinueOnError() == 0) {
                 continue;
             }
         }
-        
+
         # ticket is really closed
         if ($tickets[$row['ticket_value']]['status'] == 2 && !isset($removed_tickets[$row['ticket_value']])) {
             $removed_tickets[$row['ticket_value']] = 1;
@@ -155,7 +155,7 @@ try {
             call_user_func_array(array($external_cmd, $method_external_name), array(sprintf($command, $row['host_name'], $row['description']), $row['instance_id']));
         }
     }
-    
+
     $external_cmd->write();
 } catch (Exception $e) {
     $resultat['code'] = 1;

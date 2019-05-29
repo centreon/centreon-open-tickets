@@ -21,7 +21,7 @@
 
 class ServiceNowProvider extends AbstractProvider {
     protected $_proxy_enabled = 1;
-    
+
     const SERVICENOW_LIST_CATEGORY = 20;
     const SERVICENOW_LIST_SUBCATEGORY = 21;
     const SERVICENOW_LIST_IMPACT = 22;
@@ -29,7 +29,7 @@ class ServiceNowProvider extends AbstractProvider {
     const SERVICENOW_LIST_ASSIGNMENT_GROUP = 24;
     const SERVICENOW_LIST_ASSIGNED_TO = 25;
     const SERVICENOW_LIST_SEVERITY = 26;
-    
+
     const ARG_SHORT_DESCRIPTION = 1;
     const ARG_COMMENTS = 2;
     const ARG_IMPACT = 3;
@@ -39,7 +39,7 @@ class ServiceNowProvider extends AbstractProvider {
     const ARG_ASSIGNED_TO = 7;
     const ARG_ASSIGNMENT_GROUP = 8;
     const ARG_SEVERITY = 9;
-    
+
     protected $_internal_arg_name = array(
         self::ARG_SHORT_DESCRIPTION => 'ShortDescription',
         self::ARG_COMMENTS => 'Comments',
@@ -56,7 +56,7 @@ class ServiceNowProvider extends AbstractProvider {
     * Set the default extra data
     */
     protected function _setDefaultValueExtra() {
-        
+
         $this->default_data['clones']['mappingTicket'] = array(
             array('Arg' => self::ARG_SHORT_DESCRIPTION, 'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers/Abstract/templates/display_title.ihtml"}'),
             array('Arg' => self::ARG_COMMENTS, 'Value' => '{$body}'),
@@ -115,20 +115,20 @@ class ServiceNowProvider extends AbstractProvider {
     */
     protected function _getConfigContainer1Extra() {
         $tpl = $this->initSmartyTemplate('providers/ServiceNow/templates');
-        
+
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("servicenow" => _("Service Now")));
-        
+
         $tpl->assign('webServiceUrl', './api/internal.php');
-        
+
         // Form
         $instance_name_html = '<input size="50" name="instance_name" type="text" value="' . $this->_getFormValue('instance_name') . '" />';
         $client_id_html = '<input size="50" name="client_id" type="text" value="' . $this->_getFormValue('client_id') . '" />';
         $client_secret_html = '<input size="50" name="client_secret" type="password" value="' . $this->_getFormValue('client_secret') . '" autocomplete="off" />';
         $username_html = '<input size="50" name="username" type="text" value="' . $this->_getFormValue('username') . '" />';
         $password_html = '<input size="50" name="password" type="password" value="' . $this->_getFormValue('password') . '" autocomplete="off" />';
-    
+
         $array_form = array(
             'instance_name' => array('label' => _("Instance name") . $this->_required_field, 'html' => $instance_name_html),
             'client_id' => array('label' => _("OAuth Client ID") . $this->_required_field, 'html' => $client_id_html),
@@ -137,7 +137,7 @@ class ServiceNowProvider extends AbstractProvider {
             'password' => array('label' => _("OAuth password") . $this->_required_field, 'html' => $password_html),
             'mappingticket' => array('label' => _("Mapping ticket arguments")),
         );
-        
+
         // mapping Ticket clone
         $mappingTicketValue_html = '<input id="mappingTicketValue_#index#" name="mappingTicketValue[#index#]" size="20"  type="text" />';
         $mappingTicketArg_html = '<select id="mappingTicketArg_#index#" name="mappingTicketArg[#index#]" type="select-one">' .
@@ -155,11 +155,11 @@ class ServiceNowProvider extends AbstractProvider {
             array('label' => _("Argument"), 'html' => $mappingTicketArg_html),
             array('label' => _("Value"), 'html' => $mappingTicketValue_html),
         );
-        
+
         $tpl->assign('form', $array_form);
-        
+
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        
+
         $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
     }
 
@@ -174,7 +174,7 @@ class ServiceNowProvider extends AbstractProvider {
         $this->_save_config['simple']['client_secret'] = $this->_submitted_config['client_secret'];
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        
+
         $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
     }
 
@@ -194,12 +194,12 @@ class ServiceNowProvider extends AbstractProvider {
 
         return $str;
     }
-    
+
     protected function assignOtherServiceNow($entry, $method, &$groups_order, &$groups) {
-        $groups[$entry['Id']] = array('label' => _($entry['Label']) . 
+        $groups[$entry['Id']] = array('label' => _($entry['Label']) .
                                      (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''));
         $groups_order[] = $entry['Id'];
-                
+
         try {
             $listValues = $this->getCache($entry['Id']);
             if (is_null($listValues)) {
@@ -211,8 +211,8 @@ class ServiceNowProvider extends AbstractProvider {
             $groups[$entry['Id']]['msg_error'] = $e->getMessage();;
             return 0;
         }
-        
-        $groups[$entry['Id']]['values'] = $listValues;        
+
+        $groups[$entry['Id']]['values'] = $listValues;
         return $listValues;
     }
 
@@ -253,7 +253,7 @@ class ServiceNowProvider extends AbstractProvider {
     protected function doSubmit($db_storage, $contact, $host_problems, $service_problems) {
         $result = array('ticket_id' => null, 'ticket_error_message' => null,
             'ticket_is_ok' => 0, 'ticket_time' => time());
-            
+
         $tpl = $this->initSmartyTemplate();
 
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
@@ -268,11 +268,11 @@ class ServiceNowProvider extends AbstractProvider {
             foreach ($this->rule_data['clones']['mappingTicket'] as $value) {
                 $tpl->assign('string', $value['Value']);
                 $result_str = $tpl->fetch('eval.ihtml');
-                
+
                 if ($result_str == '') {
                     $result_str = null;
                 }
-                
+
                 $ticket_arguments[$this->_internal_arg_name[$value['Arg']]] = $result_str;
             }
         }
@@ -285,23 +285,23 @@ class ServiceNowProvider extends AbstractProvider {
         } catch (\Exception $e) {
             $result['ticket_error_message'] = 'Error during create ServiceNow ticket';
         }
-        
+
         $this->saveHistory(
-            $db_storage, 
-            $result, 
+            $db_storage,
+            $result,
             array(
-                'contact' => $contact, 
-                'host_problems' => $host_problems, 
-                'service_problems' => $service_problems, 
-                'ticket_value' => $resultInfo['sysTicketId'], 
+                'contact' => $contact,
+                'host_problems' => $host_problems,
+                'service_problems' => $service_problems,
+                'ticket_value' => $resultInfo['sysTicketId'],
                 'subject' => $ticket_arguments[
                     $this->_internal_arg_name[self::ARG_SHORT_DESCRIPTION]
-                ], 
-                'data_type' => self::DATA_TYPE_JSON, 
+                ],
+                'data_type' => self::DATA_TYPE_JSON,
                 'data' => json_encode($data)
             )
         );
-        
+
         return $result;
     }
 
@@ -367,7 +367,7 @@ class ServiceNowProvider extends AbstractProvider {
      */
     static public function test($info) {
         /* Test arguments */
-        if (!isset($info['instance']) 
+        if (!isset($info['instance'])
             || !isset($info['clientId'])
             || !isset($info['clientSecret'])
             || !isset($info['username'])
@@ -416,7 +416,7 @@ class ServiceNowProvider extends AbstractProvider {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         self::setProxy(
-            $ch, 
+            $ch,
             array(
                 'proxy_address' => $this->_getFormValue('proxy_address'),
                 'proxy_port' => $this->_getFormValue('proxy_port'),
@@ -424,7 +424,7 @@ class ServiceNowProvider extends AbstractProvider {
                 'proxy_password' => $this->_getFormValue('proxy_password'),
             )
         );
-        
+
         $returnJson = curl_exec($ch);
         if ($returnJson === false) {
             throw new \Exception(curl_error($ch));
@@ -456,7 +456,7 @@ class ServiceNowProvider extends AbstractProvider {
                     'password' => $this->_getFormValue('password'), 'proxy_address' => $this->_getFormValue('proxy_address'),
                     'proxy_port' => $this->_getFormValue('proxy_port'), 'proxy_username' => $this->_getFormValue('proxy_username'),
                     'proxy_password' => $this->_getFormValue('proxy_password')
-                )                
+                )
             );
             $accessToken = $tokens['accessToken'];
             $this->setCache('accessToken', $tokens['accessToken'], 1600);
@@ -485,8 +485,8 @@ class ServiceNowProvider extends AbstractProvider {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt(
-            $ch, 
-            CURLOPT_HTTPHEADER, 
+            $ch,
+            CURLOPT_HTTPHEADER,
             array(
                 'Accept: application/json',
                 'Content-Type: application/json',
@@ -494,7 +494,7 @@ class ServiceNowProvider extends AbstractProvider {
             )
         );
         self::setProxy(
-            $ch, 
+            $ch,
             array(
                 'proxy_address' => $this->_getFormValue('proxy_address'),
                 'proxy_port' => $this->_getFormValue('proxy_port'),
@@ -523,7 +523,7 @@ class ServiceNowProvider extends AbstractProvider {
 
         return json_decode($returnJson, true);
     }
-    
+
     /**
      * Get the list of user from ServiceNow for Assigned to
      *
@@ -598,7 +598,7 @@ class ServiceNowProvider extends AbstractProvider {
                 }
             }
         }
-        
+
         return $selected;
     }
 
@@ -612,7 +612,7 @@ class ServiceNowProvider extends AbstractProvider {
     protected function getListUrgency($params, $accessToken) {
         $uri = '/api/now/table/sys_choice?sysparm_fields=value,label,inactive&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHurgency';
         $result = $this->runHttpRequest($uri, $accessToken);
-        
+
         $selected = array();
         foreach ($result['result'] as $entry) {
             if ($entry['inactive'] === 'false') {
@@ -624,10 +624,10 @@ class ServiceNowProvider extends AbstractProvider {
                 }
             }
         }
-        
+
         return $selected;
     }
-    
+
     /**
      * Getting the list of severity from ServiceNow
      *
@@ -638,7 +638,7 @@ class ServiceNowProvider extends AbstractProvider {
     protected function getListSeverity($params, $accessToken) {
         $uri = '/api/now/table/sys_choice?sysparm_fields=value,label,inactive&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHseverity';
         $result = $this->runHttpRequest($uri, $accessToken);
-        
+
         $selected = array();
         foreach ($result['result'] as $entry) {
             if ($entry['inactive'] === 'false') {
@@ -650,7 +650,7 @@ class ServiceNowProvider extends AbstractProvider {
                 }
             }
         }
-        
+
         return $selected;
     }
 
@@ -676,7 +676,7 @@ class ServiceNowProvider extends AbstractProvider {
                 }
             }
         }
-        
+
         return $selected;
     }
 
@@ -702,7 +702,7 @@ class ServiceNowProvider extends AbstractProvider {
                 }
             }
         }
-        
+
         return $selected;
     }
 

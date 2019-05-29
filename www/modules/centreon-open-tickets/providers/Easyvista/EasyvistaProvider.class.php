@@ -2,15 +2,15 @@
 /*
  * Copyright 2017-2019 Centreon (http://www.centreon.com/)
  *
- * Centreon is a full-fledged industry-strength solution that meets 
- * the needs in IT infrastructure and application monitoring for 
+ * Centreon is a full-fledged industry-strength solution that meets
+ * the needs in IT infrastructure and application monitoring for
  * service performance.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0  
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,*
@@ -21,8 +21,8 @@
 
 class EasyvistaProvider extends AbstractProvider {
     protected $_attach_files = 1;
-    
-    const ARG_ACCOUNT = 1;    
+
+    const ARG_ACCOUNT = 1;
     const ARG_CATALOG_GUID = 2;
     const ARG_CATALOG_CODE = 3;
     const ARG_ASSET_ID = 4;
@@ -50,14 +50,14 @@ class EasyvistaProvider extends AbstractProvider {
     const ARG_CI_ASSET_TAG = 26;
     const ARG_CI_NAME = 27;
     const ARG_SUBMIT_DATE = 28;
-    
+
     protected $_internal_arg_name = array(
         self::ARG_ACCOUNT => array('formid' => 'Account', 'soapname' => 'Account'),
         self::ARG_CATALOG_GUID => array('formid' => 'CatalogGUID', 'soapname' => 'Catalog_GUID'),
         self::ARG_CATALOG_CODE => array('formid' => 'CatalogCode', 'soapname' => 'Catalog_Code'),
         self::ARG_ASSET_ID => array('formid' => 'AssetID', 'soapname' => 'AssetID'),
         self::ARG_ASSET_TAG => array('formid' => 'AssetTag', 'soapname' => 'AssetTag'),
-        self::ARG_ASSET_NAME => array('formid' => 'AssetName', 'soapname' => 'ASSET_NAME'),        
+        self::ARG_ASSET_NAME => array('formid' => 'AssetName', 'soapname' => 'ASSET_NAME'),
         self::ARG_URGENCY_ID => array('formid' => 'UrgencyId', 'soapname' => 'Urgency_ID'),
         self::ARG_SEVERITY_ID => array('formid' => 'SeverityId', 'soapname' => 'Severity_ID'),
         self::ARG_EXTERNAL_REFERENCE => array('formid' => 'ExternalReference', 'soapname' => 'External_reference'),
@@ -84,9 +84,9 @@ class EasyvistaProvider extends AbstractProvider {
 
     function __destruct() {
     }
-    
+
     /**
-     * Set default extra value 
+     * Set default extra value
      *
      * @return void
      */
@@ -95,20 +95,20 @@ class EasyvistaProvider extends AbstractProvider {
         $this->default_data['wspath'] = '/WebService/SmoBridge.php';
         $this->default_data['https'] = 0;
         $this->default_data['timeout'] = 60;
-        
+
         $this->default_data['clones']['mappingTicket'] = array(
             array('Arg' => self::ARG_ACCOUNT, 'Value' => 'Account name'),
             array('Arg' => self::ARG_DESCRIPTION, 'Value' => '{$body}'),
             array('Arg' => self::ARG_CATALOG_GUID, 'Value' => 'Catalog_GUID'),
         );
     }
-    
+
     protected function _setDefaultValueMain($body_html = 0) {
         parent::_setDefaultValueMain($body_html);
-        
-        $this->default_data['url'] = 'http://{$address}/TicketNumber={$ticket_id}';        
+
+        $this->default_data['url'] = 'http://{$address}/TicketNumber={$ticket_id}';
     }
-    
+
     /**
      * Check form
      *
@@ -117,7 +117,7 @@ class EasyvistaProvider extends AbstractProvider {
     protected function _checkConfigForm() {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
-        
+
         $this->_checkFormValue('address', "Please set 'Address' value");
         $this->_checkFormValue('wspath', "Please set 'Webservice Path' value");
         $this->_checkFormValue('timeout', "Please set 'Timeout' value");
@@ -126,14 +126,14 @@ class EasyvistaProvider extends AbstractProvider {
         $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
         $this->_checkFormInteger('timeout', "'Timeout' must be a number");
         $this->_checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
-        
+
         $this->_checkLists();
-        
+
         if ($this->_check_error_message != '') {
             throw new Exception($this->_check_error_message);
         }
     }
-    
+
     /**
      * Build the specifc config: from, to, subject, body, headers
      *
@@ -141,11 +141,11 @@ class EasyvistaProvider extends AbstractProvider {
      */
     protected function _getConfigContainer1Extra() {
         $tpl = $this->initSmartyTemplate('providers/Easyvista/templates');
-        
+
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("easyvista" => _("Easyvista")));
-        
+
         // Form
         $address_html = '<input size="50" name="address" type="text" value="' . $this->_getFormValue('address') . '" />';
         $wspath_html = '<input size="50" name="wspath" type="text" value="' . $this->_getFormValue('wspath') . '" />';
@@ -163,7 +163,7 @@ class EasyvistaProvider extends AbstractProvider {
             'timeout' => array('label' => _("Timeout"), 'html' => $timeout_html),
             'mappingticket' => array('label' => _("Mapping ticket arguments")),
         );
-        
+
         // mapping Ticket clone
         $mappingTicketValue_html = '<input id="mappingTicketValue_#index#" name="mappingTicketValue[#index#]" size="20"  type="text" />';
         $mappingTicketArg_html = '<select id="mappingTicketArg_#index#" name="mappingTicketArg[#index#]" type="select-one">' .
@@ -200,14 +200,14 @@ class EasyvistaProvider extends AbstractProvider {
             array('label' => _("Argument"), 'html' => $mappingTicketArg_html),
             array('label' => _("Value"), 'html' => $mappingTicketValue_html),
         );
-        
+
         $tpl->assign('form', $array_form);
-        
+
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        
+
         $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
     }
-    
+
     /**
      * Build the specific advanced config: -
      *
@@ -215,20 +215,20 @@ class EasyvistaProvider extends AbstractProvider {
      */
     protected function _getConfigContainer2Extra() {
         $tpl = $this->initSmartyTemplate('providers/Easyvista/templates');
-        
+
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("easyvista" => _("Easyvista")));
-        
+
         $updatefields_html = '<input size="50" name="ez_updatefields" type="text" value="' . $this->_getFormValue('ez_updatefields') . '" />';
         $array_form = array(
             'ez_updatefields' => array('label' => _("Update fields"), 'html' => $updatefields_html),
         );
-        
+
         $tpl->assign('form', $array_form);
         $this->_config['container2_html'] .= $tpl->fetch('conf_container2extra.ihtml');
     }
-    
+
     protected function saveConfigExtra() {
         $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
         $this->_save_config['simple']['wspath'] = $this->_submitted_config['wspath'];
@@ -239,22 +239,22 @@ class EasyvistaProvider extends AbstractProvider {
         ) ? $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
         $this->_save_config['simple']['ez_updatefields'] = $this->_submitted_config['ez_updatefields'];
-        
+
         $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
     }
-    
+
     public function validateFormatPopup() {
         $result = array('code' => 0, 'message' => 'ok');
-        
+
         $this->validateFormatPopupLists($result);
-        
+
         return $result;
     }
 
     protected function doSubmit($db_storage, $contact, $host_problems, $service_problems) {
         $result = array('ticket_id' => null, 'ticket_error_message' => null,
                         'ticket_is_ok' => 0, 'ticket_time' => time());
-        
+
         $tpl = $this->initSmartyTemplate();
 
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
@@ -263,44 +263,44 @@ class EasyvistaProvider extends AbstractProvider {
         $tpl->assign('service_selected', $service_problems);
 
         $this->assignSubmittedValues($tpl);
-        
+
         $ticket_arguments = array();
         if (isset($this->rule_data['clones']['mappingTicket'])) {
             foreach ($this->rule_data['clones']['mappingTicket'] as $value) {
                 $tpl->assign('string', $value['Value']);
                 $result_str = $tpl->fetch('eval.ihtml');
-                
+
                 if ($result_str == '') {
                     $result_str = null;
                 }
-                
+
                 $ticket_arguments[$this->_internal_arg_name[$value['Arg']]['formid']] = $result_str;
             }
         }
-        
+
         $code = $this->createTicket($ticket_arguments);
         if ($code == -1) {
             $result['ticket_error_message'] = $this->ws_error;
             return $result;
         }
         $this->attachFiles($ticket_arguments);
-        
+
         if (isset($this->rule_data['ez_updatefields']) && $this->rule_data['ez_updatefields'] != '') {
             $tpl->assign('string', $this->rule_data['ez_updatefields']);
             $this->rule_data['ez_updatefields'] = $tpl->fetch('eval.ihtml');
             $this->updateTicket($ticket_arguments);
         }
-        
+
         $this->saveHistory(
-            $db_storage, 
-            $result, 
+            $db_storage,
+            $result,
             array(
-                'contact' => $contact, 
-                'host_problems' => $host_problems, 
+                'contact' => $contact,
+                'host_problems' => $host_problems,
                 'service_problems' => $service_problems,
-                'ticket_value' => $this->_ticket_number, 
+                'ticket_value' => $this->_ticket_number,
                 'subject' => $ticket_arguments['CatalogGUID'],
-                'data_type' => self::DATA_TYPE_JSON, 
+                'data_type' => self::DATA_TYPE_JSON,
                 'data' => json_encode(
                     array(
                         'arguments' => $ticket_arguments
@@ -308,7 +308,7 @@ class EasyvistaProvider extends AbstractProvider {
                 )
             )
         );
-        
+
         return $result;
     }
 
@@ -320,7 +320,7 @@ class EasyvistaProvider extends AbstractProvider {
     protected function setWsError($error) {
         $this->ws_error = $error;
     }
-    
+
     protected function updateTicket($ticket_arguments) {
         $data = '<?xml version="1.0"?>
 <soap:Envelope
@@ -339,7 +339,7 @@ class EasyvistaProvider extends AbstractProvider {
 </soap:Body>
 </soap:Envelope>
 ';
-                
+
         $this->callSOAP($data, 'tns:EZV_UpdateRequest');
     }
 
@@ -365,11 +365,11 @@ class EasyvistaProvider extends AbstractProvider {
 </soap:Body>
 </soap:Envelope>
 ';
-                
+
             $this->callSOAP($data, 'tns:EZV_AttachDocToRequest');
         }
     }
-    
+
     protected function createTicket($ticket_arguments) {
         $attributes = '';
         $account = '';
@@ -378,10 +378,10 @@ class EasyvistaProvider extends AbstractProvider {
                 $account = '<tns:Account><![CDATA[' . $ticket_arguments[$value['formid']] . ']]></tns:Account>';
                 continue;
             }
-            $attributes .= (isset($ticket_arguments[$value['formid']]) ? 
+            $attributes .= (isset($ticket_arguments[$value['formid']]) ?
                 '<tns:' . $value['soapname'] . '><![CDATA[' . $ticket_arguments[$value['formid']] . ']]></tns:' . $value['soapname'] . '>' :  '<tns:' . $value['soapname'] . '/>');
         }
-        
+
         $data = '<?xml version="1.0"?>
 <soap:Envelope
   soap:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
@@ -400,14 +400,14 @@ class EasyvistaProvider extends AbstractProvider {
         if ($this->callSOAP($data, 'tns:EZV_CreateRequest') == 1) {
             return -1;
         }
-        
+
         /*
         * OK:
         *    TODO
         *
         * NOK:
         *    <?xml version="1.0" encoding="UTF-8"?>
-        *    <SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"  
+        *    <SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
         *                       xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         *                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         *                       xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
@@ -423,7 +423,7 @@ class EasyvistaProvider extends AbstractProvider {
         }
         $return_value = $matches[1];
         if (preg_match('/^-[0-9]+/', $return_value)) {
-            $map_error = array('-1' => 'invalid Account value', '-2' => 'Login/Password invalid', 
+            $map_error = array('-1' => 'invalid Account value', '-2' => 'Login/Password invalid',
                 '-3' => 'invalid parameter', -4 => 'workflow not found');
             $msg_error = 'unknown error';
             if (isset($map_error[$return_value])) {
@@ -431,12 +431,12 @@ class EasyvistaProvider extends AbstractProvider {
             }
             $this->setWsError($msg_error);
             return -1;
-        }        
-        
+        }
+
         $this->_ticket_number = $return_value;
         return 0;
     }
-    
+
     protected function callSOAP($data, $soap_action) {
         $proto = 'http';
         if (isset($this->rule_data['https']) && $this->rule_data['https'] == 'yes') {
@@ -448,7 +448,7 @@ class EasyvistaProvider extends AbstractProvider {
             $this->setWsError("cannot init curl object");
             return 1;
         }
-        
+
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->rule_data['timeout']);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->rule_data['timeout']);
@@ -456,8 +456,8 @@ class EasyvistaProvider extends AbstractProvider {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt(
-            $ch, 
-            CURLOPT_HTTPHEADER, 
+            $ch,
+            CURLOPT_HTTPHEADER,
             array(
                 'Content-Type:  text/xml;charset=UTF-8',
                 'SOAPAction: ' . $soap_action,
@@ -465,15 +465,15 @@ class EasyvistaProvider extends AbstractProvider {
             )
         );
         $this->soap_result = curl_exec($ch);
-        
+
         if ($this->soap_result == false) {
             $this->setWsError(curl_error($ch));
             curl_close($ch);
             return 1;
         }
-        
+
         curl_close($ch);
-        
+
         return 0;
     }
 }

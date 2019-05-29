@@ -2,15 +2,15 @@
 /*
  * Copyright 2015-2019 Centreon (http://www.centreon.com/)
  *
- * Centreon is a full-fledged industry-strength solution that meets 
- * the needs in IT infrastructure and application monitoring for 
+ * Centreon is a full-fledged industry-strength solution that meets
+ * the needs in IT infrastructure and application monitoring for
  * service performance.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0  
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,*
@@ -126,13 +126,13 @@ $(function() {
             $(".toolbar").val(0);
         }
     });
-    
+
     $("[id^=buttontoolbar_]").click(function() {
         var checkValues = $("input:checked").map(function() {
                 var tmp = $(this).attr('id').split("_");
                 return tmp[1];
             }).get().join(",");
-            
+
          if (checkValues != '') {
              var tmp = $(this).attr('id').split("_");
              var url = "./widgets/open-tickets/src/action.php?widgetId="+widget_id+"&sid="+sid+"&selection="+checkValues+"&cmd="+tmp[1];

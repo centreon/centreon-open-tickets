@@ -2,15 +2,15 @@
 /*
  * Copyright 2015-2019 Centreon (http://www.centreon.com/)
  *
- * Centreon is a full-fledged industry-strength solution that meets 
- * the needs in IT infrastructure and application monitoring for 
+ * Centreon is a full-fledged industry-strength solution that meets
+ * the needs in IT infrastructure and application monitoring for
  * service performance.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0  
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,*
@@ -42,7 +42,7 @@ $centreon_bg = new CentreonXMLBGRequest($dependencyInjector, session_id(), 1, 1,
 
 function service_ack() {
     global $cmd, $centreon, $centreon_path;
-    
+
     $path = $centreon_path . "www/widgets/open-tickets/src/";
     $template = new Smarty();
     $template = initSmartyTplForPopup($path . 'templates/', $template, "./", $centreon_path);
@@ -59,7 +59,7 @@ function service_ack() {
     $template->assign('selection', $_REQUEST['selection']);
     $template->assign('author', $centreon->user->alias);
     $template->assign('cmd', $cmd);
-    
+
     $title = _("Service Acknowledgement");
     $template->assign('defaultMessage', sprintf(_('Acknowledged by %s'), $centreon->user->alias));
     $persistent_checked = '';
@@ -94,7 +94,7 @@ function service_ack() {
 
 function format_popup() {
     global $cmd, $widgetId, $rule, $preferences, $centreon, $centreon_path;
-    
+
     $uniq_id = uniqid();
     if ($cmd == 3) {
         $title = _("Open Service Ticket");
@@ -102,20 +102,20 @@ function format_popup() {
         $title = _("Open Host Ticket");
     }
 
-    $result = $rule->getFormatPopupProvider($preferences['rule'], 
+    $result = $rule->getFormatPopupProvider($preferences['rule'],
                                             array('title' => $title,
                                                   'user' => array(
-                                                                  'alias' => $centreon->user->alias, 
+                                                                  'alias' => $centreon->user->alias,
                                                                   'email' => $centreon->user->email),
                                                  )
                                             , $widgetId, $uniq_id, $_REQUEST['cmd'], $_REQUEST['selection']);
-    
+
     $path = $centreon_path . "www/widgets/open-tickets/src/";
     $template = new Smarty();
     $template = initSmartyTplForPopup($path . 'templates/', $template, "./", $centreon_path);
-    
+
     $provider_infos = $rule->getAliasAndProviderId($preferences['rule']);
-    
+
     $template->assign('provider_id', $provider_infos['provider_id']);
     $template->assign('rule_id', $preferences['rule']);
     $template->assign('widgetId', $widgetId);
@@ -127,9 +127,9 @@ function format_popup() {
     $template->assign('attach_files_enable', (!is_null($result) && isset($result['attach_files_enable']) && $result['attach_files_enable'] === 'yes') ? 1 : 0);
 
     $template->assign('formatPopupProvider', (!is_null($result) && isset($result['format_popup'])) ? $result['format_popup'] : '');
-    
+
     $template->assign('submitLabel', _("Open"));
-     
+
     $template->display('formatpopup.ihtml');
 }
 
@@ -138,14 +138,14 @@ function remove_tickets() {
 
     $path = $centreon_path . "www/widgets/open-tickets/src/";
     $provider_infos = $rule->getAliasAndProviderId($preferences['rule']);
-    
+
     $template = new Smarty();
     $template = initSmartyTplForPopup($path . 'templates/', $template, "./", $centreon_path);
     $template->assign('title', _('Close Tickets'));
     $template->assign('selection', $_REQUEST['selection']);
     $template->assign('provider_id', $provider_infos['provider_id']);
     $template->assign('rule_id', $preferences['rule']);
-    
+
     $template->display('removetickets.ihtml');
 }
 
@@ -160,15 +160,15 @@ try {
     $centreon = $_SESSION['centreon'];
     $oreon = $centreon;
     $cmd = $_REQUEST['cmd'];
-    
+
     $widgetId = $_REQUEST['widgetId'];
     $selections = explode(",", $_REQUEST['selection']);
-    
+
     $widgetObj = new CentreonWidget($centreon, $db);
     $preferences = $widgetObj->getWidgetPreferences($widgetId);
-        
+
     $rule = new Centreon_OpenTickets_Rule($db);
-    
+
     if ($cmd == 3 || $cmd == 4) {
         format_popup();
     } else if ($cmd == 10) {
