@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-require_once dirname(__FILE__) . "/../../../../../class/centreonWidget/Params/List.class.php";
+require_once __DIR__ . "/../../../../../class/centreonWidget/Params/List.class.php";
 
 class CentreonWidgetParamsConnectorOpenTicketsRule extends CentreonWidgetParamsList
 {

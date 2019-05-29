@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-require_once(dirname(__FILE__) . '/CentreonCommon.php');
+require_once(__DIR__ . '/CentreonCommon.php');
 
 abstract class AbstractProvider {
     /**

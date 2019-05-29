@@ -19,5 +19,5 @@
  * limitations under the License.
  */
 
-require_once dirname(__FILE__) . '/../../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../../bootstrap.php';
 require_once $centreon_path . 'www/modules/centreon-open-tickets/views/rules/ajax/call.php';

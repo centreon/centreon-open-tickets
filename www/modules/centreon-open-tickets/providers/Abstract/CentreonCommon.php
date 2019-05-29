@@ -20,8 +20,8 @@
  */
 
 function smarty_function_host_get_hostgroups($params, &$smarty) {
-    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
-    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
+    include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
+    include_once __DIR__ . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_hostgroups_result', array());
@@ -41,8 +41,8 @@ function smarty_function_host_get_hostgroups($params, &$smarty) {
 }
 
 function smarty_function_host_get_severity($params, &$smarty) {
-    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php' ;
-    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
+    include_once __DIR__ . '/../../centreon-open-tickets.conf.php' ;
+    include_once __DIR__ . '/../../class/centreonDBManager.class.php'; 
 
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_severity_result', array());
@@ -76,8 +76,8 @@ function smarty_function_host_get_severity($params, &$smarty) {
  * 
  */
 function smarty_function_host_get_hostcategories($params, &$smarty) {
-    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
-    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
+    include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
+    include_once __DIR__ . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_hostcategories_result', array());
@@ -121,8 +121,8 @@ function smarty_function_host_get_hostcategories($params, &$smarty) {
  *
  */
 function smarty_function_service_get_servicecategories($params, &$smarty) {
-    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
-    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
+    include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
+    include_once __DIR__ . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['service_id'])) {
         $smarty->assign('service_get_servicecategories_result', array());
@@ -165,8 +165,8 @@ function smarty_function_service_get_servicecategories($params, &$smarty) {
  *
  */
 function smarty_function_service_get_servicegroups($params, &$smarty) {
-    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
-    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
+    include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
+    include_once __DIR__ . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['service_id'])) {
         $smarty->assign('service_get_servicegroups_result', array());
@@ -213,8 +213,8 @@ function smarty_function_service_get_servicegroups($params, &$smarty) {
 }
 
 function smarty_function_host_get_macro_value_in_config($params, &$smarty) {
-    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
-    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
+    include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
+    include_once __DIR__ . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_macro_value_in_config_result', '');
@@ -268,8 +268,8 @@ function smarty_function_host_get_macro_value_in_config($params, &$smarty) {
 }
 
 function smarty_function_host_get_macro_values_in_config($params, &$smarty) {
-    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
-    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
+    include_once __DIR__ . '/../../centreon-open-tickets.conf.php';
+    include_once __DIR__ . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_macro_values_in_config_result', array());

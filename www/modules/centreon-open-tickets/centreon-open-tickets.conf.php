@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../bootstrap.php');;
+require_once realpath(__DIR__ . '/../../../bootstrap.php');;
 
 require_once $centreon_path . 'www/modules/centreon-open-tickets/class/request.php';
 require_once $centreon_path . 'www/modules/centreon-open-tickets/class/rule.php';

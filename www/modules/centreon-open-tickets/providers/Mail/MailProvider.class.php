@@ -19,7 +19,7 @@
  * limitations under the License.
  */
  
-require_once dirname(__FILE__) . '/library/class.phpmailer.php';
+require_once __DIR__ . '/library/class.phpmailer.php';
 
 class MailProvider extends AbstractProvider {
     protected $_attach_files = 1;
