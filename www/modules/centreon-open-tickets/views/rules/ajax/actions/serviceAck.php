@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -69,8 +69,8 @@ $hosts_done = array();
 //fwrite($fp, "===$query===\n");
 //fwrite($fp, print_r($selected_values, true) . "==\n");
 
-$DBRESULT = $db_storage->query($query);
-while (($row = $DBRESULT->fetch())) {
+$dbResult = $db_storage->query($query);
+while (($row = $dbResult->fetch())) {
     if (isset($hosts_done[$row['host_name'] . ';' . $row['description']])) {
         continue;
     }

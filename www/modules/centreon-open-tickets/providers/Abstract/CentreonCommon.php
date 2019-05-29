@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -20,8 +20,8 @@
  */
 
 function smarty_function_host_get_hostgroups($params, &$smarty) {
-    require_once(dirname(__FILE__) . '/../../centreon-open-tickets.conf.php');
-    require_once(dirname(__FILE__) . '/../../class/centreonDBManager.class.php'); 
+    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
+    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_hostgroups_result', array());
@@ -33,16 +33,16 @@ function smarty_function_host_get_hostgroups($params, &$smarty) {
     $query = "SELECT hostgroups.* FROM hosts_hostgroups, hostgroups 
         WHERE hosts_hostgroups.host_id = " . $params['host_id'] . 
         " AND hosts_hostgroups.hostgroup_id = hostgroups.hostgroup_id";
-    $DBRESULT = $db->query($query);
-    while (($row = $DBRESULT->fetch())) {
+    $dbResult = $db->query($query);
+    while (($row = $dbResult->fetch())) {
         $result[$row['hostgroup_id']] = $row['name'];
     }
     $smarty->assign('host_get_hostgroups_result', $result);
 }
 
 function smarty_function_host_get_severity($params, &$smarty) {
-    require_once(dirname(__FILE__) . '/../../centreon-open-tickets.conf.php');
-    require_once(dirname(__FILE__) . '/../../class/centreonDBManager.class.php'); 
+    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php' ;
+    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
 
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_severity_result', array());
@@ -55,12 +55,12 @@ function smarty_function_host_get_severity($params, &$smarty) {
                     hc_id, hc_name, level
                 FROM hostcategories_relation, hostcategories
                 WHERE hostcategories_relation.host_host_id = " . $params['host_id'] . "
-                    AND hostcategories_relation.hostcategories_hc_id = hostcategories.hc_id
-                    AND level IS NOT NULL AND hc_activate = '1'
+                AND hostcategories_relation.hostcategories_hc_id = hostcategories.hc_id
+                AND level IS NOT NULL AND hc_activate = '1'
                 ORDER BY level DESC
                 LIMIT 1";
-    $DBRESULT = $db->query($query);
-    while (($row = $DBRESULT->fetch())) {
+    $dbResult = $db->query($query);
+    while (($row = $dbResult->fetch())) {
         $result[$row['hc_id']] = array('name' => $row['hc_name'], 'level' => $row['level']);
     }
     $smarty->assign('host_get_severity_result', $result);
@@ -76,8 +76,8 @@ function smarty_function_host_get_severity($params, &$smarty) {
  * 
  */
 function smarty_function_host_get_hostcategories($params, &$smarty) {
-    require_once(dirname(__FILE__) . '/../../centreon-open-tickets.conf.php');
-    require_once(dirname(__FILE__) . '/../../class/centreonDBManager.class.php'); 
+    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
+    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_hostcategories_result', array());
@@ -98,8 +98,8 @@ function smarty_function_host_get_hostcategories($params, &$smarty) {
             LEFT JOIN hostcategories_relation hcr ON htr.host_host_id = hcr.host_host_id 
             LEFT JOIN hostcategories ON hostcategories.hc_id = hcr.hostcategories_hc_id AND hostcategories.hc_activate = '1'
             WHERE host.host_id = " . $host_id . " ORDER BY `order` ASC";
-        $DBRESULT = $db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $db->query($query);
+        while (($row = $dbResult->fetch())) {
             if (!is_null($row['host_tpl_id']) && $row['host_tpl_id'] != '') {
                 array_unshift($array_stack, $row['host_tpl_id']);
             }
@@ -121,8 +121,8 @@ function smarty_function_host_get_hostcategories($params, &$smarty) {
  *
  */
 function smarty_function_service_get_servicecategories($params, &$smarty) {
-    require_once(dirname(__FILE__) . '/../../centreon-open-tickets.conf.php');
-    require_once(dirname(__FILE__) . '/../../class/centreonDBManager.class.php'); 
+    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
+    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['service_id'])) {
         $smarty->assign('service_get_servicecategories_result', array());
@@ -142,8 +142,8 @@ function smarty_function_service_get_servicecategories($params, &$smarty) {
             LEFT JOIN service_categories_relation scr ON service.service_id = scr.service_service_id 
             LEFT JOIN service_categories sc ON sc.sc_id = scr.sc_id AND sc.sc_activate = '1'
             WHERE service.service_id = " . $service_id;
-        $DBRESULT = $db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $db->query($query);
+        while (($row = $dbResult->fetch())) {
             if (!is_null($row['service_template_model_stm_id']) && $row['service_template_model_stm_id'] != '') {
                 array_unshift($array_stack, $row['service_template_model_stm_id']);
             }
@@ -165,8 +165,8 @@ function smarty_function_service_get_servicecategories($params, &$smarty) {
  *
  */
 function smarty_function_service_get_servicegroups($params, &$smarty) {
-    require_once(dirname(__FILE__) . '/../../centreon-open-tickets.conf.php');
-    require_once(dirname(__FILE__) . '/../../class/centreonDBManager.class.php'); 
+    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
+    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['service_id'])) {
         $smarty->assign('service_get_servicegroups_result', array());
@@ -181,8 +181,8 @@ function smarty_function_service_get_servicegroups($params, &$smarty) {
             LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id AND sg.sg_activate = '1'
             LEFT JOIN service ON service.service_id = sgr.service_service_id
             WHERE sgr.host_host_id = " . $params['host_id'] . " AND sgr.service_service_id = " . $params['service_id'];
-        $DBRESULT = $db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $db->query($query);
+        while (($row = $dbResult->fetch())) {
             $service_id_tpl = $row['service_template_model_stm_id'];
             if (!is_null($row['sg_id']) && $row['sg_id'] != '') {
                 $result[$row['sg_id']] = array('name' => $row['sg_name'], 'alias' => $row['sg_alias']);
@@ -200,8 +200,8 @@ function smarty_function_service_get_servicegroups($params, &$smarty) {
             LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id AND sg.sg_activate = '1'
             LEFT JOIN service ON service.service_id = sgr.service_service_id
             WHERE sgr.service_service_id = " . $service_id_tpl;
-        $DBRESULT = $db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $db->query($query);
+        while (($row = $dbResult->fetch())) {
             $service_id_tpl = $row['service_template_model_stm_id'];
             if (!is_null($row['sg_id']) && $row['sg_id'] != '') {
                 $result[$row['sg_id']] = array('name' => $row['sg_name'], 'alias' => $row['sg_alias']);
@@ -213,8 +213,8 @@ function smarty_function_service_get_servicegroups($params, &$smarty) {
 }
 
 function smarty_function_host_get_macro_value_in_config($params, &$smarty) {
-    require_once(dirname(__FILE__) . '/../../centreon-open-tickets.conf.php');
-    require_once(dirname(__FILE__) . '/../../class/centreonDBManager.class.php'); 
+    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
+    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_macro_value_in_config_result', '');
@@ -229,8 +229,8 @@ function smarty_function_host_get_macro_value_in_config($params, &$smarty) {
     // Look macro in current host
     $query = "SELECT host_macro_value FROM on_demand_macro_host
         WHERE host_host_id = " . $params['host_id'] . " AND host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'";
-    $DBRESULT = $db->query($query);
-    if (($row = $DBRESULT->fetch())) {
+    $dbResult = $db->query($query);
+    if (($row = $dbResult->fetch())) {
         $smarty->assign('host_get_macro_value_in_config_result', $row['host_macro_value']);
         return ;
     }
@@ -252,10 +252,10 @@ function smarty_function_host_get_macro_value_in_config($params, &$smarty) {
                     host_tpl_id, macro.host_macro_value
                 FROM host_template_relation
                 LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id 
-                    AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
+                AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
                 WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . " ORDER BY `order` DESC";
-        $DBRESULT = $db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $db->query($query);
+        while (($row = $dbResult->fetch())) {
             $entry = array('host_id' => $row['host_tpl_id'], 'macro_value' => null);
             if (!is_null($row['host_macro_value'])) {
                 $entry['macro_value'] = $row['host_macro_value'];
@@ -268,8 +268,8 @@ function smarty_function_host_get_macro_value_in_config($params, &$smarty) {
 }
 
 function smarty_function_host_get_macro_values_in_config($params, &$smarty) {
-    require_once(dirname(__FILE__) . '/../../centreon-open-tickets.conf.php');
-    require_once(dirname(__FILE__) . '/../../class/centreonDBManager.class.php'); 
+    include_once dirname(__FILE__) . '/../../centreon-open-tickets.conf.php';
+    include_once dirname(__FILE__) . '/../../class/centreonDBManager.class.php'; 
     
     if (!isset($params['host_id'])) {
         $smarty->assign('host_get_macro_values_in_config_result', array());
@@ -287,7 +287,7 @@ function smarty_function_host_get_macro_values_in_config($params, &$smarty) {
                     host_tpl_id, macro.host_macro_value
                 FROM host_template_relation
                 LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id 
-                    AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
+                AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
                 WHERE host_template_relation.host_host_id = " . $params['host_id'] . " ORDER BY `order` ASC";
     $dbresult1 = $db->query($query);
     while (($row_entry_level1 = $dbresult1->fetch())) {
@@ -306,10 +306,10 @@ function smarty_function_host_get_macro_values_in_config($params, &$smarty) {
                         host_tpl_id, macro.host_macro_value
                     FROM host_template_relation
                     LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id 
-                        AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
+                    AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
                     WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . " ORDER BY `order` DESC";
-            $DBRESULT = $db->query($query);
-            while (($row = $DBRESULT->fetch())) {
+            $dbResult = $db->query($query);
+            while (($row = $dbResult->fetch())) {
                 $entry = array('host_id' => $row['host_tpl_id'], 'macro_value' => null);
                 if (!is_null($row['host_macro_value'])) {
                     $entry['macro_value'] = $row['host_macro_value'];

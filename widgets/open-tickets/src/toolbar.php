@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015 Centreon (http://www.centreon.com/)
+ * Copyright 2015-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -107,11 +107,11 @@ var widget_id = "<?php echo $widgetId; ?>";
 $(function() {
     $("#toolbar_container").html(toolbar);
     $(".toolbar").change(function() {
-		if (jQuery(this).val() != 0) {
-    		var checkValues = $("input:checked").map(function() {
-    			var tmp = $(this).attr('id').split("_");
-    			return tmp[1];
-    		}).get().join(",");
+        if (jQuery(this).val() != 0) {
+            var checkValues = $("input:checked").map(function() {
+                var tmp = $(this).attr('id').split("_");
+                return tmp[1];
+            }).get().join(",");
 
             if (checkValues != '') {
                 var url = "./widgets/open-tickets/src/action.php?widgetId="+widget_id+"&sid="+sid+"&selection="+checkValues+"&cmd="+jQuery(this).val();
@@ -123,15 +123,15 @@ $(function() {
                 alert("<?php echo _('Please select one or more items'); ?>");
                 return false;
             }
-    		$(".toolbar").val(0);
-		}
-	});
+            $(".toolbar").val(0);
+        }
+    });
     
     $("[id^=buttontoolbar_]").click(function() {
         var checkValues = $("input:checked").map(function() {
-    			var tmp = $(this).attr('id').split("_");
-    			return tmp[1];
-    		}).get().join(",");
+                var tmp = $(this).attr('id').split("_");
+                return tmp[1];
+            }).get().join(",");
             
          if (checkValues != '') {
              var tmp = $(this).attr('id').split("_");

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -77,10 +77,22 @@ class SimpleProvider extends AbstractProvider {
     }
     
     protected function doSubmit($db_storage, $contact, $host_problems, $service_problems) {
-        $result = array('ticket_id' => null, 'ticket_error_message' => null,
-                        'ticket_is_ok' => 0, 'ticket_time' => time());
+        $result = array(
+            'ticket_id' => null, 
+            'ticket_error_message' => null,
+            'ticket_is_ok' => 0, 
+            'ticket_time' => time()
+        );
         
-        $this->saveHistory($db_storage, $result, array('contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems));
+        $this->saveHistory(
+            $db_storage, 
+            $result, 
+            array(
+                'contact' => $contact, 
+                'host_problems' => $host_problems, 
+                'service_problems' => $service_problems
+            )
+        );
         return $result;
     }
 }

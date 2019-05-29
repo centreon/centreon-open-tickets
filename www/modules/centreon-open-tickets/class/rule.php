@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets
  * the needs in IT infrastructure and application monitoring for
@@ -68,8 +68,8 @@ class Centreon_OpenTickets_Rule
             return $result;
         }
 
-        $DBRESULT = $this->_db->query("SELECT alias, provider_id FROM mod_open_tickets_rule WHERE rule_id = '" . $rule_id . "' LIMIT 1");
-        if (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query("SELECT alias, provider_id FROM mod_open_tickets_rule WHERE rule_id = '" . $rule_id . "' LIMIT 1");
+        if (($row = $dbResult->fetch())) {
             $result['alias'] = $row['alias'];
             $result['provider_id'] = $row['provider_id'];
         }
@@ -85,8 +85,8 @@ class Centreon_OpenTickets_Rule
         }
 
         $centreon_open_tickets_path = $centreon_path . 'www/modules/centreon-open-tickets/';
-        require_once $centreon_open_tickets_path . 'providers/register.php';
-        require_once $centreon_open_tickets_path . 'providers/Abstract/AbstractProvider.class.php';
+        include_once $centreon_open_tickets_path . 'providers/register.php';
+        include_once $centreon_open_tickets_path . 'providers/Abstract/AbstractProvider.class.php';
 
         $provider_name = null;
         foreach ($register_providers as $name => $id) {
@@ -100,7 +100,7 @@ class Centreon_OpenTickets_Rule
             throw new Exception(sprintf('Cannot find provider'));
         }
 
-        require_once $centreon_open_tickets_path . 'providers/' . $provider_name . '/' . $provider_name . 'Provider.class.php';
+        include_once $centreon_open_tickets_path . 'providers/' . $provider_name . '/' . $provider_name . 'Provider.class.php';
         $classname = $provider_name . 'Provider';
         $this->_provider = new $classname($this, $centreon_path, $centreon_open_tickets_path, $rule_id, null, $provider_id);
         $this->_provider->setWidgetId($widget_id);
@@ -160,16 +160,18 @@ class Centreon_OpenTickets_Rule
                 AND services.service_id = centreon_acl.service_id)";
             }
 
-            $DBRESULT = $db_storage->query($query . $query_where);
+            $dbResult = $db_storage->query($query . $query_where);
 
-            $DBRESULT_graph = $db_storage->query("SELECT host_id, service_id, count(*) as num_metrics FROM index_data, metrics WHERE
-                (" . $selected_str2 . ") AND index_data.id = metrics.index_id GROUP BY host_id, service_id");
+            $dbResult_graph = $db_storage->query(
+                "SELECT host_id, service_id, count(*) as num_metrics FROM index_data, metrics WHERE
+                (" . $selected_str2 . ") AND index_data.id = metrics.index_id GROUP BY host_id, service_id"
+            );
             $datas_graph = array();
-            while (($row = $DBRESULT_graph->fetch())) {
+            while (($row = $dbResult_graph->fetch())) {
                 $datas_graph[$row['host_id'] . '.' . $row['service_id']] = $row['num_metrics'];
             }
 
-            while (($row = $DBRESULT->fetch())) {
+            while (($row = $dbResult->fetch())) {
                 $row['service_state'] = $row['state'];
                 $row['state_str'] = $this->getServiceStateStr($row['state']);
                 $row['last_state_change_duration'] = CentreonDuration::toString(time() - $row['last_state_change']);
@@ -192,8 +194,8 @@ class Centreon_OpenTickets_Rule
                 $query_where .= " AND EXISTS(SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (" . $centreon_bg->grouplistStr . ") AND hosts.host_id = centreon_acl.host_id)";
             }
 
-            $DBRESULT = $db_storage->query($query . $query_where);
-            while (($row = $DBRESULT->fetch())) {
+            $dbResult = $db_storage->query($query . $query_where);
+            while (($row = $dbResult->fetch())) {
                 $row['host_state'] = $row['state'];
                 $row['state_str'] = $this->getHostStateStr($row['state']);
                 $row['last_state_change_duration'] = CentreonDuration::toString(time() - $row['last_state_change']);
@@ -220,9 +222,11 @@ class Centreon_OpenTickets_Rule
         $this->_db->beginTransaction();
 
         $nrule_id = $rule_id;
-        $DBRESULT = $this->_db->query("SELECT * FROM mod_open_tickets_rule WHERE rule_id = '" .
-            $this->_db->escape($rule_id) . "' LIMIT 1");
-        if (!($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query(
+            "SELECT * FROM mod_open_tickets_rule WHERE rule_id = '" .
+            $this->_db->escape($rule_id) . "' LIMIT 1"
+        );
+        if (!($row = $dbResult->fetch())) {
             $query = "INSERT INTO mod_open_tickets_rule (`alias`, `provider_id`, `activate`) VALUES " .
                 "('" . $this->_db->escape($datas['rule_alias']) . "', '" .
                 $this->_db->escape($datas['provider_id']) . "', '1')";
@@ -265,10 +269,10 @@ class Centreon_OpenTickets_Rule
 
     public function getRuleList() {
         $result = array();
-        $DBRESULT = $this->_db->query(
+        $dbResult = $this->_db->query(
             "SELECT r.rule_id, r.activate, r.alias FROM mod_open_tickets_rule r ORDER BY r.alias"
         );
-        while (($row = $DBRESULT->fetch())) {
+        while (($row = $dbResult->fetch())) {
             $result[$row['rule_id']] = $row['alias'];
         }
 
@@ -281,16 +285,16 @@ class Centreon_OpenTickets_Rule
             return $result;
         }
 
-        $DBRESULT = $this->_db->query("SELECT * FROM mod_open_tickets_rule WHERE rule_id = '" . $this->_db->escape($rule_id) . "' LIMIT 1");
-        if (!($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query("SELECT * FROM mod_open_tickets_rule WHERE rule_id = '" . $this->_db->escape($rule_id) . "' LIMIT 1");
+        if (!($row = $dbResult->fetch())) {
             return $result;
         }
         $result['provider_id'] = $row['provider_id'];
         $result['rule_alias'] = $row['alias'];
 
         $result['clones'] = array();
-        $DBRESULT = $this->_db->query("SELECT * FROM mod_open_tickets_form_clone WHERE rule_id = '" . $this->_db->escape($rule_id) . "' ORDER BY uniq_id, `order` ASC");
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query("SELECT * FROM mod_open_tickets_form_clone WHERE rule_id = '" . $this->_db->escape($rule_id) . "' ORDER BY uniq_id, `order` ASC");
+        while (($row = $dbResult->fetch())) {
             if (!isset($result['clones'][$row['uniq_id']])) {
                 $result['clones'][$row['uniq_id']] = array();
             }
@@ -300,8 +304,8 @@ class Centreon_OpenTickets_Rule
             $result['clones'][$row['uniq_id']][$row['order']][$row['label']] = $row['value'];
         }
 
-        $DBRESULT = $this->_db->query("SELECT * FROM mod_open_tickets_form_value WHERE rule_id = '" . $this->_db->escape($rule_id) . "'");
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query("SELECT * FROM mod_open_tickets_form_value WHERE rule_id = '" . $this->_db->escape($rule_id) . "'");
+        while (($row = $dbResult->fetch())) {
             $result[$row['uniq_id']] = $row['value'];
         }
 
@@ -357,8 +361,8 @@ class Centreon_OpenTickets_Rule
                         $res2 = $this->_db->query("SELECT `rule_id` FROM `mod_open_tickets_rule` WHERE `alias` = '" . $this->_db->escape($name) . "'");
                     }
                     $query = "INSERT INTO mod_open_tickets_rule
-							(`alias`, `provider_id`, `activate`) VALUES " .
-							"('" . $this->_db->escape($name) . "', " . $row['provider_id'] . ", " . $row['activate'] . ")";
+                            (`alias`, `provider_id`, `activate`) VALUES " .
+                            "('" . $this->_db->escape($name) . "', " . $row['provider_id'] . ", " . $row['activate'] . ")";
                     $this->_db->query($query);
 
                     $nrule_id = $this->_db->lastinsertId('mod_open_tickets_rule');
@@ -367,8 +371,8 @@ class Centreon_OpenTickets_Rule
                     $res2 = $this->_db->query("SELECT * FROM mod_open_tickets_form_clone WHERE rule_id=$ruleId");
                     while (($row2 = $res2->fetch())) {
                         $query = "INSERT INTO mod_open_tickets_form_clone
-								(`uniq_id`, `label`, `value`, `rule_id`, `order`) VALUES " .
-								"('" . $this->_db->escape($row2['uniq_id']) . "', '" . $this->_db->escape($row2['label']) . "', '" . $this->_db->escape($row2['value']) . "', " . $nrule_id . ", '" . $row2['order'] . "')";
+                                (`uniq_id`, `label`, `value`, `rule_id`, `order`) VALUES " .
+                                "('" . $this->_db->escape($row2['uniq_id']) . "', '" . $this->_db->escape($row2['label']) . "', '" . $this->_db->escape($row2['value']) . "', " . $nrule_id . ", '" . $row2['order'] . "')";
                         $this->_db->query($query);
                     }
 
@@ -376,8 +380,8 @@ class Centreon_OpenTickets_Rule
                     $res2 = $this->_db->query("SELECT * FROM mod_open_tickets_form_value WHERE rule_id=$ruleId");
                     while (($row3 = $res2->fetch())) {
                         $query = "INSERT INTO mod_open_tickets_form_value
-								(`uniq_id`, `value`, `rule_id`) VALUES " .
-								"('" . $row3['uniq_id'] . "', '" . $this->_db->escape($row3['value']) . "', " . $nrule_id . ")";
+                                (`uniq_id`, `value`, `rule_id`) VALUES " .
+                                "('" . $row3['uniq_id'] . "', '" . $this->_db->escape($row3['value']) . "', " . $nrule_id . ")";
                         $this->_db->query($query);
                     }
                 }
@@ -417,8 +421,8 @@ class Centreon_OpenTickets_Rule
         }
         $query = "SELECT hg_id, hg_name FROM hostgroup WHERE " . $where . " hg_activate = '1' ORDER BY hg_name ASC";
 
-        $DBRESULT = $this->_db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query($query);
+        while (($row = $dbResult->fetch())) {
             $result[$row['hg_id']] = $row['hg_name'];
         }
 
@@ -433,8 +437,8 @@ class Centreon_OpenTickets_Rule
         }
         $query = "SELECT cg_id, cg_name FROM contactgroup WHERE " . $where . " cg_activate = '1' ORDER BY cg_name ASC";
 
-        $DBRESULT = $this->_db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query($query);
+        while (($row = $dbResult->fetch())) {
             $result[$row['cg_id']] = $row['cg_name'];
         }
 
@@ -449,8 +453,8 @@ class Centreon_OpenTickets_Rule
         }
         $query = "SELECT sg_id, sg_name FROM servicegroup WHERE " . $where . " sg_activate = '1' ORDER BY sg_name ASC";
 
-        $DBRESULT = $this->_db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query($query);
+        while (($row = $dbResult->fetch())) {
             $result[$row['sg_id']] = $row['sg_name'];
         }
 
@@ -465,8 +469,8 @@ class Centreon_OpenTickets_Rule
         }
         $query = "SELECT hc_id, hc_name FROM hostcategories WHERE " . $where . " hc_activate = '1' ORDER BY hc_name ASC";
 
-        $DBRESULT = $this->_db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query($query);
+        while (($row = $dbResult->fetch())) {
             $result[$row['hc_id']] = $row['hc_name'];
         }
 
@@ -481,8 +485,8 @@ class Centreon_OpenTickets_Rule
         }
         $query = "SELECT hc_id, hc_name FROM hostcategories WHERE " . $where . " level IS NOT NULL AND hc_activate = '1' ORDER BY level ASC";
 
-        $DBRESULT = $this->_db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query($query);
+        while (($row = $dbResult->fetch())) {
             $result[$row['hc_id']] = $row['hc_name'];
         }
 
@@ -497,8 +501,8 @@ class Centreon_OpenTickets_Rule
         }
         $query = "SELECT sc_id, sc_name FROM service_categories WHERE " . $where . " sc_activate = '1' ORDER BY sc_name ASC";
 
-        $DBRESULT = $this->_db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query($query);
+        while (($row = $dbResult->fetch())) {
             $result[$row['sc_id']] = $row['sc_name'];
         }
 
@@ -514,8 +518,8 @@ class Centreon_OpenTickets_Rule
         $query = "SELECT sc_id, sc_name FROM service_categories WHERE " . $where .
             " level IS NOT NULL AND sc_activate = '1' ORDER BY level ASC";
 
-        $DBRESULT = $this->_db->query($query);
-        while (($row = $DBRESULT->fetch())) {
+        $dbResult = $this->_db->query($query);
+        while (($row = $dbResult->fetch())) {
             $result[$row['sc_id']] = $row['sc_name'];
         }
 

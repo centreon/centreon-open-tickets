@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015 Centreon (http://www.centreon.com/)
+ * Copyright 2015-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -24,8 +24,8 @@ require_once $centreon_path . "/www/class/centreonDB.class.php";
 class CentreonDBManager extends CentreonDB {
 
     public function lastinsertId($name = null) {
-        $DBRESULT = $this->query("SELECT LAST_INSERT_ID() as last_id FROM " . $name);
-        if (!($row = $DBRESULT->fetch())) {
+        $dbResult = $this->query("SELECT LAST_INSERT_ID() as last_id FROM " . $name);
+        if (!($row = $dbResult->fetch())) {
             throw new Exception('Cannot get last id');
         }
         return $row['last_id'];

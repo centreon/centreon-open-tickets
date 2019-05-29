@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2018 Centreon (http://www.centreon.com/)
+ * Copyright 2018-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets
  * the needs in IT infrastructure and application monitoring for
@@ -127,7 +127,7 @@ class Centreon_OpenTickets_Log
         }
         if (isset($params['host_filter']) && count($params['host_filter']) > 0) {
             if ($build_services_filter != '') {
-               $query .= "(motl.host_id IN (" . join(',', $params['host_filter']) . ") " .
+                $query .= "(motl.host_id IN (" . join(',', $params['host_filter']) . ") " .
                    "OR (" . $build_services_filter . ")) AND ";
             } else {
                 $query .= "motl.host_id IN (" . join(',', $params['host_filter']) . ") AND ";

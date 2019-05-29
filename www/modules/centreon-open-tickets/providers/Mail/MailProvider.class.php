@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -113,8 +113,9 @@ class MailProvider extends AbstractProvider {
         $this->_save_config['simple']['from'] = $this->_submitted_config['from'];
         $this->_save_config['simple']['to'] = $this->_submitted_config['to'];
         $this->_save_config['simple']['subject'] = $this->_submitted_config['subject'];
-        $this->_save_config['simple']['ishtml'] = (isset($this->_submitted_config['ishtml']) && $this->_submitted_config['ishtml'] == 'yes') ? 
-            $this->_submitted_config['ishtml'] : '';
+        $this->_save_config['simple']['ishtml'] = (isset($this->_submitted_config['ishtml'])
+            && $this->_submitted_config['ishtml'] == 'yes') 
+            ? $this->_submitted_config['ishtml'] : '';
     }
     
     public function validateFormatPopup() {
@@ -130,7 +131,7 @@ class MailProvider extends AbstractProvider {
 
         try {
             $query = "INSERT INTO mod_open_tickets
-  (`timestamp`, `user`) VALUES ('" . $result['ticket_time'] . "', '" . $db_storage->escape($contact['name']) . "')";            
+  (`timestamp`, `user`) VALUES ('" . $result['ticket_time'] . "', '" . $db_storage->escape($contact['name']) . "')";
             $db_storage->query($query);
             $result['ticket_id'] = $db_storage->lastinsertId('mod_open_tickets');
         } catch (Exception $e) {
@@ -177,10 +178,25 @@ class MailProvider extends AbstractProvider {
         $mail->Subject = $subject;
         $mail->Body = $this->body;
         if ($mail->send()) {
-            $this->saveHistory($db_storage, $result, 
-                array('no_create_ticket_id' => true, 'contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems,
-                      'subject' => $subject, 
-                      'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode(array('body' => $this->body, 'from' => $from, 'headers' => $headers, 'to' => $this->rule_data['to'])))
+            $this->saveHistory(
+                $db_storage, 
+                $result,
+                array(
+                    'no_create_ticket_id' => true, 
+                    'contact' => $contact, 
+                    'host_problems' => $host_problems, 
+                    'service_problems' => $service_problems,
+                    'subject' => $subject, 
+                    'data_type' => self::DATA_TYPE_JSON, 
+                    'data' => json_encode(
+                        array(
+                            'body' => $this->body, 
+                            'from' => $from, 
+                            'headers' => $headers, 
+                            'to' => $this->rule_data['to']
+                        )
+                    )
+                )
             );
         } else {
             $result['ticket_error_message'] = 'Mailer Error: ' . $mail->ErrorInfo;

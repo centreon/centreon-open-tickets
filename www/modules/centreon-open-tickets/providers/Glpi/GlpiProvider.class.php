@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -249,8 +249,10 @@ class GlpiProvider extends AbstractProvider {
         }
         $code = $this->listGroupsGlpi($filter);
         
-        $groups[$entry['Id']] = array('label' => _($entry['Label']) . 
-                                                        (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''));
+        $groups[$entry['Id']] = array(
+            'label' => _($entry['Label']) . 
+                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '')
+        );
         $groups_order[] = $entry['Id'];
         
         if ($code == -1) {
@@ -275,8 +277,10 @@ class GlpiProvider extends AbstractProvider {
         }
         $code = $this->listItilCategoriesGlpi($filter);
         
-        $groups[$entry['Id']] = array('label' => _($entry['Label']) . 
-                                                        (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''));
+        $groups[$entry['Id']] = array(
+            'label' => _($entry['Label']) . 
+                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '')
+        );
         $groups_order[] = $entry['Id'];
         
         if ($code == -1) {
@@ -339,7 +343,7 @@ class GlpiProvider extends AbstractProvider {
             return array();
         }
 
-        foreach ($result as $value)  {
+        foreach ($result as $value) {
             if ($value['id'] == $selected_id) {                
                 return $value;
             }
@@ -384,9 +388,18 @@ class GlpiProvider extends AbstractProvider {
             return $result;
         }
         
-        $this->saveHistory($db_storage, $result, array('contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems, 
-            'ticket_value' => $this->glpi_call_response['response']['id'], 'subject' => $ticket_arguments[self::ARG_TITLE], 
-            'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode($ticket_arguments)));
+        $this->saveHistory(
+            $db_storage, 
+            $result, 
+            array(
+                'contact' => $contact, 
+                'host_problems' => $host_problems, 
+                'service_problems' => $service_problems, 
+                'ticket_value' => $this->glpi_call_response['response']['id'], 
+                'subject' => $ticket_arguments[self::ARG_TITLE], 
+                'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode($ticket_arguments)
+            )
+        );
         return $result;
     }
 
@@ -425,10 +438,16 @@ class GlpiProvider extends AbstractProvider {
         }
         
         $request = xmlrpc_encode_request($method, $args, array('encoding' => 'utf-8', 'escaping' => 'markup'));
-        $context = stream_context_create(array('http' => array('method'  => "POST",
-                                               'header'  => 'Content-Type: text/xml',
-                                               'timeout' => $this->rule_data['timeout'],
-                                               'content' => $request)));
+        $context = stream_context_create(
+            array(
+                'http' => array(
+                    'method'  => "POST",
+                    'header'  => 'Content-Type: text/xml',
+                    'timeout' => $this->rule_data['timeout'],
+                    'content' => $request
+                )
+            )
+        );
         $file = file_get_contents("$proto://$host/$url", false, $context);
         if (!$file) {
             $this->setRpcError("webservice '$method': no response");
@@ -486,8 +505,16 @@ class GlpiProvider extends AbstractProvider {
             }
         }
         
-        $this->glpi_call_response = $this->requestRpc('glpi.listObjects', array('start' => 0, 'limit' => 100, 'name' => $filter, 
-                                                      'itemtype' => 'itilcategory', 'show_label' => 1));
+        $this->glpi_call_response = $this->requestRpc(
+            'glpi.listObjects',
+            array(
+                'start' => 0, 
+                'limit' => 100, 
+                'name' => $filter,
+                'itemtype' => 'itilcategory', 
+                'show_label' => 1
+            )
+        );
         if ($this->glpi_call_response['code'] == -1) {
             return -1;
         }
@@ -546,7 +573,13 @@ class GlpiProvider extends AbstractProvider {
             return -1;
         }
         
-        $this->glpi_call_response = $this->requestRpc('glpi.doLogin', array('login_name' => $this->rule_data['username'], 'login_password' => $this->rule_data['password']));
+        $this->glpi_call_response = $this->requestRpc(
+            'glpi.doLogin', 
+            array(
+                'login_name' => $this->rule_data['username'], 
+                'login_password' => $this->rule_data['password']
+            )
+        );
         if ($this->glpi_call_response['code'] == -1) {
             return -1;
         }

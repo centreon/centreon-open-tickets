@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets
  * the needs in IT infrastructure and application monitoring for
@@ -286,9 +286,21 @@ class ServiceNowProvider extends AbstractProvider {
             $result['ticket_error_message'] = 'Error during create ServiceNow ticket';
         }
         
-        $this->saveHistory($db_storage, $result, array('contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems, 
-            'ticket_value' => $resultInfo['sysTicketId'], 'subject' => $ticket_arguments[$this->_internal_arg_name[self::ARG_SHORT_DESCRIPTION]], 
-            'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode($data)));
+        $this->saveHistory(
+            $db_storage, 
+            $result, 
+            array(
+                'contact' => $contact, 
+                'host_problems' => $host_problems, 
+                'service_problems' => $service_problems, 
+                'ticket_value' => $resultInfo['sysTicketId'], 
+                'subject' => $ticket_arguments[
+                    $this->_internal_arg_name[self::ARG_SHORT_DESCRIPTION]
+                ], 
+                'data_type' => self::DATA_TYPE_JSON, 
+                'data' => json_encode($data)
+            )
+        );
         
         return $result;
     }
@@ -355,11 +367,12 @@ class ServiceNowProvider extends AbstractProvider {
      */
     static public function test($info) {
         /* Test arguments */
-        if (!isset($info['instance']) ||
-            !isset($info['clientId']) ||
-            !isset($info['clientSecret']) ||
-            !isset($info['username']) ||
-            !isset($info['password'])) {
+        if (!isset($info['instance']) 
+            || !isset($info['clientId'])
+            || !isset($info['clientSecret'])
+            || !isset($info['username'])
+            || !isset($info['password'])
+        ) {
             throw new \Exception('Missing arguments.');
         }
 
@@ -387,8 +400,12 @@ class ServiceNowProvider extends AbstractProvider {
         $instance = $this->_getFormValue('instance_name');
         $url = 'https://' . $instance . '.service-now.com/oauth_token.do';
         $postfields = 'grant_type=refresh_token';
-        $postfields .= '&client_id=' . urlencode($this->_getFormValue('client_id'));
-        $postfields .= '&client_secret=' . urlencode($this->_getFormValue('client_secret'));
+        $postfields .= '&client_id=' . urlencode(
+            $this->_getFormValue('client_id')
+        );
+        $postfields .= '&client_secret=' . urlencode(
+            $this->_getFormValue('client_secret')
+        );
         $postfields .= '&refresh_token=' . $refreshToken;
 
         $ch = curl_init();
@@ -398,7 +415,9 @@ class ServiceNowProvider extends AbstractProvider {
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        self::setProxy($ch, array(
+        self::setProxy(
+            $ch, 
+            array(
                 'proxy_address' => $this->_getFormValue('proxy_address'),
                 'proxy_port' => $this->_getFormValue('proxy_port'),
                 'proxy_username' => $this->_getFormValue('proxy_username'),
@@ -431,11 +450,12 @@ class ServiceNowProvider extends AbstractProvider {
         $refreshToken = $this->getCache('refreshToken');
         if (is_null($refreshToken)) {
             $tokens = self::getAccessToken(
-                 array('instance' => $this->_getFormValue('instance_name'), 'client_id' => $this->_getFormValue('client_id'),
-                       'client_secret' => $this->_getFormValue('client_secret'), 'username' => $this->_getFormValue('username'),
-                       'password' => $this->_getFormValue('password'), 'proxy_address' => $this->_getFormValue('proxy_address'),
-                       'proxy_port' => $this->_getFormValue('proxy_port'), 'proxy_username' => $this->_getFormValue('proxy_username'),
-                       'proxy_password' => $this->_getFormValue('proxy_password'),
+                array(
+                    'instance' => $this->_getFormValue('instance_name'), 'client_id' => $this->_getFormValue('client_id'),
+                    'client_secret' => $this->_getFormValue('client_secret'), 'username' => $this->_getFormValue('username'),
+                    'password' => $this->_getFormValue('password'), 'proxy_address' => $this->_getFormValue('proxy_address'),
+                    'proxy_port' => $this->_getFormValue('proxy_port'), 'proxy_username' => $this->_getFormValue('proxy_username'),
+                    'proxy_password' => $this->_getFormValue('proxy_password')
                 )                
             );
             $accessToken = $tokens['accessToken'];
@@ -464,16 +484,22 @@ class ServiceNowProvider extends AbstractProvider {
         $url = 'https://' . $instance . '.service-now.com' . $uri;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Accept: application/json',
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $accessToken
-        ));
-        self::setProxy($ch, array(
+        curl_setopt(
+            $ch, 
+            CURLOPT_HTTPHEADER, 
+            array(
+                'Accept: application/json',
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $accessToken
+            )
+        );
+        self::setProxy(
+            $ch, 
+            array(
                 'proxy_address' => $this->_getFormValue('proxy_address'),
                 'proxy_port' => $this->_getFormValue('proxy_port'),
                 'proxy_username' => $this->_getFormValue('proxy_username'),
-                'proxy_password' => $this->_getFormValue('proxy_password'),
+                'proxy_password' => $this->_getFormValue('proxy_password')
             )
         );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -689,7 +715,9 @@ class ServiceNowProvider extends AbstractProvider {
             'impact' => $impacts[0],
             'urgency' => $urgencies[0],
             'severity' => $severities[0],
-            'short_description' => $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_SHORT_DESCRIPTION]]
+            'short_description' => $params['ticket_arguments'][
+                $this->_internal_arg_name[self::ARG_SHORT_DESCRIPTION]
+            ]
         );
         if (isset($params['ticket_arguments'][$this->_internal_arg_name[self::ARG_CATEGORY]])) {
             $category = explode('_', $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_CATEGORY]], 2);

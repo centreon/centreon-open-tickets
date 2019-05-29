@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -34,21 +34,21 @@ $tpl = initSmartyTpl($path, $tpl);
 $form = new HTML_QuickFormCustom('FormTicketLogs', 'get', "?p=".$p);
 
 $periods = array(""=>"",
-				"10800"=>_("Last 3 Hours"),
-				"21600"=>_("Last 6 Hours"),
-				"43200"=>_("Last 12 Hours"),
-				"86400"=>_("Last 24 Hours"),
-				"172800"=>_("Last 2 Days"),
-				"302400"=>_("Last 4 Days"),
-				"604800"=>_("Last 7 Days"),
-				"1209600"=>_("Last 14 Days"),
-				"2419200"=>_("Last 28 Days"),
-				"2592000"=>_("Last 30 Days"),
-				"2678400"=>_("Last 31 Days"),
-				"5184000"=>_("Last 2 Months"),
-				"10368000"=>_("Last 4 Months"),
-				"15552000"=>_("Last 6 Months"),
-				"31104000"=>_("Last Year"));
+                "10800"=>_("Last 3 Hours"),
+                "21600"=>_("Last 6 Hours"),
+                "43200"=>_("Last 12 Hours"),
+                "86400"=>_("Last 24 Hours"),
+                "172800"=>_("Last 2 Days"),
+                "302400"=>_("Last 4 Days"),
+                "604800"=>_("Last 7 Days"),
+                "1209600"=>_("Last 14 Days"),
+                "2419200"=>_("Last 28 Days"),
+                "2592000"=>_("Last 30 Days"),
+                "2678400"=>_("Last 31 Days"),
+                "5184000"=>_("Last 2 Months"),
+                "10368000"=>_("Last 4 Months"),
+                "15552000"=>_("Last 6 Months"),
+                "31104000"=>_("Last Year"));
 
 $form->addElement('select', 'period', _("Log Period"), $periods);
 $form->addElement('text', 'StartDate', '', array("id" => "StartDate", "class" => "datepicker", "size"=>8));
@@ -67,8 +67,8 @@ $attrHosts = array(
     'multiple' => true
 );
 $attrHost1 = array_merge(
-    $attrHosts/* ,
-   array('defaultDatasetRoute' => './include/common/webServices/rest/internal.php?object=centreon_configuration_host&action=defaultValues&target=host&field=host_parents&id=')*/
+    $attrHosts /*,
+    array('defaultDatasetRoute' => './include/common/webServices/rest/internal.php?object=centreon_configuration_host&action=defaultValues&target=host&field=host_parents&id=')*/
 );
 $form->addElement('select2', 'host_filter', _("Hosts"), array(), $attrHost1);
 

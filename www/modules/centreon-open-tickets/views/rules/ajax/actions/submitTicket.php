@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -23,8 +23,8 @@ function get_contact_information() {
     global $db, $centreon_bg;
     
     $result = array('alias' => '', 'email' => '', 'name' => '');
-    $DBRESULT = $db->query("SELECT contact_name as `name`, contact_alias as `alias`, contact_email as email FROM contact WHERE contact_id = '" . $centreon_bg->user_id . "' LIMIT 1");
-    if (($row = $DBRESULT->fetch())) {
+    $dbResult = $db->query("SELECT contact_name as `name`, contact_alias as `alias`, contact_email as email FROM contact WHERE contact_id = '" . $centreon_bg->user_id . "' LIMIT 1");
+    if (($row = $dbResult->fetch())) {
         $result = $row;
     }
     

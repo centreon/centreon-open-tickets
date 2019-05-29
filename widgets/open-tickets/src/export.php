@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015 Centreon (http://www.centreon.com/)
+ * Copyright 2015-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -103,34 +103,34 @@ $stateLabels = array(0 => "Ok",
                      4 => "Pending");
 // Build Query
 $query = "SELECT SQL_CALC_FOUND_ROWS h.host_id,
-		h.name as hostname,
-		h.state as h_state,
-		s.service_id,
-		s.description,
-		s.state as s_state,
-		s.last_hard_state,
-		s.output,
-		s.scheduled_downtime_depth as s_scheduled_downtime_depth,
-		s.acknowledged as s_acknowledged,
-		s.notify as s_notify,
-		s.active_checks as s_active_checks,
-		s.passive_checks as s_passive_checks,
-		h.scheduled_downtime_depth as h_scheduled_downtime_depth,
-		h.acknowledged as h_acknowledged,
-		h.notify as h_notify,
-		h.active_checks as h_active_checks,
-		h.passive_checks as h_passive_checks,
-		s.last_check,
-		s.last_state_change,
-		s.last_hard_state_change,
-		s.check_attempt,
-		s.max_check_attempts,
-		h.action_url as h_action_url,
-		h.notes_url as h_notes_url,
-		s.action_url as s_action_url,
-		s.notes_url as s_notes_url, 
-		cv2.value AS criticality_id,
-		cv.value AS criticality_level
+        h.name as hostname,
+        h.state as h_state,
+        s.service_id,
+        s.description,
+        s.state as s_state,
+        s.last_hard_state,
+        s.output,
+        s.scheduled_downtime_depth as s_scheduled_downtime_depth,
+        s.acknowledged as s_acknowledged,
+        s.notify as s_notify,
+        s.active_checks as s_active_checks,
+        s.passive_checks as s_passive_checks,
+        h.scheduled_downtime_depth as h_scheduled_downtime_depth,
+        h.acknowledged as h_acknowledged,
+        h.notify as h_notify,
+        h.active_checks as h_active_checks,
+        h.passive_checks as h_passive_checks,
+        s.last_check,
+        s.last_state_change,
+        s.last_hard_state_change,
+        s.check_attempt,
+        s.max_check_attempts,
+        h.action_url as h_action_url,
+        h.notes_url as h_notes_url,
+        s.action_url as s_action_url,
+        s.notes_url as s_notes_url, 
+        cv2.value AS criticality_id,
+        cv.value AS criticality_level
 ";
 $query .= " FROM hosts h, services s ";
 $query .= " LEFT JOIN customvariables cv ON (s.service_id = cv.service_id AND s.host_id = cv.host_id AND cv.name = 'CRITICALITY_LEVEL') ";
@@ -250,8 +250,8 @@ if (!$centreon->user->admin) {
     $aclObj = new CentreonACL($centreon->user->user_id, $centreon->user->admin);
     $groupList = $aclObj->getAccessGroupsString();
     $query .= " AND h.host_id = acl.host_id
-	AND acl.service_id = s.service_id
-	AND acl.group_id IN ($groupList)";
+    AND acl.service_id = s.service_id
+    AND acl.group_id IN ($groupList)";
 }
 $orderby = "hostname ASC , description ASC";
 if (isset($preferences['order_by']) && $preferences['order_by'] != "") {
@@ -289,9 +289,9 @@ while ($row = $res->fetch()) {
             $value = $hostObj->replaceMacroInString($row['hostname'], $value);
             $value = $svcObj->replaceMacroInString($service_id, $value);
         } elseif ($key == "criticality_id" && $value != '') {
-	      $critData = $criticality->getData($row["criticality_id"], 1);
-    	  $value = $critData["hc_name"];        
-	    }
+          $critData = $criticality->getData($row["criticality_id"], 1);
+          $value = $critData["hc_name"];        
+        }
         $data[$row['host_id']."_".$row['service_id']][$key] = $value;
     }
    

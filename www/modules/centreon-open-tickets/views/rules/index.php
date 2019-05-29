@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015 Centreon (http://www.centreon.com/)
+ * Copyright 2015-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -42,34 +42,34 @@ $search = $request->getParam('searchRule');
 
 try {
     switch ($o) {
-        case 'a':
-            require_once 'form.php';
-            break;
-        case 'd':
-            $rule->delete($select);
-            require_once 'list.php';
-            break;
-        case 'c':
-            require_once 'form.php';
-            break;
-        case 'l':
-            require_once 'list.php';
-            break;
-        case 'dp':
-            $rule->duplicate($select, $duplicateNb);
-            require_once 'list.php';
-            break;
-        case 'e':
-            $rule->enable($select);
-            require_once 'list.php';
-            break;
-        case 'ds':
-            $rule->disable($select);
-            require_once 'list.php';
-            break;
-        default:
-            require_once 'list.php';
-            break;
+    case 'a':
+        include_once 'form.php';
+        break;
+    case 'd':
+        $rule->delete($select);
+        include_once 'list.php';
+        break;
+    case 'c':
+        include_once 'form.php';
+        break;
+    case 'l':
+        include_once 'list.php';
+        break;
+    case 'dp':
+        $rule->duplicate($select, $duplicateNb);
+        include_once 'list.php';
+        break;
+    case 'e':
+        $rule->enable($select);
+        include_once 'list.php';
+        break;
+    case 'ds':
+        $rule->disable($select);
+        include_once 'list.php';
+        break;
+    default:
+        include_once 'list.php';
+        break;
     }
 }
 catch (Exception $e) {

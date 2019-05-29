@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -213,8 +213,9 @@ class OtrsProvider extends AbstractProvider {
         $this->_save_config['simple']['webservice_name'] = $this->_submitted_config['webservice_name'];
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes') ? 
-            $this->_submitted_config['https'] : '';
+        $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https'])
+            && $this->_submitted_config['https'] == 'yes') 
+            ? $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
         
         $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
@@ -266,8 +267,10 @@ class OtrsProvider extends AbstractProvider {
         // no filter $entry['Filter']. preg_match used
         $code = $this->listPriorityOtrs();
         
-        $groups[$entry['Id']] = array('label' => _($entry['Label']) . 
-                                                        (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''));
+        $groups[$entry['Id']] = array(
+            'label' => _($entry['Label']) . 
+                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '')
+        );
         $groups_order[] = $entry['Id'];
         
         if ($code == -1) {
@@ -296,8 +299,10 @@ class OtrsProvider extends AbstractProvider {
         // no filter $entry['Filter']. preg_match used
         $code = $this->listStateOtrs();
         
-        $groups[$entry['Id']] = array('label' => _($entry['Label']) . 
-                                                        (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''));
+        $groups[$entry['Id']] = array(
+            'label' => _($entry['Label']) . 
+                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '')
+        );
         $groups_order[] = $entry['Id'];
         
         if ($code == -1) {
@@ -326,8 +331,10 @@ class OtrsProvider extends AbstractProvider {
         // no filter $entry['Filter']. preg_match used
         $code = $this->listTypeOtrs();
         
-        $groups[$entry['Id']] = array('label' => _($entry['Label']) . 
-                                                        (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''));
+        $groups[$entry['Id']] = array(
+            'label' => _($entry['Label']) . 
+                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '')
+        );
         $groups_order[] = $entry['Id'];
         
         if ($code == -1) {
@@ -356,8 +363,10 @@ class OtrsProvider extends AbstractProvider {
         // no filter $entry['Filter']. preg_match used
         $code = $this->listCustomerUserOtrs();
         
-        $groups[$entry['Id']] = array('label' => _($entry['Label']) . 
-                                                        (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''));
+        $groups[$entry['Id']] = array(
+            'label' => _($entry['Label']) . 
+                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '')
+        );
         $groups_order[] = $entry['Id'];
         
         if ($code == -1) {
@@ -386,8 +395,10 @@ class OtrsProvider extends AbstractProvider {
         // no filter $entry['Filter']. preg_match used
         $code = $this->listUserOtrs();
         
-        $groups[$entry['Id']] = array('label' => _($entry['Label']) . 
-                                                        (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''));
+        $groups[$entry['Id']] = array(
+            'label' => _($entry['Label']) . 
+                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '')
+            );
         $groups_order[] = $entry['Id'];
         
         if ($code == -1) {
@@ -483,8 +494,12 @@ class OtrsProvider extends AbstractProvider {
     }
     
     protected function doSubmit($db_storage, $contact, $host_problems, $service_problems) {
-        $result = array('ticket_id' => null, 'ticket_error_message' => null,
-                        'ticket_is_ok' => 0, 'ticket_time' => time());
+        $result = array(
+            'ticket_id' => null, 
+            'ticket_error_message' => null,
+            'ticket_is_ok' => 0, 
+            'ticket_time' => time()
+        );
         
         $tpl = $this->initSmartyTemplate();
 
@@ -531,9 +546,24 @@ class OtrsProvider extends AbstractProvider {
             return $result;
         }
         
-        $this->saveHistory($db_storage, $result, array('contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems, 
-            'ticket_value' => $this->_otrs_call_response['TicketNumber'], 'subject' => $ticket_arguments['Subject'], 
-            'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode(array('arguments' => $ticket_arguments, 'dynamic_fields' => $ticket_dynamic_fields))));
+        $this->saveHistory(
+            $db_storage, 
+            $result, 
+            array(
+                'contact' => $contact, 
+                'host_problems' => $host_problems, 
+                'service_problems' => $service_problems, 
+                'ticket_value' => $this->_otrs_call_response['TicketNumber'], 
+                'subject' => $ticket_arguments['Subject'], 
+                'data_type' => self::DATA_TYPE_JSON, 
+                'data' => json_encode(
+                    array(
+                        'arguments' => $ticket_arguments, 
+                        'dynamic_fields' => $ticket_dynamic_fields
+                    )
+                )
+            )
+        );
         
         return $result;
     }
@@ -696,7 +726,11 @@ class OtrsProvider extends AbstractProvider {
         $attach_files = $this->getUploadFiles();
         foreach ($attach_files as $file) {
             $base64_content = base64_encode(file_get_contents($file['filepath']));
-            $files[] = array('Content' => $base64_content, 'Filename' => $file['filename'], 'ContentType' => mime_content_type($file['filepath']));
+            $files[] = array(
+                'Content' => $base64_content, 
+                'Filename' => $file['filename'], 
+                'ContentType' => mime_content_type($file['filepath'])
+            );
         }
         if (count($files) > 0) {
             $argument['Attachment'] = $files;
@@ -755,10 +789,13 @@ class OtrsProvider extends AbstractProvider {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $argument_json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Accept: application/json',
-            'Content-Length: ' . strlen($argument_json))
+        curl_setopt(
+            $ch, 
+            CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Content-Length: ' . strlen($argument_json)
+            )
         );
         $result = curl_exec($ch);
         if ($result == false) {
@@ -767,7 +804,7 @@ class OtrsProvider extends AbstractProvider {
             return 1;
         }
                 
-        $decoded_result = json_decode($result, TRUE);
+        $decoded_result = json_decode($result, true);
         if (is_null($decoded_result) || $decoded_result == false) {
             $this->setWsError($result);
             return 1;

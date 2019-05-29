@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -178,8 +178,12 @@ class SerenaProvider extends AbstractProvider {
     }
     
     protected function doSubmit($db_storage, $contact, $host_problems, $service_problems) {
-        $result = array('ticket_id' => null, 'ticket_error_message' => null,
-                        'ticket_is_ok' => 0, 'ticket_time' => time());
+        $result = array(
+            'ticket_id' => null, 
+            'ticket_error_message' => null,
+            'ticket_is_ok' => 0, 
+            'ticket_time' => time()
+        );
         
         $tpl = $this->initSmartyTemplate();
                 
@@ -209,9 +213,23 @@ class SerenaProvider extends AbstractProvider {
             return $result;
         }
         
-        $this->saveHistory($db_storage, $result, array('contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems, 
-            'ticket_value' => $this->_ticket_number, 'subject' => $ticket_arguments[$this->_internal_arg_name[self::ARG_SUBJECT]], 
-            'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode(array('arguments' => $ticket_arguments))));
+        $this->saveHistory(
+            $db_storage, 
+            $result, 
+            array(
+                'contact' => $contact, 
+                'host_problems' => $host_problems, 
+                'service_problems' => $service_problems, 
+                'ticket_value' => $this->_ticket_number, 
+                'subject' => $ticket_arguments[
+                    $this->_internal_arg_name[self::ARG_SUBJECT]
+                ], 
+                'data_type' => self::DATA_TYPE_JSON, 
+                'data' => json_encode(
+                    array('arguments' => $ticket_arguments)
+                )
+            )
+        );
         
         return $result;
     }
@@ -350,10 +368,14 @@ class SerenaProvider extends AbstractProvider {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type:  text/xml;charset=UTF-8',
-            'SOAPAction: ae:CreatePrimaryItem',
-            'Content-Length: ' . strlen($data))
+        curl_setopt(
+            $ch, 
+            CURLOPT_HTTPHEADER, 
+            array(
+                'Content-Type:  text/xml;charset=UTF-8',
+                'SOAPAction: ae:CreatePrimaryItem',
+                'Content-Length: ' . strlen($data)
+            )
         );
         $result = curl_exec($ch);
         curl_close($ch);

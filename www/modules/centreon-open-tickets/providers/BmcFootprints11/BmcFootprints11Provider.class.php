@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2017 Centreon (http://www.centreon.com/)
+ * Copyright 2017-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -63,7 +63,7 @@ class BmcFootprints11Provider extends AbstractProvider {
     protected function _setDefaultValueMain($body_html = 0) {
         parent::_setDefaultValueMain($body_html);
         
-        $this->default_data['url'] = 'http://{$address}/TicketNumber={$ticket_id}';        
+        $this->default_data['url'] = 'http://{$address}/TicketNumber={$ticket_id}';
     }
     
     /**
@@ -170,8 +170,9 @@ class BmcFootprints11Provider extends AbstractProvider {
         $this->_save_config['simple']['action'] = $this->_submitted_config['action'];
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes') ? 
-            $this->_submitted_config['https'] : '';
+        $this->_save_config['simple']['https'] = (
+            isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes'
+        ) ? $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
         
         $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
@@ -235,9 +236,24 @@ class BmcFootprints11Provider extends AbstractProvider {
             return $result;
         }
         
-        $this->saveHistory($db_storage, $result, array('contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems, 
-            'ticket_value' => $this->_ticket_number, 'subject' => $ticket_arguments['Subject'], 
-            'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode(array('arguments' => $ticket_arguments, 'project_fields' => $ticket_project_fields))));
+        $this->saveHistory(
+            $db_storage, 
+            $result, 
+            array(
+                'contact' => $contact, 
+                'host_problems' => $host_problems, 
+                'service_problems' => $service_problems,
+                'ticket_value' => $this->_ticket_number, 
+                'subject' => $ticket_arguments['Subject'],
+                'data_type' => self::DATA_TYPE_JSON, 
+                'data' => json_encode(
+                    array(
+                        'arguments' => $ticket_arguments, 
+                        'project_fields' => $ticket_project_fields
+                    )
+                )
+            )
+        );
         
         return $result;
     }
@@ -316,7 +332,7 @@ class BmcFootprints11Provider extends AbstractProvider {
         if (isset($this->rule_data['https']) && $this->rule_data['https'] == 'yes') {
             $proto = 'https';
         }
-        $endpoint = $proto . '://' . $this->rule_data['address'] . $this->rule_data['wspath'];           
+        $endpoint = $proto . '://' . $this->rule_data['address'] . $this->rule_data['wspath'];
         $ch = curl_init($endpoint);
         if ($ch == false) {
             $this->setWsError("cannot init curl object");
@@ -329,10 +345,14 @@ class BmcFootprints11Provider extends AbstractProvider {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type:  text/xml;charset=UTF-8',
-            'SOAPAction: ' . $url . '#MRWebServices__createIssue',
-            'Content-Length: ' . strlen($data))
+        curl_setopt(
+            $ch, 
+            CURLOPT_HTTPHEADER, 
+            array(
+                'Content-Type:  text/xml;charset=UTF-8',
+                'SOAPAction: ' . $url . '#MRWebServices__createIssue',
+                'Content-Length: ' . strlen($data)
+            )
         );
         $result = curl_exec($ch);
         curl_close($ch);

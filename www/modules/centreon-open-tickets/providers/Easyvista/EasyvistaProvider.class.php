@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2017 Centreon (http://www.centreon.com/)
+ * Copyright 2017-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -234,8 +234,9 @@ class EasyvistaProvider extends AbstractProvider {
         $this->_save_config['simple']['wspath'] = $this->_submitted_config['wspath'];
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes') ? 
-            $this->_submitted_config['https'] : '';
+        $this->_save_config['simple']['https'] = (
+            isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes'
+        ) ? $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
         $this->_save_config['simple']['ez_updatefields'] = $this->_submitted_config['ez_updatefields'];
         
@@ -290,9 +291,23 @@ class EasyvistaProvider extends AbstractProvider {
             $this->updateTicket($ticket_arguments);
         }
         
-        $this->saveHistory($db_storage, $result, array('contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems, 
-            'ticket_value' => $this->_ticket_number, 'subject' => $ticket_arguments['CatalogGUID'], 
-            'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode(array('arguments' => $ticket_arguments))));
+        $this->saveHistory(
+            $db_storage, 
+            $result, 
+            array(
+                'contact' => $contact, 
+                'host_problems' => $host_problems, 
+                'service_problems' => $service_problems,
+                'ticket_value' => $this->_ticket_number, 
+                'subject' => $ticket_arguments['CatalogGUID'],
+                'data_type' => self::DATA_TYPE_JSON, 
+                'data' => json_encode(
+                    array(
+                        'arguments' => $ticket_arguments
+                    )
+                )
+            )
+        );
         
         return $result;
     }
@@ -373,10 +388,10 @@ class EasyvistaProvider extends AbstractProvider {
   xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 <soap:Body>
 <tns:EZV_CreateRequest xmlns:tns="https://na1.easyvista.com/WebService">' .
-    $account . '
+        $account . '
     <tns:Login><![CDATA[' . $this->rule_data['username'] . ']]></tns:Login>
     <tns:Password><![CDATA[' . $this->rule_data['password'] . ']]></tns:Password>' .
-    $attributes .
+        $attributes .
 '</tns:EZV_CreateRequest>
 </soap:Body>
 </soap:Envelope>
@@ -427,7 +442,7 @@ class EasyvistaProvider extends AbstractProvider {
         if (isset($this->rule_data['https']) && $this->rule_data['https'] == 'yes') {
             $proto = 'https';
         }
-        $endpoint = $proto . '://' . $this->rule_data['address'] . $this->rule_data['wspath'];           
+        $endpoint = $proto . '://' . $this->rule_data['address'] . $this->rule_data['wspath'];
         $ch = curl_init($endpoint);
         if ($ch == false) {
             $this->setWsError("cannot init curl object");
@@ -440,10 +455,14 @@ class EasyvistaProvider extends AbstractProvider {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type:  text/xml;charset=UTF-8',
-            'SOAPAction: ' . $soap_action,
-            'Content-Length: ' . strlen($data))
+        curl_setopt(
+            $ch, 
+            CURLOPT_HTTPHEADER, 
+            array(
+                'Content-Type:  text/xml;charset=UTF-8',
+                'SOAPAction: ' . $soap_action,
+                'Content-Length: ' . strlen($data)
+            )
         );
         $this->soap_result = curl_exec($ch);
         

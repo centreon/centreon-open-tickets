@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2016 Centreon (http://www.centreon.com/)
+ * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets 
  * the needs in IT infrastructure and application monitoring for 
@@ -22,7 +22,8 @@
 class BmcItsmProvider extends AbstractProvider {
     protected $_set_empty_xml = 1;
     
-    protected $_itsm_fields = array('Assigned_Group', 'Assigned_Group_Shift_Name', 'Assigned_Support_Company', 'Assigned_Support_Organization',
+    protected $_itsm_fields = array(
+        'Assigned_Group', 'Assigned_Group_Shift_Name', 'Assigned_Support_Company', 'Assigned_Support_Organization',
         'Assignee', 'Categorization_Tier_1', 'Categorization_Tier_2', 'Categorization_Tier_3', 'CI_Name', 'Closure_Manufacturer', 
         'Closure_Product_Category_Tier1', 'Closure_Product_Category_Tier2', 'Closure_Product_Category_Tier3', 'Closure_Product_Model_Version', 
         'Closure_Product_Name', 'Department', 'First_Name', 'Impact', 'Last_Name', 'Lookup_Keyword', 'Manufacturer', 
@@ -248,9 +249,23 @@ class BmcItsmProvider extends AbstractProvider {
             return $result;
         }
         
-        $this->saveHistory($db_storage, $result, array('contact' => $contact, 'host_problems' => $host_problems, 'service_problems' => $service_problems, 
-            'ticket_value' => $this->_ticket_number, 'subject' => $ticket_arguments['Description'], 
-            'data_type' => self::DATA_TYPE_JSON, 'data' => json_encode(array('arguments' => $ticket_arguments))));
+        $this->saveHistory(
+            $db_storage, 
+            $result, 
+            array(
+                'contact' => $contact, 
+                'host_problems' => $host_problems, 
+                'service_problems' => $service_problems, 
+                'ticket_value' => $this->_ticket_number, 
+                'subject' => $ticket_arguments['Description'], 
+                'data_type' => self::DATA_TYPE_JSON, 
+                'data' => json_encode(
+                    array(
+                        'arguments' => $ticket_arguments
+                    )
+                )
+            )
+        );
         
         return $result;
     }
@@ -317,10 +332,14 @@ class BmcItsmProvider extends AbstractProvider {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type:  text/xml;charset=UTF-8',
-            'SOAPAction: urn:' . $this->rule_data['namespace'] . '/HelpDesk_Submit_Service',
-            'Content-Length: ' . strlen($data))
+        curl_setopt(
+            $ch, 
+            CURLOPT_HTTPHEADER, 
+            array(
+                'Content-Type:  text/xml;charset=UTF-8',
+                'SOAPAction: urn:' . $this->rule_data['namespace'] . '/HelpDesk_Submit_Service',
+                'Content-Length: ' . strlen($data)
+            )
         );
         $result = curl_exec($ch);
         curl_close($ch);
