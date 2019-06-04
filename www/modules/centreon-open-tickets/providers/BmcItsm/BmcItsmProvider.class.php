@@ -93,8 +93,8 @@ class BmcItsmProvider extends AbstractProvider {
         );
     }
     
-    protected function _setDefaultValueMain() {
-        parent::_setDefaultValueMain();
+    protected function _setDefaultValueMain($body_html = 0) {
+        parent::_setDefaultValueMain($body_html);
         
         $this->default_data['message_confirm'] = '
 <table class="table">
@@ -108,7 +108,7 @@ class BmcItsmProvider extends AbstractProvider {
 {/if}
 </table>
 ';
-        $this->default_data['message_confirm'] = $this->change_html_tags($this->default_data['message_confirm']);
+        $this->default_data['message_confirm'] = $this->default_data['message_confirm'];
         $this->default_data['url'] = 'http://{$address}/index.pl?Action=AgentTicketZoom;TicketNumber={$ticket_id}';   
     }
     
@@ -143,8 +143,7 @@ class BmcItsmProvider extends AbstractProvider {
      * @return void
      */
     protected function _getConfigContainer1Extra() {
-        $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/BmcItsm/templates', $this->_centreon_path);
+        $tpl = $this->initSmartyTemplate('providers/BmcItsm/templates');
         
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
@@ -216,8 +215,7 @@ class BmcItsmProvider extends AbstractProvider {
         $result = array('ticket_id' => null, 'ticket_error_message' => null,
                         'ticket_is_ok' => 0, 'ticket_time' => time());
         
-        $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/Abstract/templates', $this->_centreon_path);
+        $tpl = $this->initSmartyTemplate();
                 
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign('user', $contact);

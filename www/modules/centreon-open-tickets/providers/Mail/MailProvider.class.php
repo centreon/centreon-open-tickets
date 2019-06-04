@@ -24,7 +24,7 @@ require_once dirname(__FILE__) . '/library/class.phpmailer.php';
 class MailProvider extends AbstractProvider {
     protected $_attach_files = 1;
     
-    protected function _setDefaultValueMain() {
+    protected function _setDefaultValueMain($body_html = 0) {
         parent::_setDefaultValueMain(1);
     }
      
@@ -64,8 +64,7 @@ class MailProvider extends AbstractProvider {
      * @return void
      */
     protected function _getConfigContainer1Extra() {
-        $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/Mail/templates', $this->_centreon_path);
+        $tpl = $this->initSmartyTemplate('providers/Mail/templates');
         
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
@@ -139,8 +138,7 @@ class MailProvider extends AbstractProvider {
             return $result;
         }
         
-        $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/Abstract/templates', $this->_centreon_path);
+        $tpl = $this->initSmartyTemplate();
         
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
         $tpl->assign('user', $contact);
@@ -166,9 +164,13 @@ class MailProvider extends AbstractProvider {
         foreach ($attach_files as $file) {
             $mail->addAttachment($file['filepath'], $file['filename']);
         }
+        
+        $headers = "From: " . $from;
+
         if (isset($this->rule_data['clones']['headerMail'])) {
             foreach ($this->rule_data['clones']['headerMail'] as $values) {
                 $mail->addCustomHeader($values['Name'], $values['Value']);
+                $headers .= "\r\n" . $values['Name'] . ':' . $values['Value'];
             }
         }
         
