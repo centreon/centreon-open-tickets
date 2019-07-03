@@ -145,6 +145,7 @@ abstract class AbstractProvider
         $tpl->register_function('host_get_macro_values_in_config', 'smarty_function_host_get_macro_values_in_config');
         $tpl->register_function('service_get_servicecategories', 'smarty_function_service_get_servicecategories');
         $tpl->register_function('service_get_servicegroups', 'smarty_function_service_get_servicegroups');
+        $tpl->register_function('sortgroup', 'smarty_function_sortgroup');
         $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, $path, $this->_centreon_path);
         return $tpl;
     }
@@ -422,7 +423,10 @@ Output: {$service.output|substr:0:1024}
 
     protected function _checkLists()
     {
-        $groupList = $this->_getCloneSubmitted('groupList', array('Id', 'Label', 'Type', 'Filter', 'Mandatory'));
+        $groupList = $this->_getCloneSubmitted(
+            'groupList',
+            array('Id', 'Label', 'Type', 'Filter', 'Mandatory', 'Sort')
+        );
         $duplicate_id = array();
 
         foreach ($groupList as $values) {
@@ -559,24 +563,28 @@ Output: {$service.output|substr:0:1024}
             'size="20"  type="text" />';
         $groupListMandatory_html =  '<input id="groupListMandatory_#index#" name="groupListMandatory[#index#]" ' .
             'type="checkbox" value="1" />';
+        $groupListSort_html =  '<input id="groupListSort_#index#" name="groupListSort[#index#]" type="checkbox" />';
         $array_form['groupList'] = array(
             array('label' => _("Id"), 'html' => $groupListId_html),
             array('label' => _("Label"), 'html' => $groupListLabel_html),
             array('label' => _("Type"), 'html' => $groupListType_html),
             array('label' => _("Filter"), 'html' => $groupListFilter_html),
             array('label' => _("Mandatory"), 'html' => $groupListMandatory_html),
+            array('label' => _("Sort"), 'html' => $groupListSort_html),
         );
 
         // Custom list clone
-        $customListId_html = '<input id="customListId_#index#" name="customListId[#index#]" size="20"  ' .
+        $customListId_html = '<input id="customListId_#index#" name="customListId[#index#]" size="20"  type="text" />';
+        $customListValue_html = '<input id="customListValue_#index#" name="customListValue[#index#]" size="20"  ' .
             'type="text" />';
-        $customListValue_html = '<input id="customListValue_#index#" name="customListValue[#index#]" ' .
-            'size="20"  type="text" />';
+        $customListLabel_html = '<input id="customListLabel_#index#" name="customListLabel[#index#]" size="20"  ' .
+            'type="text" />';
         $customListDefault_html =  '<input id="customListDefault_#index#" name="customListDefault[#index#]" ' .
             'type="checkbox" value="1" />';
         $array_form['customList'] = array(
             array('label' => _("Id"), 'html' => $customListId_html),
             array('label' => _("Value"), 'html' => $customListValue_html),
+            array('label' => _("Label"), 'html' => $customListLabel_html),
             array('label' => _("Default"), 'html' => $customListDefault_html),
         );
 
@@ -743,20 +751,17 @@ Output: {$service.output|substr:0:1024}
 
         $this->_save_config['clones']['groupList'] = $this->_getCloneSubmitted(
             'groupList',
-            array('Id', 'Label', 'Type', 'Filter', 'Mandatory')
+            array('Id', 'Label', 'Type', 'Filter', 'Mandatory', 'Sort')
         );
         $this->_save_config['clones']['customList'] = $this->_getCloneSubmitted(
             'customList',
-            array('Id', 'Value', 'Default')
+            array('Id', 'Value', 'Label', 'Default')
         );
         $this->_save_config['clones']['bodyList'] = $this->_getCloneSubmitted(
             'bodyList',
             array('Name', 'Value', 'Default')
         );
-        $this->_save_config['clones']['chainruleList'] = $this->_getCloneSubmitted(
-            'chainruleList',
-            array('Provider')
-        );
+        $this->_save_config['clones']['chainruleList'] = $this->_getCloneSubmitted('chainruleList', array('Provider'));
         $this->_save_config['clones']['commandList'] = $this->_getCloneSubmitted('commandList', array('Cmd'));
 
         $this->_save_config['simple']['proxy_address'] = isset(
@@ -789,10 +794,10 @@ Output: {$service.output|substr:0:1024}
         $result = $this->_rule->getHostgroup($entry['Filter']);
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
-                isset($entry['Mandatory'])
-                && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
             ),
-            'values' => $result
+            'values' => $result,
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
     }
@@ -804,7 +809,8 @@ Output: {$service.output|substr:0:1024}
             'label' => _($entry['Label']) . (
                 isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
             ),
-            'values' => $result
+            'values' => $result,
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
     }
@@ -816,7 +822,8 @@ Output: {$service.output|substr:0:1024}
             'label' => _($entry['Label']) . (
                 isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
             ),
-            'values' => $result
+            'values' => $result,
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
     }
@@ -840,7 +847,8 @@ Output: {$service.output|substr:0:1024}
             'label' => _($entry['Label']) . (
                 isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
             ),
-            'values' => $result
+            'values' => $result,
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
     }
@@ -852,7 +860,8 @@ Output: {$service.output|substr:0:1024}
             'label' => _($entry['Label']) . (
                 isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
             ),
-            'values' => $result
+            'values' => $result,
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
     }
@@ -864,7 +873,8 @@ Output: {$service.output|substr:0:1024}
             'label' => _($entry['Label']) . (
                 isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
             ),
-            'values' => $result
+            'values' => $result,
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
     }
@@ -880,6 +890,7 @@ Output: {$service.output|substr:0:1024}
                     && $values['Id'] == $entry['Id']
                 ) {
                     $result[] = $values['Value'];
+                    $placeholder[] = $values['Label'];
                     if (isset($values['Default']) && $values['Default']) {
                         $default = $values['Value'];
                     }
@@ -892,7 +903,9 @@ Output: {$service.output|substr:0:1024}
                 isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
             ),
             'values' => $result,
-            'default' => $default
+            'placeholder' => $placeholder,
+            'default' => $default,
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
     }
@@ -1058,13 +1071,21 @@ Output: {$service.output|substr:0:1024}
 
                 $id = '-1';
                 $value = '';
+                $placeholder = '';
                 $matches = array();
-                if (preg_match('/^(.*?)_(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
+                if (preg_match('/^(.*?)___(.*?)___(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
+                    $id = $matches[1];
+                    $value = $matches[2];
+                    $placeholder = $matches[3];
+                } elseif (preg_match('/^(.*?)___(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
                     $id = $matches[1];
                     $value = $matches[2];
                 }
-
-                $select_lists[$values['Id']] = array('label' => _($values['Label']), 'id' => $id, 'value' => $value);
+                if (!empty($placeholder)) {
+                    $select_lists[$values['Id']] = array('label' => _($values['Label']), 'id' => $id, 'value' => $value, 'placeholder' => $placeholder);
+                } else {
+                    $select_lists[$values['Id']] = array('label' => _($values['Label']), 'id' => $id, 'value' => $value);
+                }
                 if (method_exists($this, $method_name)) {
                     $more_attributes = $this->{$method_name}($values['Id'], $id);
                     $select_lists[$values['Id']] = array_merge($select_lists[$values['Id']], $more_attributes);
@@ -1086,8 +1107,13 @@ Output: {$service.output|substr:0:1024}
 
                 $id = '-1';
                 $value = '';
+                $placeholder = '';
                 $matches = array();
-                if (preg_match('/^(.*?)_(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
+                if (preg_match('/^(.*?)___(.*?)___(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
+                    $id = $matches[1];
+                    $value = $matches[2];
+                    $placeholder = $matches[3];
+                } elseif (preg_match('/^(.*?)___(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
                     $id = $matches[1];
                     $value = $matches[2];
                 }
@@ -1104,12 +1130,22 @@ Output: {$service.output|substr:0:1024}
 
                 $tpl->assign('string', $value_body);
                 $content = $tpl->fetch('eval.ihtml');
-                $body_lists[$values['Id']] = array(
-                    'label' => _($values['Label']),
-                    'id' => $id,
-                    'name' => $value,
-                    'value' => $content
-                );
+                if (!empty($placeholder)) {
+                    $body_lists[$values['Id']] = array(
+                        'label' => _($values['Label']),
+                        'id' => $id,
+                        'name' => $value,
+                        'value' => $content,
+                        'placeholder' => $placeholder
+                    );
+                } else {
+                    $body_lists[$values['Id']] = array(
+                        'label' => _($values['Label']),
+                        'id' => $id,
+                        'name' => $value,
+                        'value' => $content
+                    );
+                }
             }
         }
 
@@ -1245,7 +1281,8 @@ Output: {$service.output|substr:0:1024}
         return $result;
     }
 
-    public function getUrl($ticket_id, $data) {
+    public function getUrl($ticket_id, $data)
+    {
         $tpl = $this->initSmartyTemplate();
         foreach ($data as $label => $value) {
             $tpl->assign($label, $value);
@@ -1389,17 +1426,16 @@ Output: {$service.output|substr:0:1024}
         if (!isset($_SESSION['ot_cache_' . $this->_rule_id][$key])) {
             return null;
         }
-        if (!is_null())
-        $cacheJson = file_get_contents($cacheFile);
-        $cache = json_decode($cacheJson, true);
+
         if (!is_null($_SESSION['ot_cache_' . $this->_rule_id][$key]['ttl'])) {
             $timeTtl = $_SESSION['ot_cache_' . $this->_rule_id][$key]['ttl'] + $_SESSION['ot_cache_' .
                 $this->_rule_id][$key]['created'];
             if ($timeTtl < time()) {
-                unlink($_SESSION['ot_cache_' . $this->_rule_id][$key]);
+                unset($_SESSION['ot_cache_' . $this->_rule_id][$key]);
                 return null;
             }
         }
+
         return $_SESSION['ot_cache_' . $this->_rule_id][$key]['value'];
     }
 

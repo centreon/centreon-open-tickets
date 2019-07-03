@@ -267,12 +267,12 @@ class GlpiProvider extends AbstractProvider
     {
         // no filter $entry['Filter']. preg_match used
         $code = $this->listEntitiesGlpi();
-
+        
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
-                isset($entry['Mandatory'])
-                && $entry['Mandatory'] == 1 ? $this->_required_field : ''
-            )
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+            ),
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
 
@@ -305,10 +305,12 @@ class GlpiProvider extends AbstractProvider
             $filter = $entry['Filter'];
         }
         $code = $this->listGroupsGlpi($filter);
-
+        
         $groups[$entry['Id']] = array(
-            'label' => _($entry['Label']) .
-                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '')
+            'label' => _($entry['Label']) . (
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+            ),
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
 
@@ -334,11 +336,12 @@ class GlpiProvider extends AbstractProvider
             $filter = $entry['Filter'];
         }
         $code = $this->listItilCategoriesGlpi($filter);
-
+        
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
                 isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
-            )
+            ),
+            'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         $groups_order[] = $entry['Id'];
 
