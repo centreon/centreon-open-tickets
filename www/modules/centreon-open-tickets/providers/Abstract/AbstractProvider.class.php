@@ -224,7 +224,6 @@ abstract class AbstractProvider
     {
         $this->default_data['macro_ticket_id'] = 'TICKET_ID';
         $this->default_data['ack'] = 'yes';
-        //$this->default_data['close_ticket_enable'] = 'yes';
 
         $this->default_data['format_popup'] = '
 <table class="table">
@@ -733,18 +732,17 @@ Output: {$service.output|substr:0:1024}
         $this->_save_config['simple']['ack'] = (
             isset($this->_submitted_config['ack']) && $this->_submitted_config['ack'] == 'yes'
         ) ? $this->_submitted_config['ack'] : '';
-        $this->_save_config['simple']['attach_files'] = (
-            isset($this->_submitted_config['attach_files'])
-            && $this->_submitted_config['attach_files'] == 'yes'
+        $this->_save_config['simple']['attach_files'] =
+            (isset($this->_submitted_config['attach_files']) && $this->_submitted_config['attach_files'] == 'yes'
         ) ? $this->_submitted_config['attach_files'] : '';
-        $this->_save_config['simple']['close_ticket_enable'] = (
-            isset($this->_submitted_config['close_ticket_enable'])
-            && $this->_submitted_config['close_ticket_enable'] == 'yes'
-        ) ? $this->_submitted_config['close_ticket_enable'] : '';
-        $this->_save_config['simple']['error_close_centreon'] = (
-            isset($this->_submitted_config['error_close_centreon'])
-            && $this->_submitted_config['error_close_centreon'] == 'yes'
-        ) ? $this->_submitted_config['error_close_centreon'] : '';
+        $this->_save_config['simple']['close_ticket_enable'] =
+            (isset($this->_submitted_config['close_ticket_enable'])
+                && $this->_submitted_config['close_ticket_enable'] == 'yes')
+            ? $this->_submitted_config['close_ticket_enable'] : '';
+        $this->_save_config['simple']['error_close_centreon'] =
+            (isset($this->_submitted_config['error_close_centreon'])
+                && $this->_submitted_config['error_close_centreon'] == 'yes')
+            ? $this->_submitted_config['error_close_centreon'] : '';
         $this->_save_config['simple']['url'] = $this->_submitted_config['url'];
         $this->_save_config['simple']['format_popup'] = $this->_submitted_config['format_popup'];
         $this->_save_config['simple']['message_confirm'] = $this->_submitted_config['message_confirm'];
@@ -885,8 +883,10 @@ Output: {$service.output|substr:0:1024}
         $default = '';
         if (isset($this->rule_data['clones']['customList'])) {
             foreach ($this->rule_data['clones']['customList'] as $values) {
-                if (isset($entry['Id']) && $entry['Id'] != ''
-                    && isset($values['Id']) && $values['Id'] != ''
+                if (isset($entry['Id'])
+                    && $entry['Id'] != ''
+                    && isset($values['Id'])
+                    && $values['Id'] != ''
                     && $values['Id'] == $entry['Id']
                 ) {
                     $result[] = $values['Value'];
@@ -916,8 +916,10 @@ Output: {$service.output|substr:0:1024}
         $default = '';
         if (isset($this->rule_data['clones']['bodyList'])) {
             foreach ($this->rule_data['clones']['bodyList'] as $values) {
-                if (isset($entry['Id']) && $entry['Id'] != ''
-                    && isset($values['Name']) && $values['Name'] != ''
+                if (isset($entry['Id'])
+                    && $entry['Id'] != ''
+                    && isset($values['Name'])
+                    && $values['Name'] != ''
                 ) {
                     $result[] = $values['Name'];
                     if (isset($values['Default']) && $values['Default']) {
@@ -952,29 +954,40 @@ Output: {$service.output|substr:0:1024}
 
         if (isset($this->rule_data['clones']['groupList'])) {
             foreach ($this->rule_data['clones']['groupList'] as $values) {
-                if ($values['Type'] == self::HOSTGROUP_TYPE) {
-                    $this->assignHostgroup($values, $groups_order, $groups);
-                } elseif ($values['Type'] == self::HOSTCATEGORY_TYPE) {
-                    $this->assignHostcategory($values, $groups_order, $groups);
-                } elseif ($values['Type'] == self::HOSTSEVERITY_TYPE) {
-                    $this->assignHostseverity($values, $groups_order, $groups);
-                } elseif ($values['Type'] == self::SERVICEGROUP_TYPE) {
-                    $this->assignServicegroup($values, $groups_order, $groups);
-                } elseif ($values['Type'] == self::SERVICECATEGORY_TYPE) {
-                    $this->assignServicecategory($values, $groups_order, $groups);
-                } elseif ($values['Type'] == self::SERVICESEVERITY_TYPE) {
-                    $this->assignServiceseverity($values, $groups_order, $groups);
-                } elseif ($values['Type'] == self::SERVICECONTACTGROUP_TYPE) {
-                    $this->assignContactgroup($values, $groups_order, $groups);
-                } elseif ($values['Type'] == self::CUSTOM_TYPE) {
-                    $this->assignCustom($values, $groups_order, $groups);
-                } elseif ($values['Type'] == self::BODY_TYPE) {
-                    $this->assignBody($values, $groups_order, $groups);
-                } else {
-                    $method_name = 'assignOthers';
-                    if (method_exists($this, $method_name)) {
-                        $this->{$method_name}($values, $groups_order, $groups);
-                    }
+                switch ($values['Type']) {
+                    case self::HOSTGROUP_TYPE:
+                        $this->assignHostgroup($values, $groups_order, $groups);
+                        break;
+                    case self::HOSTCATEGORY_TYPE:
+                        $this->assignHostcategory($values, $groups_order, $groups);
+                        break;
+                    case self::HOSTSEVERITY_TYPE:
+                        $this->assignHostseverity($values, $groups_order, $groups);
+                        break;
+                    case self::SERVICEGROUP_TYPE:
+                        $this->assignServicegroup($values, $groups_order, $groups);
+                        break;
+                    case self::SERVICECATEGORY_TYPE:
+                        $this->assignServicecategory($values, $groups_order, $groups);
+                        break;
+                    case self::SERVICESEVERITY_TYPE:
+                        $this->assignServiceseverity($values, $groups_order, $groups);
+                        break;
+                    case self::SERVICECONTACTGROUP_TYPE:
+                        $this->assignContactgroup($values, $groups_order, $groups);
+                        break;
+                    case self::CUSTOM_TYPE:
+                        $this->assignCustom($values, $groups_order, $groups);
+                        break;
+                    case self::BODY_TYPE:
+                        $this->assignBody($values, $groups_order, $groups);
+                        break;
+                    default:
+                        $method_name = 'assignOthers';
+                        if (method_exists($this, $method_name)) {
+                            $this->{$method_name}($values, $groups_order, $groups);
+                        }
+                        break;
                 }
             }
         }
@@ -1014,9 +1027,7 @@ Output: {$service.output|substr:0:1024}
         $this->assignFormatPopupTemplate($tpl, $args);
         $tpl->assign('string', $this->rule_data['format_popup']);
         $result['format_popup'] = $tpl->fetch('eval.ihtml');
-        $result['attach_files_enable'] = isset(
-            $this->rule_data['attach_files']
-        ) ? $this->rule_data['attach_files'] : 0;
+        $result['attach_files_enable'] = isset($this->rule_data['attach_files']) ? $this->rule_data['attach_files'] : 0;
         return $result;
     }
 
@@ -1073,18 +1084,35 @@ Output: {$service.output|substr:0:1024}
                 $value = '';
                 $placeholder = '';
                 $matches = array();
-                if (preg_match('/^(.*?)___(.*?)___(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
+                if (preg_match(
+                    '/^(.*?)___(.*?)___(.*)$/',
+                    $this->_submitted_config['select_' . $values['Id']],
+                    $matches
+                )) {
                     $id = $matches[1];
                     $value = $matches[2];
                     $placeholder = $matches[3];
-                } elseif (preg_match('/^(.*?)___(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
+                } elseif (preg_match(
+                    '/^(.*?)___(.*)$/',
+                    $this->_submitted_config['select_' . $values['Id']],
+                    $matches
+                )) {
                     $id = $matches[1];
                     $value = $matches[2];
                 }
                 if (!empty($placeholder)) {
-                    $select_lists[$values['Id']] = array('label' => _($values['Label']), 'id' => $id, 'value' => $value, 'placeholder' => $placeholder);
+                    $select_lists[$values['Id']] = array(
+                        'label' => _($values['Label']),
+                        'id' => $id,
+                        'value' => $value,
+                        'placeholder' => $placeholder
+                    );
                 } else {
-                    $select_lists[$values['Id']] = array('label' => _($values['Label']), 'id' => $id, 'value' => $value);
+                    $select_lists[$values['Id']] = array(
+                        'label' => _($values['Label']),
+                        'id' => $id,
+                        'value' => $value
+                    );
                 }
                 if (method_exists($this, $method_name)) {
                     $more_attributes = $this->{$method_name}($values['Id'], $id);
@@ -1109,11 +1137,19 @@ Output: {$service.output|substr:0:1024}
                 $value = '';
                 $placeholder = '';
                 $matches = array();
-                if (preg_match('/^(.*?)___(.*?)___(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
+                if (preg_match(
+                    '/^(.*?)___(.*?)___(.*)$/',
+                    $this->_submitted_config['select_' . $values['Id']],
+                    $matches
+                )) {
                     $id = $matches[1];
                     $value = $matches[2];
                     $placeholder = $matches[3];
-                } elseif (preg_match('/^(.*?)___(.*)$/', $this->_submitted_config['select_' . $values['Id']], $matches)) {
+                } elseif (preg_match(
+                    '/^(.*?)___(.*)$/',
+                    $this->_submitted_config['select_' . $values['Id']],
+                    $matches
+                )) {
                     $id = $matches[1];
                     $value = $matches[2];
                 }
@@ -1379,9 +1415,9 @@ Output: {$service.output|substr:0:1024}
                 );
             }
 
-            $result['ticket_id'] = is_null(
-                $extra_args['ticket_value']
-            ) ? $result['ticket_id'] : $extra_args['ticket_value'];
+            $result['ticket_id'] = is_null($extra_args['ticket_value'])
+                ? $result['ticket_id']
+                : $extra_args['ticket_value'];
             $result['ticket_is_ok'] = 1;
             $db_storage->commit();
         } catch (Exception $e) {
@@ -1428,8 +1464,8 @@ Output: {$service.output|substr:0:1024}
         }
 
         if (!is_null($_SESSION['ot_cache_' . $this->_rule_id][$key]['ttl'])) {
-            $timeTtl = $_SESSION['ot_cache_' . $this->_rule_id][$key]['ttl'] + $_SESSION['ot_cache_' .
-                $this->_rule_id][$key]['created'];
+            $timeTtl = $_SESSION['ot_cache_' . $this->_rule_id][$key]['ttl']
+                + $_SESSION['ot_cache_' . $this->_rule_id][$key]['created'];
             if ($timeTtl < time()) {
                 unset($_SESSION['ot_cache_' . $this->_rule_id][$key]);
                 return null;

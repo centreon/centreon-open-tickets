@@ -259,9 +259,9 @@ if (isset($preferences["display_severities"])
         if ($labels != '') {
             $labels .= ',';
         }
-        $labels .= "'".trim($p)."'";
+        $labels .= "'" . trim($p) . "'";
     }
-    $query2 = "SELECT sc_id FROM service_categories WHERE sc_name IN (".$labels.")";
+    $query2 = "SELECT sc_id FROM service_categories WHERE sc_name IN (" . $labels . ")";
     $RES = $db->query($query2);
     $idC = "";
     while ($d1 = $RES->fetch()) {
@@ -270,15 +270,15 @@ if (isset($preferences["display_severities"])
         }
         $idC .= $d1['sc_id'];
     }
-    $query .= " AND cv2.`value` IN ($idC) ";
+    $query .= " AND cv2.`value` IN (" . $idC . ") ";
 }
 if (!$centreon->user->admin) {
     $pearDB = $db;
     $aclObj = new CentreonACL($centreon->user->user_id, $centreon->user->admin);
     $groupList = $aclObj->getAccessGroupsString();
     $query .= " AND h.host_id = acl.host_id
-    AND acl.service_id = s.service_id
-    AND acl.group_id IN ($groupList)";
+        AND acl.service_id = s.service_id
+        AND acl.group_id IN (" . $groupList . ")";
 }
 $orderby = "hostname ASC , description ASC";
 if (isset($preferences['order_by']) && $preferences['order_by'] != "") {

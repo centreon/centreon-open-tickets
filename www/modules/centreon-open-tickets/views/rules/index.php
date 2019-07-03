@@ -43,32 +43,32 @@ $search = $request->getParam('searchRule');
 try {
     switch ($o) {
         case 'a':
-            include_once 'form.php';
+            require_once 'form.php';
             break;
         case 'd':
             $rule->delete($select);
-            include_once 'list.php';
+            require_once 'list.php';
             break;
         case 'c':
-            include_once 'form.php';
+            require_once 'form.php';
             break;
         case 'l':
-            include_once 'list.php';
+            require_once 'list.php';
             break;
         case 'dp':
             $rule->duplicate($select, $duplicateNb);
-            include_once 'list.php';
+            require_once 'list.php';
             break;
         case 'e':
             $rule->enable($select);
-            include_once 'list.php';
+            require_once 'list.php';
             break;
         case 'ds':
             $rule->disable($select);
-            include_once 'list.php';
+            require_once 'list.php';
             break;
         default:
-            include_once 'list.php';
+            require_once 'list.php';
             break;
     }
 } catch (Exception $e) {

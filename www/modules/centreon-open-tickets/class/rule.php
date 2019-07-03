@@ -91,8 +91,8 @@ class Centreon_OpenTickets_Rule
         }
 
         $centreon_open_tickets_path = $centreon_path . 'www/modules/centreon-open-tickets/';
-        include_once $centreon_open_tickets_path . 'providers/register.php';
-        include_once $centreon_open_tickets_path . 'providers/Abstract/AbstractProvider.class.php';
+        require_once $centreon_open_tickets_path . 'providers/register.php';
+        require_once $centreon_open_tickets_path . 'providers/Abstract/AbstractProvider.class.php';
 
         $provider_name = null;
         foreach ($register_providers as $name => $id) {

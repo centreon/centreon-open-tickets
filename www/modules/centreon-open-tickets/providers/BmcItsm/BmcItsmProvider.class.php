@@ -118,15 +118,18 @@ class BmcItsmProvider extends AbstractProvider
 
         $this->default_data['message_confirm'] = '
 <table class="table">
-<tr>
-    <td class="FormHeader" colspan="2"><h3 style="color: #00bfb3;">{$title}</h3></td>
-</tr>
+    <tr>
+        <td class="FormHeader" colspan="2"><h3 style="color: #00bfb3;">{$title}</h3></td>
+    </tr>
 {if $ticket_is_ok == 1}
-    <tr><td class="FormRowField" style="padding-left:15px;">New ticket opened: {$ticket_id}.</td></tr>
+    <tr>
+        <td class="FormRowField" style="padding-left:15px;">New ticket opened: {$ticket_id}.</td>
+    </tr>
 {else}
     <tr>
-    <td class="FormRowField" style="padding-left:15px;">Error to open the ticket: <xmp>{$ticket_error_message}</xmp>
-    </td></tr>
+        <td class="FormRowField" style="padding-left:15px;">Error to open the ticket: <xmp>{$ticket_error_message}</xmp>
+        </td>
+    </tr>
 {/if}
 </table>
 ';
