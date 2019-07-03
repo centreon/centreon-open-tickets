@@ -33,11 +33,12 @@ class CentreonWidgetParamsConnectorOpenTicketsRule extends CentreonWidgetParamsL
         static $tab;
 
         if (!isset($tab)) {
-            $query = "SELECT rule_id, `alias`
-                          FROM mod_open_tickets_rule
-                          WHERE `activate` = '1'";
-            $query .= " ORDER BY `alias`";
-            $res = $this->db->query($query);
+            $res = $this->db->query(
+                "SELECT rule_id, `alias`
+                FROM mod_open_tickets_rule
+                WHERE `activate` = '1'
+                ORDER BY `alias`"
+            );
             $tab = array(null => null);
             while ($row = $res->fetch()) {
                 $tab[$row['rule_id']] = $row['alias'];

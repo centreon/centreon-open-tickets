@@ -31,10 +31,11 @@ function smarty_function_host_get_hostgroups($params, &$smarty)
     $db = new CentreonDBManager('centstorage');
 
     $result = array();
-    $query = "SELECT hostgroups.* FROM hosts_hostgroups, hostgroups
+    $dbResult = $db->query(
+        "SELECT hostgroups.* FROM hosts_hostgroups, hostgroups
         WHERE hosts_hostgroups.host_id = " . $params['host_id'] .
-        " AND hosts_hostgroups.hostgroup_id = hostgroups.hostgroup_id";
-    $dbResult = $db->query($query);
+        " AND hosts_hostgroups.hostgroup_id = hostgroups.hostgroup_id"
+    );
     while (($row = $dbResult->fetch())) {
         $result[$row['hostgroup_id']] = $row['name'];
     }
@@ -97,13 +98,15 @@ function smarty_function_host_get_hostcategories($params, &$smarty)
             continue;
         }
         $loop[$host_id] = 1;
-        $query = "SELECT htr.host_tpl_id, hcr.hostcategories_hc_id, hostcategories.hc_name FROM host
+        $dbResult = $db->query(
+            "SELECT htr.host_tpl_id, hcr.hostcategories_hc_id, hostcategories.hc_name
+            FROM host
             LEFT JOIN host_template_relation htr ON host.host_id = htr.host_host_id
             LEFT JOIN hostcategories_relation hcr ON htr.host_host_id = hcr.host_host_id
             LEFT JOIN hostcategories ON hostcategories.hc_id = hcr.hostcategories_hc_id
             AND hostcategories.hc_activate = '1'
-            WHERE host.host_id = " . $host_id . " ORDER BY `order` ASC";
-        $dbResult = $db->query($query);
+            WHERE host.host_id = " . $host_id . " ORDER BY `order` ASC"
+        );
         while (($row = $dbResult->fetch())) {
             if (!is_null($row['host_tpl_id']) && $row['host_tpl_id'] != '') {
                 array_unshift($array_stack, $row['host_tpl_id']);
@@ -144,11 +147,13 @@ function smarty_function_service_get_servicecategories($params, &$smarty)
             continue;
         }
         $loop[$service_id] = 1;
-        $query = "SELECT service.service_template_model_stm_id, sc.sc_id, sc.sc_name, sc.sc_description FROM service
+        $dbResult = $db->query(
+            "SELECT service.service_template_model_stm_id, sc.sc_id, sc.sc_name, sc.sc_description
+            FROM service
             LEFT JOIN service_categories_relation scr ON service.service_id = scr.service_service_id
             LEFT JOIN service_categories sc ON sc.sc_id = scr.sc_id AND sc.sc_activate = '1'
-            WHERE service.service_id = " . $service_id;
-        $dbResult = $db->query($query);
+            WHERE service.service_id = " . $service_id
+        );
         while (($row = $dbResult->fetch())) {
             if (!is_null($row['service_template_model_stm_id']) && $row['service_template_model_stm_id'] != '') {
                 array_unshift($array_stack, $row['service_template_model_stm_id']);
@@ -184,12 +189,13 @@ function smarty_function_service_get_servicegroups($params, &$smarty)
     $result = array();
     $service_id_tpl = $params['service_id'];
     if (isset($params['host_id'])) {
-        $query = "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias
+        $dbResult = $db->query(
+            "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias
             FROM servicegroup_relation sgr
             LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id AND sg.sg_activate = '1'
             LEFT JOIN service ON service.service_id = sgr.service_service_id
-            WHERE sgr.host_host_id = " . $params['host_id'] . " AND sgr.service_service_id = " . $params['service_id'];
-        $dbResult = $db->query($query);
+            WHERE sgr.host_host_id = " . $params['host_id'] . " AND sgr.service_service_id = " . $params['service_id']
+        );
         while (($row = $dbResult->fetch())) {
             $service_id_tpl = $row['service_template_model_stm_id'];
             if (!is_null($row['sg_id']) && $row['sg_id'] != '') {
@@ -204,12 +210,13 @@ function smarty_function_service_get_servicegroups($params, &$smarty)
             break;
         }
         $loop_array[$service_id_tpl] = 1;
-        $query = "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias
+        $dbResult = $db->query(
+            "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias
             FROM servicegroup_relation sgr
             LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id AND sg.sg_activate = '1'
             LEFT JOIN service ON service.service_id = sgr.service_service_id
-            WHERE sgr.service_service_id = " . $service_id_tpl;
-        $dbResult = $db->query($query);
+            WHERE sgr.service_service_id = " . $service_id_tpl
+        );
         while (($row = $dbResult->fetch())) {
             $service_id_tpl = $row['service_template_model_stm_id'];
             if (!is_null($row['sg_id']) && $row['sg_id'] != '') {
@@ -237,9 +244,12 @@ function smarty_function_host_get_macro_value_in_config($params, &$smarty)
     $db = new CentreonDBManager();
 
     // Look macro in current host
-    $query = "SELECT host_macro_value FROM on_demand_macro_host
-        WHERE host_host_id = " . $params['host_id'] . " AND host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'";
-    $dbResult = $db->query($query);
+    $dbResult = $db->query(
+        "SELECT host_macro_value
+        FROM on_demand_macro_host
+        WHERE host_host_id = " . $params['host_id'] . "
+        AND host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'"
+    );
     if (($row = $dbResult->fetch())) {
         $smarty->assign('host_get_macro_value_in_config_result', $row['host_macro_value']);
         return ;
@@ -340,7 +350,8 @@ function smarty_function_host_get_macro_values_in_config($params, &$smarty)
     $smarty->assign('host_get_macro_values_in_config_result', $result);
 }
 
-function smarty_function_sortgroup($params, &$smarty) {
+function smarty_function_sortgroup($params, &$smarty)
+{
     asort($params['group']);
     $smarty->assign('sortgroup_result', $params['group']);
 }

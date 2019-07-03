@@ -1,20 +1,20 @@
 <form>
     <table id='HostTable' class='ListTable styleTable'>
     <tr class="ListHeader">
-            <td class="ListColHeaderPicker"><input type='checkbox' id='selection_0;0' class='checkall selection'/></td>
-            {if $preferences.display_severities}<td class="ListColHeaderCenter" style="white-space: nowrap; width: 17px;" name='Severities'>S</td>{/if}
-            {if $preferences.display_host_name}<td class='ListColHeaderCenter' name='hostname' colspan='2'>Host</td>{/if}
-            {if $preferences.display_svc_description}<td class='ListColHeaderCenter' name='description' colspan='2'>Service</td>{/if}
-            {if $preferences.display_status}<td class='ListColHeaderCenter' name='s_state'>Status</td>{/if}
-            {if $preferences.display_duration}<td class='ListColHeaderCenter' name='last_state_change'>Duration</td>{/if}
-            {if $preferences.display_hard_state_duration}<td class='ListColHeaderCenter' name='last_hard_state_change'>Hard State Duration</td>{/if}
-            {if $preferences.display_last_check}<td class='ListColHeaderCenter' name='last_check'>Last Check</td>{/if}
-            {if $preferences.display_tries}<td class='ListColHeaderCenter' name='check_attempt'>Tries</td>{/if}
-            {if $preferences.display_execution_time}<td class='ListColHeaderCenter' name='execution_time'>Execution Time</td>{/if}
-            {if $preferences.display_output}<td class='ListColHeaderCenter' name='output'>Status information</td>{/if}
-            {if $preferences.display_ticket_id}<td class='ListColHeaderCenter' name='ticket_id'>Ticket ID</td>{/if}
-            {if $preferences.display_ticket_time}<td class='ListColHeaderCenter' name='ticket_time'>Ticket Time</td>{/if}
-            {if $preferences.display_ticket_subject}<td class='ListColHeaderCenter' name='ticket_subject'>Ticket Subject</td>{/if}
+        <td class="ListColHeaderPicker"><input type='checkbox' id='selection_0;0' class='checkall selection'/></td>
+        {if $preferences.display_severities}<td class="ListColHeaderCenter" style="white-space: nowrap; width: 17px;" name='Severities'>S</td>{/if}
+        {if $preferences.display_host_name}<td class='ListColHeaderCenter' name='hostname' colspan='2'>Host</td>{/if}
+        {if $preferences.display_svc_description}<td class='ListColHeaderCenter' name='description' colspan='2'>Service</td>{/if}
+        {if $preferences.display_status}<td class='ListColHeaderCenter' name='s_state'>Status</td>{/if}
+        {if $preferences.display_duration}<td class='ListColHeaderCenter' name='last_state_change'>Duration</td>{/if}
+        {if $preferences.display_hard_state_duration}<td class='ListColHeaderCenter' name='last_hard_state_change'>Hard State Duration</td>{/if}
+        {if $preferences.display_last_check}<td class='ListColHeaderCenter' name='last_check'>Last Check</td>{/if}
+        {if $preferences.display_tries}<td class='ListColHeaderCenter' name='check_attempt'>Tries</td>{/if}
+        {if $preferences.display_execution_time}<td class='ListColHeaderCenter' name='execution_time'>Execution Time</td>{/if}
+        {if $preferences.display_output}<td class='ListColHeaderCenter' name='output'>Status information</td>{/if}
+        {if $preferences.display_ticket_id}<td class='ListColHeaderCenter' name='ticket_id'>Ticket ID</td>{/if}
+        {if $preferences.display_ticket_time}<td class='ListColHeaderCenter' name='ticket_time'>Ticket Time</td>{/if}
+        {if $preferences.display_ticket_subject}<td class='ListColHeaderCenter' name='ticket_subject'>Ticket Subject</td>{/if}
     </tr>
     {assign var='previous' value=''}
     {assign var='classStyle' value='list_two'}

@@ -101,8 +101,8 @@ class Centreon_OpenTickets_Log
             $params['period']
         );
 
-        $query = "SELECT SQL_CALC_FOUND_ROWS mot.ticket_value as ticket_id, mot.timestamp, mot.user, " .
-            "motl.hostname as host_name, motl.service_description, motd.subject " .
+        $query = "SELECT SQL_CALC_FOUND_ROWS mot.ticket_value AS ticket_id, mot.timestamp, mot.user, " .
+            "motl.hostname AS host_name, motl.service_description, motd.subject " .
             "FROM mod_open_tickets_link motl, mod_open_tickets_data motd, mod_open_tickets mot WHERE ";
         if (!is_null($range_time['start'])) {
             $query .= "mot.timestamp >= " . $range_time['start'] . " AND ";
