@@ -4,45 +4,45 @@
 <form id="RuleForm" action="?p={$page}">
 <input type="hidden" id="rule_id" name="rule_id" value="{$rule_id}">
 <div class="headerTabContainer">
-	<ul id="mainnav">
-		<li class="a" id='c1'><a href="#" onclick="javascript:montre('1');">{$sort1}</a></li>
-		<li class="b" id='c2'><a href="#" onclick="javascript:montre('2');">{$sort2}</a></li>
-	</ul>
-	<div id="validFormTop">
-		<p class="oreonbutton">
-			<input id="OTSave" class="btc bt_success" type="button" value="Save" onClick="saveForm()" />
-		</p>
-	</div>
+    <ul id="mainnav">
+        <li class="a" id='c1'><a href="#" onclick="javascript:montre('1');">{$sort1}</a></li>
+        <li class="b" id='c2'><a href="#" onclick="javascript:montre('2');">{$sort2}</a></li>
+    </ul>
+    <div id="validFormTop">
+        <p class="oreonbutton">
+            <input id="OTSave" class="btc bt_success" type="button" value="Save" onClick="saveForm()" />
+        </p>
+    </div>
 </div>
 <div id="tab1" class="tab">
-	<table id="OTcontainer1" class="formTable table">
-	 	<tr class="ListHeader">
-	 		<td class="FormHeader" colspan="2">
-	 			<h3>|{$header.title}</h3>
-	 		</td>
-	 	</tr>
-	 	<tr class="list_lvl_1">
-	 		<td class="ListColLvl1_name" colspan="2">
-	 			<h4>{$header.general}</h4>
-	 		</td>
-	 	</tr>
-		<tr class="list_one">
-			<td class="FormRowField">
-				{$form.rule_alias.label}
-			</td>
-			<td class="FormRowValue">
-				{$form.rule_alias.html}
-			</td>
-		</tr>
+    <table id="OTcontainer1" class="formTable table">
+         <tr class="ListHeader">
+             <td class="FormHeader" colspan="2">
+                 <h3>|{$header.title}</h3>
+             </td>
+         </tr>
+         <tr class="list_lvl_1">
+             <td class="ListColLvl1_name" colspan="2">
+                 <h4>{$header.general}</h4>
+             </td>
+         </tr>
+        <tr class="list_one">
+            <td class="FormRowField">
+                {$form.rule_alias.label}
+            </td>
+            <td class="FormRowValue">
+                {$form.rule_alias.html}
+            </td>
+        </tr>
         <tr id="OTFindcontainer1" class="list_two">
-			<td class="FormRowField">
-				{$form.rule_provider.label}
-			</td>
-			<td class="FormRowValue">
-				{$form.rule_provider.html}
-			</td>
-		</tr>
-	</table>
+            <td class="FormRowField">
+                {$form.rule_provider.label}
+            </td>
+            <td class="FormRowValue">
+                {$form.rule_provider.html}
+            </td>
+        </tr>
+    </table>
 </div>
 <div id="tab2" class="tab">
     <table class="formTable table">
@@ -56,8 +56,8 @@
 
 <div id="validForm">
     <p class="oreonbutton">
-		<input id="OTSave" class="btc bt_success" type="button" value="Save" onClick="saveForm()" />
-	</p>
+        <input id="OTSave" class="btc bt_success" type="button" value="Save" onClick="saveForm()" />
+    </p>
 </div>
 
 </form>

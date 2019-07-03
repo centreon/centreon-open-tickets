@@ -162,18 +162,18 @@
                     ,nameAttr = that.attr("name")
                     
                 /* Normalize field name attributes */
-		if(typeof(newNameAttr)=='string'){
-                	newNameAttr = nameTemplateAttr.replace(options.indexFormat, index);
-                	that.attr("name", newNameAttr);
-		}
+        if(typeof(newNameAttr)=='string'){
+                    newNameAttr = nameTemplateAttr.replace(options.indexFormat, index);
+                    that.attr("name", newNameAttr);
+        }
 
                 /* Normalize field id attributes */
                 if(typeof(newIdAttr)=='string'){
                         newIdAttr = idTemplateAttr.replace(options.indexFormat, index);
 
                         form.find("label[for='"+idAttr+"']").each(function(){
-                        	$(this).attr("for", newIdAttr);
-                    	});
+                            $(this).attr("for", newIdAttr);
+                        });
                         that.attr("id", newIdAttr);
                 }
             });
@@ -499,8 +499,8 @@
             }
 
             if (canRemoveAllForms()) {
-		var count = forms.length;
-		for (i = 0; i < count; i++) {
+        var count = forms.length;
+        for (i = 0; i < count; i++) {
                     if (forms[i]) {
                         removeForm(forms[i]);
                     }
@@ -706,7 +706,7 @@
             if (forms.length > 0) {
                 var count = 0;
                 var num = forms.length;
-		var i = 0;
+        var i = 0;
 
                 for (i = 0; i < forms.length; i++) {
                     if (forms[i]) {
@@ -969,14 +969,14 @@
 
 
                 var iFormat = '#index#';
-        	if (typeof(options.indexFormat) != 'undefined' && options.indexFormat){
-            		iFormat = options.indexFormat;
-        	}
+            if (typeof(options.indexFormat) != 'undefined' && options.indexFormat){
+                    iFormat = options.indexFormat;
+            }
 
 
                 // Replace form Id and form Index with current values
                 if (index.indexOf('#form#') != -1 || index.indexOf(iFormat) != -1) {
-                	index = index.replace('#form#', formId);
+                    index = index.replace('#form#', formId);
                         index = index.replace(iFormat, formIndex);
                 } else {
                         index = formId + '_' + formIndex + '_' + index;
@@ -1005,7 +1005,7 @@
 
                 // Field was found
                 if (field.length > 0) {
-					
+                    
                     // Multiple values?
                     var mv = false;
                     if (typeof(value) == 'object') {
@@ -1021,7 +1021,7 @@
                     if (mf) {
 
                         if (mv) {
-							
+                            
                             var fieldsToFill = [];
                             fieldsToFill['fields'] = [];
                             fieldsToFill['values'] = [];

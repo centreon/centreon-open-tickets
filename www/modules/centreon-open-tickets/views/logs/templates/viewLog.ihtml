@@ -19,11 +19,11 @@
         <tr>
             <td><h4>{t}From{/t}</h4></td>
             <td><h4>{t}To{/t}</h4></td>
-    	    <td colspan='3'><h4>{$form.period.label}</h4></td>
+            <td colspan='3'><h4>{$form.period.label}</h4></td>
         </tr>
         <tr>
             <td>{$form.StartDate.html} {$form.StartTime.html}</td>
-    	    <td>{$form.EndDate.html} {$form.EndTime.html}</td>
+            <td>{$form.EndDate.html} {$form.EndTime.html}</td>
             <td colspan="2">{$form.period.html}</td>
             <td align="right" style="padding-right: 100px">{$form.graph.html}</td>
         </tr>

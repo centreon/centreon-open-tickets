@@ -54,7 +54,7 @@ function init_sheepit() {
    });
 
    jQuery(".clonable").sortable(
-   	{
+    {
         handle: ".clonehandle",
         axis: "y",
         helper: "clone",
@@ -64,6 +64,6 @@ function init_sheepit() {
         stop: function(event, ui) {
             cloneResort(jQuery(this).attr('id'));
         }
-	}
+    }
    );
 }

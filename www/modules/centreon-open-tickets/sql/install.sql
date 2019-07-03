@@ -19,24 +19,24 @@ INSERT INTO `topology_JS` (`id_page`, `PathName_js`) VALUES ('20320', './modules
 -- STRUCTURE FOR mod_open_tickets_rule
 --
 CREATE TABLE IF NOT EXISTS `mod_open_tickets_rule` (
-	`rule_id` int(11) NOT NULL AUTO_INCREMENT,
-	`alias` varchar(255) DEFAULT NULL,
+    `rule_id` int(11) NOT NULL AUTO_INCREMENT,
+    `alias` varchar(255) DEFAULT NULL,
     `provider_id` int(11) NOT NULL,
-	`activate` enum('0','1') NOT NULL DEFAULT '1',
-	PRIMARY KEY (`rule_id`)
+    `activate` enum('0','1') NOT NULL DEFAULT '1',
+    PRIMARY KEY (`rule_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
 -- STRUCTURE FOR mod_open_tickets_form_clone
 --
 CREATE TABLE IF NOT EXISTS `mod_open_tickets_form_clone` (
-	`form_clone_id` int(11) NOT NULL AUTO_INCREMENT,
+    `form_clone_id` int(11) NOT NULL AUTO_INCREMENT,
     `uniq_id` VARCHAR(512) NOT NULL,
     `label` VARCHAR(512) NOT NULL,
-	`value` TEXT,
-	`rule_id` int(11) NOT NULL,
+    `value` TEXT,
+    `rule_id` int(11) NOT NULL,
     `order` int(11) NOT NULL,
-	PRIMARY KEY (`form_clone_id`)
+    PRIMARY KEY (`form_clone_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `mod_open_tickets_form_clone`
@@ -46,11 +46,11 @@ ALTER TABLE `mod_open_tickets_form_clone`
 -- STRUCTURE FOR mod_open_tickets_form_value
 --
 CREATE TABLE IF NOT EXISTS `mod_open_tickets_form_value` (
-	`form_value_id` int(11) NOT NULL AUTO_INCREMENT,
-  	`uniq_id` VARCHAR(512) NOT NULL,
+    `form_value_id` int(11) NOT NULL AUTO_INCREMENT,
+      `uniq_id` VARCHAR(512) NOT NULL,
     `rule_id` int(11) NOT NULL,
     `value` TEXT,
-	PRIMARY KEY (`form_value_id`)
+    PRIMARY KEY (`form_value_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `mod_open_tickets_form_value`
