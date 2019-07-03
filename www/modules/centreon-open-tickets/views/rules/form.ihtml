@@ -73,14 +73,14 @@ var $callback_OTLoadForm = function(res) {
     } else {
         jQuery("#OTFindcontainer1").after(data_ret['result']['container1_html']);
         jQuery("#OTFindcontainer2").after(data_ret['result']['container2_html']);
-        
+
         // Load macros if there are some
         if (data_ret['result']['clones'] !== undefined) {
             for (var key in data_ret['result']['clones']) {
                 jQuery("#clone-count-" + key).data("clone-count-" + key, data_ret['result']['clones'][key]['clone_count']);
                 jQuery("#clone-values-" + key).data("clone-values-" + key, JSON.parse(data_ret['result']['clones'][key]['clone_values']));
             }
-            
+
             init_sheepit();
         }
     }
@@ -98,14 +98,14 @@ var $callback_OTSaveForm = function(res) {
 
 function OTLoadForm() {
     jQuery("#rule_error").html('');
-    
+
     jQuery("#OTFindcontainer1").nextAll().empty();
     jQuery("#OTFindcontainer2").nextAll().empty();
     delete_sheepit();
-    if (jQuery("#provider_id").val() === undefined || jQuery("#provider_id").val().length == 0) {    
+    if (jQuery("#provider_id").val() === undefined || jQuery("#provider_id").val().length == 0) {
         return ;
     }
-        
+
     var data = {
         "action": "get-form-config",
         "rule_id": jQuery("#rule_id").val(),
@@ -117,7 +117,7 @@ function OTLoadForm() {
 
 function saveForm() {
     jQuery("#rule_error").html('');
-    
+
     var data = {
         "action": "save-form-config",
         "rule_id": jQuery("#rule_id").val(),
@@ -130,7 +130,7 @@ function saveForm() {
 
 jQuery(function() {
     jQuery("#provider_id").attr('onChange', 'OTLoadForm();');
-    
+
     // Maybe need to init
     OTLoadForm();
 });

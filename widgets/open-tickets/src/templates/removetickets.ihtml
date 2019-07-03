@@ -9,7 +9,7 @@
             <input type='hidden' id="provider_id" name='provider_id' value='{$provider_id}' />
             <input type='hidden' name='selection' value='{$selection}' />
         </div>
-        
+
         <!--<table class="table">
         <tr>
             <td class="FormHeader" colspan="2"><h3 style="color: #00bfb3;">{$title}</td>
@@ -36,14 +36,14 @@ var $callback_closeTicket = function(res) {
 
 function closeTicket() {
     jQuery("#form_error").html('');
-    
+
     var data = {
         "action": "close-ticket",
         "rule_id": jQuery("#rule_id").val(),
         "provider_id": jQuery("#provider_id").val(),
         "form": jQuery("#Form").serializeObject()
     }
-    
+
     jQuery("#validForm").empty();
     jQuery("#OTcontainer").html('<div style="margin-top: 50px; margin-bottom:10px">Please wait...</div><div><img src="./widgets/open-tickets/resources/ajax-waiting.gif" / ></div>');
 

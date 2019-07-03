@@ -46,11 +46,11 @@
                 {/if}
                     <td class="ListColPicker">
                         {$elem.select}
-                    </td>                    
+                    </td>
                     <td class="ListColLeft">
                         <a href={$elem.url_edit}>
                             {$elem.name}
-                        </a>        
+                        </a>
                     </td>
                     <td class="ListColCenter">
                         {$elem.status}
@@ -75,7 +75,7 @@
                 {/php}
             </td>
         </tr>
-    </table>    
-    <input type='hidden' id='limit' name='limit' value='{$limit}'>    
+    </table>
+    <input type='hidden' id='limit' name='limit' value='{$limit}'>
     {$form.hidden}
 </form>

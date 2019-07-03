@@ -10,7 +10,7 @@ INSERT INTO `topology_JS` (`id_page`, `PathName_js`) VALUES ('60420', './modules
 INSERT INTO `topology_JS` (`id_page`, `PathName_js`) VALUES ('60420', './modules/centreon-open-tickets/lib/doClone.js');
 INSERT INTO `topology_JS` (`id_page`, `PathName_js`) VALUES ('60420', './modules/centreon-open-tickets/lib/commonFunc.js');
 
-INSERT INTO `topology` (`topology_id`, `topology_name`, `topology_parent`, `topology_page`, `topology_order`, `topology_group`, `topology_url`, `topology_url_opt`, `topology_popup`, `topology_modules`, `topology_show`, `topology_style_class`, `topology_style_id`, `topology_OnClick`, `readonly`) VALUES 
+INSERT INTO `topology` (`topology_id`, `topology_name`, `topology_parent`, `topology_page`, `topology_order`, `topology_group`, `topology_url`, `topology_url_opt`, `topology_popup`, `topology_modules`, `topology_show`, `topology_style_class`, `topology_style_id`, `topology_OnClick`, `readonly`) VALUES
 (NULL,'Ticket Logs', 203, 20320,30,30,'./modules/centreon-open-tickets/views/logs/index.php',NULL,'0','0','1',NULL,NULL,NULL,'1');
 INSERT INTO `topology_JS` (`id_page`, `PathName_js`) VALUES ('20320', './modules/centreon-open-tickets/lib/commonFunc.js');
 INSERT INTO `topology_JS` (`id_page`, `PathName_js`) VALUES ('20320', './modules/centreon-open-tickets/lib/jquery.serialize-object.min.js');
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS centreon_storage.`mod_open_tickets_data` (
 
 ALTER TABLE centreon_storage.`mod_open_tickets_data`
   ADD CONSTRAINT `mod_open_tickets_data_fk_1` FOREIGN KEY (`ticket_id`) REFERENCES `mod_open_tickets` (`ticket_id`) ON DELETE CASCADE;
-  
+
 CREATE TABLE IF NOT EXISTS centreon_storage.`mod_open_tickets_link` (
     `ticket_id` int(11) NOT NULL,
     `host_id` int(11),

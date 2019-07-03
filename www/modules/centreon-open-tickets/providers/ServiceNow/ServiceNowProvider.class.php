@@ -259,7 +259,7 @@ class ServiceNowProvider extends AbstractProvider
 
         return $str;
     }
-    
+
     protected function assignOtherServiceNow($entry, $method, &$groups_order, &$groups) {
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (

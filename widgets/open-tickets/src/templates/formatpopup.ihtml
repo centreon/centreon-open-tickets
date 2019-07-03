@@ -85,20 +85,20 @@ var $callback_removeFile = function(res) {
 
 function submitTicket() {
     jQuery("#form_error").html('');
-    
+
     var data = {
         "action": "submit-ticket",
         "rule_id": jQuery("#rule_id").val(),
         "provider_id": jQuery("#provider_id").val(),
         "form": jQuery("#Form").serializeObject()
     }
-    
+
     jQuery("#validForm").empty();
     jQuery("#OTcontainer").html('<div style="margin-top: 50px; margin-bottom:10px">Please wait...</div><div><img src="./widgets/open-tickets/resources/ajax-waiting.gif" / ></div>');
     if (document.getElementById("myDropzone") !== null) {
         jQuery("#myDropzone").remove();
     }
-    
+
 
     call_ajax_async(data, $callback_submitTicket, './widgets/open-tickets/src/ajax/callforwardmodule.php');
     return false;
@@ -106,20 +106,20 @@ function submitTicket() {
 
 function removeFile(filename) {
     jQuery("#form_error").html('');
-    
+
     var data = {
         "action": "remove-file",
         "uniqId": jQuery("#uniqId").val(),
         "filename": filename
     }
-    
+
     call_ajax_async(data, $callback_removeFile, './widgets/open-tickets/src/ajax/callforwardmodule.php');
     return false;
 }
 
 function validateFormatPopup() {
     jQuery("#form_error").html('');
-    
+
     var data = {
         "action": "validate-format-popup",
         "rule_id": jQuery("#rule_id").val(),
