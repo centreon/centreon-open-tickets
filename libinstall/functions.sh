@@ -33,7 +33,7 @@ SETCOLOR_NORMAL="\\033[0;39m"
 ## @Globals    LOG_FILE
 #----
 function echo_info() {
-    echo -e "${1}${MOVE_TO_COL}${SETCOLOR_INFO}${2}${SETCOLOR_NORMAL}" 
+    echo -e "${1}${MOVE_TO_COL}${SETCOLOR_INFO}${2}${SETCOLOR_NORMAL}"
     echo -e "$1 : $2" >> $LOG_FILE
 }
 
@@ -46,7 +46,7 @@ function echo_info() {
 ## @Globals    LOG_FILE
 #----
 function echo_success() {
-    echo -e "${1}${MOVE_TO_COL}${SETCOLOR_SUCCESS}${2}${SETCOLOR_NORMAL}" 
+    echo -e "${1}${MOVE_TO_COL}${SETCOLOR_SUCCESS}${2}${SETCOLOR_NORMAL}"
     echo -e "$1 : $2" >> $LOG_FILE
 }
 
@@ -113,7 +113,7 @@ function log() {
 function define_specific_binary_vars() {
     local vars_bin="GREP CAT SED CHMOD CHOWN RM MKDIR CP MV"
     local var_bin_tolower=""
-    for var_bin in $vars_bin ; 
+    for var_bin in $vars_bin ;
     do
         if [ -z $(eval echo \$$var_bin) ] ; then
             var_bin_tolower="$(echo $var_bin | tr [:upper:] [:lower:])"
@@ -192,9 +192,9 @@ function yes_no_default() {
         read res
         [ -z "$res" ] && res="$default"
     done
-    if [ "$res" = "$yes" ] ; then 
+    if [ "$res" = "$yes" ] ; then
         return 0
-    else 
+    else
         return 1
     fi
 }
@@ -285,7 +285,7 @@ function get_spaces_modulo_forge_url() {
 function print_footer() {
     forge_url_spaces=`get_spaces_modulo_forge_url;`
     spaces_x=`echo $forge_url_spaces | cut -d":" -f1`
-    
+
     echo -e "################################################################################"
     echo -e "#                                                                              #"
     echo -e "#       Go to the URL : http://your-server/centreon/ to finish the setup       #"
@@ -307,14 +307,14 @@ function get_centreon_parameters() {
 
     WEB_USER=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "WEB_USER" | cut -d '=' -f2`;
     WEB_GROUP=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "WEB_GROUP" | cut -d '=' -f2`;
-    
+
     MONITORINGENGINE_BINARY=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "MONITORINGENGINE_BINARY" | cut -d '=' -f2`;
     PLUGIN_DIR=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "PLUGIN_DIR" | cut -d '=' -f2`;
     MONITORINGENGINE_USER=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "MONITORINGENGINE_USER" | cut -d '=' -f2`;
     CENTREON_GROUP=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "CENTREON_GROUP" | cut -d '=' -f2`;
 
     PLUGIN_DIR=`${CAT} $CENTREON_CONF/$CENTPLUGINS_FILE_CONF | ${GREP} "PLUGIN_DIR" | cut -d '=' -f2`
-    
+
     RESULT=0
     # check centreon parameters
     if [ "$CENTREON_DIR" != "" ] ; then
@@ -355,8 +355,8 @@ function get_centreon_parameters() {
     fi
 
 
-    #if [ "$RESULT" -eq 10 ]; then 
-    if [ "$RESULT" -eq 9 ]; then 
+    #if [ "$RESULT" -eq 10 ]; then
+    if [ "$RESULT" -eq 9 ]; then
         return 1;
     else
         return 0;
@@ -424,24 +424,24 @@ function install_module_web() {
     ${CHMOD} -R 755 $TEMP_D/* >> $LOG_FILE 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
         echo_success "Setting right" "$ok"
-    else 
+    else
         echo_failure "Setting right" "$fail"
         exit 1
     fi
-    
+
     RESULT=0
     ${CHOWN} -R $WEB_USER.$WEB_GROUP $TEMP_D/* >> $LOG_FILE 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
         RESULT=`expr $RESULT + 1`
     fi
-    
+
     if [ "$RESULT" -eq 1 ] ; then
         echo_success "Setting owner/group" "$ok"
-    else 
+    else
         echo_failure "Setting owner/group" "$fail"
         exit 1
     fi
-    
+
     RESULT=0
     find $TEMP_D -type f -exec ${SED} -i -e 's|@CENTREON_ETC@|'$CENTREON_CONF'|g' \{\} \; 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
@@ -450,11 +450,11 @@ function install_module_web() {
 
     if [ "$RESULT" -eq 1 ] ; then
         echo_success "Changing macro" "$ok"
-    else 
+    else
         echo_failure "Changing macro" "$fail"
         exit 1
     fi
-    
+
     if [ ! -d $INSTALL_DIR_MODULE ] ; then
         RESULT=0
         ${MKDIR} $INSTALL_DIR_MODULE >> $LOG_FILE 2>> $LOG_FILE
@@ -469,19 +469,19 @@ function install_module_web() {
         if [ "$?" -eq 0 ] ; then
             RESULT=`expr $RESULT + 1`
         fi
-        
+
         if [ "$RESULT" -eq 3 ] ; then
             echo_success "Create module directory" "$ok"
-        else 
+        else
             echo_failure "Create module directory" "$fail"
             exit 1
         fi
     fi
-    
+
     ${CP} -Rf --preserve $TEMP_D/* $INSTALL_DIR_MODULE >> $LOG_FILE 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
         echo_success "Copying module" "$ok"
-    else 
+    else
         echo_failure "Copying module" "$fail"
         exit 1
     fi
@@ -502,24 +502,24 @@ function install_module_widgets() {
     ${CHMOD} -R 755 $TEMP_D/* >> $LOG_FILE 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
         echo_success "Setting right" "$ok"
-    else 
+    else
         echo_failure "Setting right" "$fail"
         exit 1
     fi
-    
+
     RESULT=0
     ${CHOWN} -R $WEB_USER.$WEB_GROUP $TEMP_D/* >> $LOG_FILE 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
         RESULT=`expr $RESULT + 1`
     fi
-    
+
     if [ "$RESULT" -eq 1 ] ; then
         echo_success "Setting owner/group" "$ok"
-    else 
+    else
         echo_failure "Setting owner/group" "$fail"
         exit 1
     fi
-    
+
     RESULT=0
     find $TEMP_D -type f -exec ${SED} -i -e 's|@CENTREON_ETC@|'$CENTREON_CONF'|g' \{\} \; 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
@@ -528,11 +528,11 @@ function install_module_widgets() {
 
     if [ "$RESULT" -eq 1 ] ; then
         echo_success "Changing macro" "$ok"
-    else 
+    else
         echo_failure "Changing macro" "$fail"
         exit 1
     fi
-    
+
     if [ ! -d $INSTALL_DIR_MODULE ] ; then
         RESULT=0
         ${MKDIR} $INSTALL_DIR_MODULE >> $LOG_FILE 2>> $LOG_FILE
@@ -547,19 +547,19 @@ function install_module_widgets() {
         if [ "$?" -eq 0 ] ; then
             RESULT=`expr $RESULT + 1`
         fi
-        
+
         if [ "$RESULT" -eq 3 ] ; then
             echo_success "Create widgets directory" "$ok"
-        else 
+        else
             echo_failure "Create widgets directory" "$fail"
             exit 1
         fi
     fi
-    
+
     ${CP} -Rf --preserve $TEMP_D/* $INSTALL_DIR_MODULE >> $LOG_FILE 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
         echo_success "Copying widgets" "$ok"
-    else 
+    else
         echo_failure "Copying widgets" "$fail"
         exit 1
     fi
@@ -573,11 +573,11 @@ function install_module_end() {
     ${RM} -Rf $TEMP_D $TEMP >> $LOG_FILE 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
         echo_success "Delete temp install directory" "$ok"
-    else 
+    else
         echo_failure "Delete temp install directory" "$fail"
         exit 1
     fi
-    
+
     echo ""
     echo "$line"
     echo -e "\tEnd of $RNAME installation"
