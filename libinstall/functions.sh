@@ -27,10 +27,10 @@ SETCOLOR_NORMAL="\\033[0;39m"
 #----
 ## print info message
 ## add info message to log file
-## @param    message info
-## @param    type info (ex: INFO, username...)
-## @Stdout    info message
-## @Globals    LOG_FILE
+## @param   message info
+## @param   type info (ex: INFO, username...)
+## @Stdout  info message
+## @Globals LOG_FILE
 #----
 function echo_info() {
     echo -e "${1}${MOVE_TO_COL}${SETCOLOR_INFO}${2}${SETCOLOR_NORMAL}"
@@ -40,10 +40,10 @@ function echo_info() {
 #----
 ## print success message
 ## add success message to log file
-## @param    message
-## @param    word to specify success (ex: OK)
-## @Stdout    success message
-## @Globals    LOG_FILE
+## @param   message
+## @param   word to specify success (ex: OK)
+## @Stdout  success message
+## @Globals LOG_FILE
 #----
 function echo_success() {
     echo -e "${1}${MOVE_TO_COL}${SETCOLOR_SUCCESS}${2}${SETCOLOR_NORMAL}"
@@ -53,10 +53,10 @@ function echo_success() {
 #----
 ## print failure message
 ## add failure message to log file
-## @param    message
-## @param    word to specify failure (ex: fail)
-## @Stdout    failure message
-## @Globals    LOG_FILE
+## @param   message
+## @param   word to specify failure (ex: fail)
+## @Stdout  failure message
+## @Globals LOG_FILE
 #----
 function echo_failure() {
     echo -e "${1}${MOVE_TO_COL}${SETCOLOR_FAILURE}${2}${SETCOLOR_NORMAL}"
@@ -66,10 +66,10 @@ function echo_failure() {
 #----
 ## print passed message
 ## add passed message to log file
-## @param    message
-## @param    word to specify pass (ex: passed)
-## @Stdout    passed message
-## @Globals    LOG_FILE
+## @param   message
+## @param   word to specify pass (ex: passed)
+## @Stdout  passed message
+## @Globals LOG_FILE
 #----
 function echo_passed() {
     echo -e "${1}${MOVE_TO_COL}${SETCOLOR_WARNING}${2}${SETCOLOR_NORMAL}"
@@ -79,10 +79,10 @@ function echo_passed() {
 #----
 ## print warning message
 ## add warning message to log file
-## @param    message
-## @param    word to specify warning (ex: warn)
-## @Stdout    warning message
-## @Globals    LOG_FILE
+## @param   message
+## @param   word to specify warning (ex: warn)
+## @Stdout  warning message
+## @Globals LOG_FILE
 #----
 function echo_warning() {
     echo -e "${1}${MOVE_TO_COL}${SETCOLOR_WARNING}${2}${SETCOLOR_NORMAL}"
@@ -91,9 +91,9 @@ function echo_warning() {
 
 #----
 ## add message on log file
-## @param    type of message level (debug, info, ...)
-## @param    message
-## @Globals    LOG_FILE
+## @param   type of message level (debug, info, ...)
+## @param   message
+## @Globals LOG_FILE
 #----
 function log() {
     local program="$0"
@@ -108,7 +108,7 @@ function log() {
 ## This functions was been use in first line on your script
 ## @return 0    All is't ok
 ## @return 1    problem with one variable
-## @Globals    GREP, CAT, SED, CHMOD, CHOWN
+## @Globals     GREP, CAT, SED, CHMOD, CHOWN
 #----
 function define_specific_binary_vars() {
     local vars_bin="GREP CAT SED CHMOD CHOWN RM MKDIR CP MV"
@@ -132,10 +132,10 @@ function define_specific_binary_vars() {
 
 #----
 ## find in $PATH if binary exist
-## @param    file to test
+## @param       file to test
 ## @return 0    found
 ## @return 1    not found
-## @Globals    PATH
+## @Globals     PATH
 #----
 function pathfind() {
     OLDIFS="$IFS"
@@ -152,11 +152,11 @@ function pathfind() {
 
 #----
 ## find in $PATH if binary exist and return dirname
-## @param    file to test
-## @param    global variable to set a result
+## @param       file to test
+## @param       global variable to set a result
 ## @return 0    found
 ## @return 1    not found
-## @Globals    PATH
+## @Globals     PATH
 #----
 function pathfind_ret() {
     local bin=$1
@@ -177,10 +177,10 @@ function pathfind_ret() {
 #----
 ## make a question with yes/no possiblity
 ## use "no" response by default
-## @param    message to print
-## @param     default response (default to no)
-## @return 0     yes
-## @return 1     no
+## @param       message to print
+## @param       default response (default to no)
+## @return 0    yes
+## @return 1    no
 #----
 function yes_no_default() {
     local message=$1
@@ -201,7 +201,7 @@ function yes_no_default() {
 
 #----
 ## get right and left spaces of header line
-## @return     "$x:$y"
+## @return  "$x:$y"
 #----
 function get_spaces_modulo_name() {
     lenght_module_name=`echo ${#RNAME}`
@@ -222,7 +222,7 @@ function get_spaces_modulo_name() {
 
 #----
 ## get right and left spaces of header version line
-## @return     "$x:$y"
+## @return  "$x:$y"
 #----
 function get_spaces_modulo_version() {
     lenght_module_version=`echo ${#VERSION}`
@@ -260,7 +260,7 @@ function print_header() {
 
 #----
 ## get right and left spaces of header version line
-## @return     "$x:$y"
+## @return  "$x:$y"
 #----
 function get_spaces_modulo_forge_url() {
     lenght_forge_url=`echo ${#FORGE_URL}`
@@ -302,8 +302,6 @@ function print_footer() {
 function get_centreon_parameters() {
     CENTREON_DIR=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "INSTALL_DIR_CENTREON" | cut -d '=' -f2`;
     CENTREON_LOG_DIR=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "CENTREON_LOG" | cut -d '=' -f2`;
-    #CENTREON_VARLIB=`${CAT} $CENTREON_CONF/$CENTSTORAGE_FILE_CONF | ${GREP} "CENTREON_VARLIB" | cut -d '=' -f2`;
-    #CENTCORE_CMD=$CENTREON_VARLIB"/centcore.cmd"
 
     WEB_USER=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "WEB_USER" | cut -d '=' -f2`;
     WEB_GROUP=`${CAT} $CENTREON_CONF/$FILE_CONF | ${GREP} "WEB_GROUP" | cut -d '=' -f2`;
@@ -323,10 +321,6 @@ function get_centreon_parameters() {
     if [ "$CENTREON_LOG_DIR" != "" ] ; then
         RESULT=`expr $RESULT + 1`
     fi
-    #if [ "$CENTREON_VARLIB" != "" ] ; then
-    #    RESULT=`expr $RESULT + 1`
-    #fi
-
 
     # check apache parameters
     if [ "$WEB_USER" != "" ] ; then
@@ -335,7 +329,6 @@ function get_centreon_parameters() {
     if [ "$WEB_GROUP" != "" ] ; then
         RESULT=`expr $RESULT + 1`
     fi
-
 
     # check Nagios parameters
     if [ "$MONITORINGENGINE_BINARY" != "" ] ; then
@@ -354,8 +347,6 @@ function get_centreon_parameters() {
         RESULT=`expr $RESULT + 1`
     fi
 
-
-    #if [ "$RESULT" -eq 10 ]; then
     if [ "$RESULT" -eq 9 ]; then
         return 1;
     else
@@ -366,8 +357,8 @@ function get_centreon_parameters() {
 #---
 ## {Get location of instCentWeb.conf file}
 ##
-## @Stdout Error message if user set incorrect directory
-## @Stdin Path with must contain $FILE_CONF
+## @Stdout  Error message if user set incorrect directory
+## @Stdin   Path with must contain $FILE_CONF
 #----
 function get_centreon_configuration_location() {
     echo ""
@@ -397,8 +388,8 @@ function get_centreon_configuration_location() {
 #---
 ## {Install my Module}
 ##
-## @Stdout Actions realised by function
-## @Stderr Log into $LOG_FILE
+## @Stdout  Actions realised by function
+## @Stderr  Log into $LOG_FILE
 function install_module() {
     install_module_web;
     install_module_widgets;
@@ -407,8 +398,8 @@ function install_module() {
 
 ## {Install Web Interface of Module}
 ##
-## @Stdout Actions realised by function
-## @Stderr Log into $LOG_FILE
+## @Stdout  Actions realised by function
+## @Stderr  Log into $LOG_FILE
 function install_module_web() {
     INSTALL_DIR_MODULE=$CENTREON_DIR/$MODULE_DIR
 
@@ -567,8 +558,8 @@ function install_module_widgets() {
 
 ## {End of installation}
 ##
-## @Stdout Actions realised by function
-## @Stderr Log into $LOG_FILE
+## @Stdout  Actions realised by function
+## @Stderr  Log into $LOG_FILE
 function install_module_end() {
     ${RM} -Rf $TEMP_D $TEMP >> $LOG_FILE 2>> $LOG_FILE
     if [ "$?" -eq 0 ] ; then
