@@ -21,14 +21,7 @@
 
 global $centreon_path;
 require_once _CENTREON_PATH_ . "/www/class/centreonDB.class.php";
-
-if (file_exists($centreon_path . "/www/include/common/webServices/rest/webService.class.php")) {
-    // Centreon < 2.8
-    include_once $centreon_path . "/www/include/common/webServices/rest/webService.class.php";
-} else {
-    // Centreon >= 2.8
-    include_once $centreon_path . "/www/api/class/webService.class.php";
-}
+require_once $centreon_path . "/www/api/class/webService.class.php";
 
 class CentreonOpenticketHistory extends CentreonWebService
 {
