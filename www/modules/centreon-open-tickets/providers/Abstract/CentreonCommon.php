@@ -33,8 +33,8 @@ function smarty_function_host_get_hostgroups($params, &$smarty)
     $result = array();
     $dbResult = $db->query(
         "SELECT hostgroups.* FROM hosts_hostgroups, hostgroups
-        WHERE hosts_hostgroups.host_id = " . $params['host_id'] .
-        " AND hosts_hostgroups.hostgroup_id = hostgroups.hostgroup_id"
+        WHERE hosts_hostgroups.host_id = " . $params['host_id'] . "
+        AND hosts_hostgroups.hostgroup_id = hostgroups.hostgroup_id"
     );
     while (($row = $dbResult->fetch())) {
         $result[$row['hostgroup_id']] = $row['name'];
@@ -192,9 +192,11 @@ function smarty_function_service_get_servicegroups($params, &$smarty)
         $dbResult = $db->query(
             "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias
             FROM servicegroup_relation sgr
-            LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id AND sg.sg_activate = '1'
+            LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id
+            AND sg.sg_activate = '1'
             LEFT JOIN service ON service.service_id = sgr.service_service_id
-            WHERE sgr.host_host_id = " . $params['host_id'] . " AND sgr.service_service_id = " . $params['service_id']
+            WHERE sgr.host_host_id = " . $params['host_id'] . "
+            AND sgr.service_service_id = " . $params['service_id']
         );
         while (($row = $dbResult->fetch())) {
             $service_id_tpl = $row['service_template_model_stm_id'];
@@ -213,7 +215,8 @@ function smarty_function_service_get_servicegroups($params, &$smarty)
         $dbResult = $db->query(
             "SELECT service.service_template_model_stm_id, sg.sg_id, sg.sg_name, sg.sg_alias
             FROM servicegroup_relation sgr
-            LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id AND sg.sg_activate = '1'
+            LEFT JOIN servicegroup sg ON sgr.servicegroup_sg_id = sg.sg_id
+            AND sg.sg_activate = '1'
             LEFT JOIN service ON service.service_id = sgr.service_service_id
             WHERE sgr.service_service_id = " . $service_id_tpl
         );
@@ -274,7 +277,8 @@ function smarty_function_host_get_macro_value_in_config($params, &$smarty)
             FROM host_template_relation
             LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id
             AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
-            WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . " ORDER BY `order` DESC"
+            WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . "
+            ORDER BY `order` DESC"
         );
         while (($row = $dbResult->fetch())) {
             $entry = array('host_id' => $row['host_tpl_id'], 'macro_value' => null);
@@ -311,7 +315,8 @@ function smarty_function_host_get_macro_values_in_config($params, &$smarty)
         FROM host_template_relation
         LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id
         AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
-        WHERE host_template_relation.host_host_id = " . $params['host_id'] . " ORDER BY `order` ASC"
+        WHERE host_template_relation.host_host_id = " . $params['host_id'] . "
+        ORDER BY `order` ASC"
     );
     while (($row_entry_level1 = $dbresult1->fetch())) {
         $loop = array();
@@ -334,7 +339,8 @@ function smarty_function_host_get_macro_values_in_config($params, &$smarty)
                 FROM host_template_relation
                 LEFT JOIN on_demand_macro_host macro ON macro.host_host_id = host_template_relation.host_tpl_id
                 AND macro.host_macro_name = '\$_HOST" . $params['macro_name'] . "\$'
-                WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . " ORDER BY `order` DESC"
+                WHERE host_template_relation.host_host_id = " . $host_entry['host_id'] . "
+                ORDER BY `order` DESC"
             );
             while (($row = $dbResult->fetch())) {
                 $entry = array('host_id' => $row['host_tpl_id'], 'macro_value' => null);

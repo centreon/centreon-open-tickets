@@ -141,5 +141,3 @@ $form->accept($renderer);
 $tpl->assign('form', $renderer->toArray());
 
 $tpl->display("viewLog.ihtml");
-
-?>

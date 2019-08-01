@@ -122,45 +122,45 @@ $stateLabels = array(
 );
 // Build Query
 $query = "SELECT SQL_CALC_FOUND_ROWS h.host_id,
-        h.name as hostname,
+        h.name AS hostname,
         s.latency,
         s.execution_time,
-        h.state as h_state,
+        h.state AS h_state,
         s.service_id,
         s.description,
-        s.state as s_state,
-        h.state_type as state_type,
+        s.state AS s_state,
+        h.state_type AS state_type,
         s.last_hard_state,
         s.output,
-        s.scheduled_downtime_depth as s_scheduled_downtime_depth,
-        s.acknowledged as s_acknowledged,
-        s.notify as s_notify,
-        s.active_checks as s_active_checks,
-        s.passive_checks as s_passive_checks,
-        h.scheduled_downtime_depth as h_scheduled_downtime_depth,
-        h.acknowledged as h_acknowledged,
-        h.notify as h_notify,
-        h.active_checks as h_active_checks,
-        h.passive_checks as h_passive_checks,
+        s.scheduled_downtime_depth AS s_scheduled_downtime_depth,
+        s.acknowledged AS s_acknowledged,
+        s.notify AS s_notify,
+        s.active_checks AS s_active_checks,
+        s.passive_checks AS s_passive_checks,
+        h.scheduled_downtime_depth AS h_scheduled_downtime_depth,
+        h.acknowledged AS h_acknowledged,
+        h.notify AS h_notify,
+        h.active_checks AS h_active_checks,
+        h.passive_checks AS h_passive_checks,
         s.last_check,
         s.last_state_change,
         s.last_hard_state_change,
         s.last_time_ok,
         s.check_attempt,
         s.max_check_attempts,
-        h.action_url as h_action_url,
-        h.notes_url as h_notes_url,
-        s.action_url as s_action_url,
-        s.notes_url as s_notes_url,
-        h.last_hard_state_change as host_last_hard_state_change,
-        h.last_time_up as host_last_time_up,
-        CAST(mop1.timestamp AS UNSIGNED) as host_ticket_time,
-        mop1.ticket_value as host_ticket_id,
-        mopd1.subject as host_ticket_subject,
-        CAST(mop2.timestamp AS UNSIGNED) as service_ticket_time,
-        mopd2.subject as service_ticket_subject,
-        mop2.ticket_value as service_ticket_id,
-        CONCAT_WS('', mop1.ticket_value, mop2.ticket_value) as ticket_id,
+        h.action_url AS h_action_url,
+        h.notes_url AS h_notes_url,
+        s.action_url AS s_action_url,
+        s.notes_url AS s_notes_url,
+        h.last_hard_state_change AS host_last_hard_state_change,
+        h.last_time_up AS host_last_time_up,
+        CAST(mop1.timestamp AS UNSIGNED) AS host_ticket_time,
+        mop1.ticket_value AS host_ticket_id,
+        mopd1.subject AS host_ticket_subject,
+        CAST(mop2.timestamp AS UNSIGNED) AS service_ticket_time,
+        mopd2.subject AS service_ticket_subject,
+        mop2.ticket_value AS service_ticket_id,
+        CONCAT_WS('', mop1.ticket_value, mop2.ticket_value) AS ticket_id,
         cv2.value AS criticality_id,
         cv.value AS criticality_level,
         h.icon_image
@@ -171,7 +171,7 @@ $query = "SELECT SQL_CALC_FOUND_ROWS h.host_id,
     )
     LEFT JOIN mod_open_tickets mop1 ON (
         cv5.value = mop1.ticket_value AND (
-            mop1.timestamp > h.last_time_up OR h.last_time_up is NULL
+            mop1.timestamp > h.last_time_up OR h.last_time_up IS NULL
         )
     )
     LEFT JOIN mod_open_tickets_data mopd1 ON (mop1.ticket_id = mopd1.ticket_id), services s
@@ -370,7 +370,7 @@ if (isset($preferences['order_by']) && $preferences['order_by'] != "") {
     }
 }
 
-$query .= "ORDER BY $orderBy";
+$query .= "ORDER BY " . $orderBy;
 $query .= " LIMIT " . ($page * $preferences['entries']) . "," . $preferences['entries'];
 
 $res = $dbb->query($query);

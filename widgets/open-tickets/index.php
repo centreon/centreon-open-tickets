@@ -82,4 +82,3 @@ if ($preferences['more_views']) {
 $template->assign('more_views', $bMoreViews);
 
 $template->display('index.ihtml');
-?>

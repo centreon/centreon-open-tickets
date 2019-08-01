@@ -109,32 +109,32 @@ $stateLabels = array(
 );
 // Build Query
 $query = "SELECT SQL_CALC_FOUND_ROWS h.host_id,
-        h.name as hostname,
-        h.state as h_state,
+        h.name AS hostname,
+        h.state AS h_state,
         s.service_id,
         s.description,
-        s.state as s_state,
+        s.state AS s_state,
         s.last_hard_state,
         s.output,
-        s.scheduled_downtime_depth as s_scheduled_downtime_depth,
-        s.acknowledged as s_acknowledged,
-        s.notify as s_notify,
-        s.active_checks as s_active_checks,
-        s.passive_checks as s_passive_checks,
-        h.scheduled_downtime_depth as h_scheduled_downtime_depth,
-        h.acknowledged as h_acknowledged,
-        h.notify as h_notify,
-        h.active_checks as h_active_checks,
-        h.passive_checks as h_passive_checks,
+        s.scheduled_downtime_depth AS s_scheduled_downtime_depth,
+        s.acknowledged AS s_acknowledged,
+        s.notify AS s_notify,
+        s.active_checks AS s_active_checks,
+        s.passive_checks AS s_passive_checks,
+        h.scheduled_downtime_depth AS h_scheduled_downtime_depth,
+        h.acknowledged AS h_acknowledged,
+        h.notify AS h_notify,
+        h.active_checks AS h_active_checks,
+        h.passive_checks AS h_passive_checks,
         s.last_check,
         s.last_state_change,
         s.last_hard_state_change,
         s.check_attempt,
         s.max_check_attempts,
-        h.action_url as h_action_url,
-        h.notes_url as h_notes_url,
-        s.action_url as s_action_url,
-        s.notes_url as s_notes_url,
+        h.action_url AS h_action_url,
+        h.notes_url AS h_notes_url,
+        s.action_url AS s_action_url,
+        s.notes_url AS s_notes_url,
         cv2.value AS criticality_id,
         cv.value AS criticality_level
     FROM hosts h, services s
@@ -261,10 +261,9 @@ if (isset($preferences["display_severities"])
         }
         $labels .= "'" . trim($p) . "'";
     }
-    $query2 = "SELECT sc_id FROM service_categories WHERE sc_name IN (" . $labels . ")";
-    $RES = $db->query($query2);
+    $res = $db->query("SELECT sc_id FROM service_categories WHERE sc_name IN (" . $labels . ")");
     $idC = "";
-    while ($d1 = $RES->fetch()) {
+    while ($d1 = $res->fetch()) {
         if ($idC != '') {
             $idC .= ",";
         }
@@ -324,9 +323,11 @@ while ($row = $res->fetch()) {
 
     if (isset($preferences['display_last_comment']) && $preferences['display_last_comment']) {
         $res2 = $dbb->query(
-            'SELECT data FROM comments where host_id = ' .
-            $row['host_id'] . ' AND service_id = ' .
-            $row['service_id'] . ' ORDER BY entry_time DESC LIMIT 1'
+            'SELECT data
+            FROM comments
+            WHERE host_id = ' . $row['host_id'] . '
+            AND service_id = ' . $row['service_id'] . '
+            ORDER BY entry_time DESC LIMIT 1'
         );
         if ($row2 = $res2->fetch()) {
             $data[$row['host_id']."_".$row['service_id']]['comment'] = substr($row2['data'], 0, $commentLength);

@@ -25,7 +25,7 @@ class CentreonDBManager extends CentreonDB
 {
     public function lastinsertId($name = null)
     {
-        $dbResult = $this->query("SELECT LAST_INSERT_ID() as last_id FROM " . $name);
+        $dbResult = $this->query("SELECT LAST_INSERT_ID() AS last_id FROM " . $name);
         if (!($row = $dbResult->fetch())) {
             throw new Exception('Cannot get last id');
         }

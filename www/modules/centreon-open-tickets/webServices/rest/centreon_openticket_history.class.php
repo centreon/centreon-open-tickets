@@ -74,17 +74,14 @@ class CentreonOpenticketHistory extends CentreonWebService
         }
 
         $links_ok = array();
-        $query_host = 'SELECT host_id ' .
-                'FROM hosts ' .
-                'WHERE name = ?';
-        $stmt_host = $this->pearDBMonitoring->prepare($query_host);
-
-        $query_service = 'SELECT hosts.host_id, services.service_id ' .
-                'FROM hosts, services ' .
-                'WHERE hosts.name = ? ' .
-                'AND hosts.host_id = services.host_id ' .
-                'AND services.description = ?';
-        $stmt_service = $this->pearDBMonitoring->prepare($query_service);
+        $stmt_host = $this->pearDBMonitoring->prepare('SELECT host_id FROM hosts WHERE name = ?');
+        $stmt_service = $this->pearDBMonitoring->prepare(
+            'SELECT hosts.host_id, services.service_id
+            FROM hosts, services
+            WHERE hosts.name = ?
+            AND hosts.host_id = services.host_id
+            AND services.description = ?'
+        );
         foreach ($this->arguments['links'] as $link) {
             if (isset($link['hostname']) && isset($link['service_description'])) {
                 $res = $this->pearDBMonitoring->execute(
@@ -125,7 +122,7 @@ class CentreonOpenticketHistory extends CentreonWebService
         }
 
         /* Get Autoincrement */
-        $res = $this->pearDBMonitoring->query("SELECT LAST_INSERT_ID() as last_id");
+        $res = $this->pearDBMonitoring->query("SELECT LAST_INSERT_ID() AS last_id");
         if (true === PEAR::isError($res) || !($row = $res->fetch())) {
             $result = array('code' => 1, 'message' => 'database issue');
             return $result;
