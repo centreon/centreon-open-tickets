@@ -57,8 +57,8 @@ class BmcFootprints11Provider extends AbstractProvider
         $this->default_data['clones']['mappingTicket'] = array(
             array(
                 'Arg' => self::ARG_TITLE,
-                'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers' . '
-                    /Abstract/templates/display_title.ihtml"}'
+                'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers' .
+                    '/Abstract/templates/display_title.ihtml"}'
             ),
             array('Arg' => self::ARG_DESCRIPTION, 'Value' => '{$body}'),
             array('Arg' => self::ARG_STATUS, 'Value' => 'Open'),
