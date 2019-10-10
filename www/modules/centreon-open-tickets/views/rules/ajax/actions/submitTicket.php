@@ -249,6 +249,35 @@ try {
                         $value['instance_id']
                     )
                 );
+
+                $MYDBRESULT = $db->query("select name from modules_informations where name like 'centreon-dsm'");
+                if (($myrow = $MYDBRESULT->fetch())) { //dsm is installed
+                    $MYDBRESULT->closeCursor();
+                    // is the service from DSM ?
+                    $MYDBRESULT = $db->query("select pool_prefix FROM mod_dsm_pool WHERE pool_host_id = " . $db->quote($value['host_id']) . " AND pool_activate = '1'");
+                    if($MYDBRESULT->rowCount() != 0) {
+                        while($myrow = $MYDBRESULT->fetch()) {
+                            if(substr($value['description'], 0, strlen($myrow['pool_prefix'])) === $myrow['pool_prefix']) {
+                                // found it !
+                                $MYDBRESULT->closeCursor();
+                                $mycommand = "SCHEDULE_FORCED_SVC_CHECK;%s;%s;%s";
+                                call_user_func_array(
+                                    array($external_cmd, $method_external_name),
+                                    array(
+                                        sprintf(
+                                            $mycommand,
+                                            $value['host_name'],
+                                            $value['description'],
+                                            time() + 1
+                                        ),
+                                        $value['instance_id']
+                                    )
+                                );
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         }
 
