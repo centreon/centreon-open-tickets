@@ -1,0 +1,313 @@
+{*
+<tr>
+  {if $groupId == "itop_organization"}
+    <td class="FormRowField" style="padding-left: 15px;">{$groups.$groupId.label}</td>
+  {/if}
+  <td class="FormRowValue" style="padding-left:15px;">
+    {if isset($groups.$groupId.code) and $groups.$groupId.code == -1}
+      <span style="color: red">{$groups.$groupId.msg_error}</span>
+    {else}
+      {if $groupId == "itop_organization"}
+        <select id="select_{$groupId}" name="select_{$groupId}">
+          <option value="-1"> -- select -- </option>
+          {foreach from=$groups.$groupId.values key=k item=v}
+            <option value='{$k}_{$v}' {if $v eq $groups.$groupId.default}selected{/if}>{$v}</option>
+          {/foreach}
+        </select>
+      {/if}
+    {/if}
+  </td>
+</tr>
+<tr>
+  {if $groupId == "itop_caller"}
+    <td class="FormRowField" style="padding-left: 15px;">{$groups.$groupId.label}</td>
+  {/if}
+  <td class="FormRowValue" style="padding-left:15px;">
+    {if isset($groups.$groupId.code) and $groups.$groupId.code == -1}
+      <span style="color: red">{$groups.$groupId.msg_error}</span>
+    {else}
+      {if $groupId == "itop_caller"}
+        <select id="select_{$groupId}" name="select_{$groupId}">
+          <option value="-1"> -- select -- </option>
+          {foreach from=$groups.$groupId.values key=k item=v}
+            <option value='{$k}_{$v}' {if $v eq $groups.$groupId.default}selected{/if}>{$v}</option>
+          {/foreach}
+        </select>
+      {/if}
+    {/if}
+  </td>
+</tr>
+<tr>
+  {if $groupId == "itop_service_family"}
+    <td class="FormRowField" style="padding-left:15px;">{$groups.$groupId.label}</td>
+  {/if}
+  <td class="FormRowValue" style="padding-left:15px;">
+    {if isset($groups.$groupId.code) and $groups.$groupId.code == -1}
+      <span style="color: red">{$groups.$groupId.msg_error}</span>
+    {else}
+      {if $groupId == "itop_service_family"}
+        <select id="select_{$groupId}" name="select_{$groupId}">
+          <option value="-1"> -- select an organization -- </option>
+          {foreach from=$groups.$groupId.values key=k item=v}
+            <option value='{$k}_{$v}' {if $v eq $groups.$groupId.default}selected{/if}>{$v}</option>
+          {/foreach}
+        </select>
+      {/if}
+    {/if}
+  </td>
+</tr>
+<tr>
+  {if $groupId == "itop_service"}
+    <td class="FormRowField" style="padding-left:15px;">{$groups.$groupId.label}</td>
+  {/if}
+  <td class="FormRowValue" style="padding-left:15px;">
+    {if isset($groups.$groupId.code) and $groups.$groupId.code == -1}
+      <span style="color: red">{$groups.$groupId.msg_error}</span>
+    {else}
+      {if $groupId == "itop_service"}
+        <select id="select_{$groupId}" name="select_{$groupId}">
+          <option value="-1"> -- select a service family -- </option>
+          {foreach from=$groups.$groupId.values key=k item=v}
+            <option value='{$k}_{$v}' {if $v eq $groups.$groupId.default}selected{/if}>{$v}</option>
+          {/foreach}
+        </select>
+      {/if}
+    {/if}
+  </td>
+</tr>
+<tr>
+  {if $groupId == "itop_service_subcategory"}
+    <td class="FormRowField" style="padding-left:15px;">{$groups.$groupId.label}</td>
+  {/if}
+  <td class="FormRowValue" style="padding-left:15px;">
+    {if isset($groups.$groupId.code) and $groups.$groupId.code == -1}
+      <span style="color: red">{$groups.$groupId.msg_error}</span>
+    {else}
+      {if $groupId == "itop_service_subcategory"}
+        <select id="select_{$groupId}" name="select_{$groupId}">
+          <option value="-1"> -- select a service -- </option>
+          {foreach from=$groups.$groupId.values key=k item=v}
+            <option value='{$k}_{$v}' {if $v eq $groups.$groupId.default}selected{/if}>{$v}</option>
+          {/foreach}
+        </select>
+      {/if}
+    {/if}
+  </td>
+</tr>
+<tr>
+  {if $groupId == "itop_team"}
+    <td class="FormRowField" style="padding-left:15px;">{$groups.$groupId.label}</td>
+  {/if}
+  <td class="FormRowValue" style="padding-left:15px;">
+    {if isset($groups.$groupId.code) and $groups.$groupId.code == -1}
+      <span style="color: red">{$groups.$groupId.msg_error}</span>
+    {else}
+      {if $groupId == "itop_team"}
+        <select id="select_{$groupId}" name="select_{$groupId}">
+          <option value="-1"> -- select an organization -- </option>
+          {foreach from=$groups.$groupId.values key=k item=v}
+            <option value='{$k}_{$v}' {if $v eq $groups.$groupId.default}selected{/if}>{$v}</option>
+          {/foreach}
+        </select>
+      {/if}
+    {/if}
+  </td>
+</tr> *}
+
+{literal}
+<script>
+  jQuery('#select_itop_organization').on('change', function() {
+    var data = {
+      rule_id: jQuery('#rule_id').val(),
+      provider_id: jQuery('#provider_id').val(),
+      methods: ['getListCallers', 'getListServiceFamilies', 'getListTeams'],
+      // methods: ['getListCallers', 'getListServiceFamilies', 'getListTeams'],
+      provider_data: {
+        organization_value: jQuery('#select_itop_organization').val()
+      }
+    }
+
+    if (jQuery('#select_itop_organization').val() !== -1) {
+      jQuery('#form_error').empty();
+      jQuery.ajax({
+        url: './modules/centreon-open-tickets/providers/Itop/ajax/call.php',
+        type: 'post',
+        data: {
+          data: JSON.stringify(data)
+        },
+        success: function (data) {
+          data = JSON.parse(data);
+          if (data.code !== 0) {
+            jQuery('#form_error').text(data.msg + ' Please contact your administrator.');
+            return;
+          }
+          // if (!data.data) {
+          //   jQuery('#form_error').text('no data found for the chosen organization');
+          //   return;
+          // }
+          jQuery('#select_itop_caller').empty();
+          jQuery('#select_itop_service_family').empty();
+          jQuery('#select_itop_team').empty();
+          jQuery('<option>')
+            .attr('value', -1)
+            .text('-- select a caller --')
+            .appendTo('#select_itop_caller');
+          jQuery('<option>')
+            .attr('value', -1)
+            .text('-- select a service family --')
+            .appendTo('#select_itop_service_family');
+          jQuery('<option>')
+            .attr('value', -1)
+            .text('-- select a team --')
+            .appendTo('#select_itop_team');
+          var keys = Object.keys(data.getListCallers);
+          for (var i = 0; i < keys.length; i++) {
+            jQuery('<option>')
+              .attr('value', keys[i] + '___' + data.getListCallers[keys[i]])
+              .text(data.getListCallers[keys[i]])
+              .appendTo('#select_itop_caller');
+          }
+          keys = Object.keys(data.getListServiceFamilies);
+          for (var i = 0; i < keys.length; i++) {
+            jQuery('<option>')
+              .attr('value', keys[i] + '___' + data.getListServiceFamilies[keys[i]])
+              .text(data.getListServiceFamilies[keys[i]])
+              .appendTo('#select_itop_service_family');
+          }
+          keys = Object.keys(data.getListTeams);
+          for (var i = 0; i < keys.length; i++) {
+            jQuery('<option>')
+              .attr('value', keys[i] + '___' + data.getListTeams[keys[i]])
+              .text(data.getListTeams[keys[i]])
+              .appendTo('#select_itop_team');
+          }
+        }
+      })
+    }
+  })
+
+  jQuery('#select_itop_service_family').on('change', function() {
+    data = {
+      rule_id: jQuery('#rule_id').val(),
+      provider_id: jQuery('#provider_id').val(),
+      methods: ['getListServices'],
+      provider_data: {
+        service_family_value: jQuery('#select_itop_service_family').val()
+      }
+    }
+    if (jQuery('#select_itop_service_family').val() !== -1) {
+      jQuery('#form_error').empty();
+      jQuery.ajax({
+        url: './modules/centreon-open-tickets/providers/Itop/ajax/call.php',
+        type: 'post',
+        data: {
+          data: JSON.stringify(data)
+        },
+        success: function (data) {
+          data = JSON.parse(data);
+          if (data.code !== 0) {
+            jQuery('#form_error').text(data.msg + ' Please contact your administrator.');
+            return;
+          }
+          jQuery('#select_itop_service').empty();
+          jQuery('<option>')
+            .attr('value', -1)
+            .text('-- select a service --')
+            .appendTo('#select_itop_service');
+          keys = Object.keys(data.getListServices);
+          console.log(keys);
+          for (var i = 0; i < keys.length; i++) {
+            jQuery('<option>')
+              .attr('value', keys[i] + '___' + data.getListServices[keys[i]])
+              .text(data.getListServices[keys[i]])
+              .appendTo('#select_itop_service');
+          }
+        }
+      })
+    }
+  })
+
+  jQuery('#select_itop_service').on('change', function() {
+    data = {
+      rule_id: jQuery('#rule_id').val(),
+      provider_id: jQuery('#provider_id').val(),
+      methods: ['getListServiceSubcategories'],
+      // methods: ['getListCallers', 'getListServiceFamilies', 'getListTeams'],
+      provider_data: {
+        service_family_value: jQuery('#select_itop_service').val()
+      }
+    }
+    if (jQuery('#select_itop_service_subcategory').val() !== -1) {
+      jQuery('#form_error').empty();
+      jQuery.ajax({
+        url: './modules/centreon-open-tickets/providers/Itop/ajax/call.php',
+        type: 'post',
+        data: {
+          data: JSON.stringify(data)
+        },
+        success: function (data) {
+          data = JSON.parse(data);
+          if (data.code !== 0) {
+            jQuery('#form_error').text(data.msg + ' Please contact your administrator.');
+            return;
+          }
+          jQuery('#select_itop_service_subcategory').empty();
+          jQuery('<option>')
+            .attr('value', -1)
+            .text('-- select a service subcategory --')
+            .appendTo('#select_itop_service_subcategory');
+          keys = Object.keys(data.getListServiceSubcategories);
+          console.log(keys);
+          for (var i = 0; i < keys.length; i++) {
+            jQuery('<option>')
+              .attr('value', keys[i] + '___' + data.getListServiceSubcategories[keys[i]])
+              .text(data.getListServiceSubcategories[keys[i]])
+              .appendTo('#select_itop_service_subcategory');
+          }
+        }
+      })
+    }
+  })
+
+  jQuery('#select_itop_beneficiary_organization').on('change', function() {
+    data = {
+      rule_id: jQuery('#rule_id').val(),
+      provider_id: jQuery('#provider_id').val(),
+      methods: ['getListBeneficiaries'],
+      provider_data: {
+        beneficiary_organization_value: jQuery('#select_itop_beneficiary_organization').val()
+      }
+    }
+    if (jQuery('#select_itop_beneficiary_organization').val() !== -1) {
+      jQuery('#form_error').empty();
+      jQuery.ajax({
+        url: './modules/centreon-open-tickets/providers/Itop/ajax/call.php',
+        type: 'post',
+        data: {
+          data: JSON.stringify(data)
+        },
+        success: function (data) {
+          data = JSON.parse(data);
+          if (data.code !== 0) {
+            jQuery('#form_error').text(data.msg + ' Please contact your administrator.');
+            return;
+          }
+          jQuery('#select_itop_beneficiary').empty();
+          jQuery('<option>')
+            .attr('value', -1)
+            .text('-- select a beneficiary --')
+            .appendTo('#select_itop_beneficiary');
+          keys = Object.keys(data.getListBeneficiaries);
+          console.log(keys);
+          for (var i = 0; i < keys.length; i++) {
+            jQuery('<option>')
+              .attr('value', keys[i] + '___' + data.getListBeneficiaries[keys[i]])
+              .text(data.getListBeneficiaries[keys[i]])
+              .appendTo('#select_itop_beneficiary');
+          }
+        }
+      })
+    }
+  })
+</script>
+{/literal}
