@@ -34,7 +34,7 @@ $module_conf['centreon-open-tickets']["lang_files"] = "0";
 $module_conf['centreon-open-tickets']["sql_files"] = "1";
 $module_conf['centreon-open-tickets']["php_files"] = "0";
 $module_conf['centreon-open-tickets']["stability"] = "stable";
-$module_conf['centreon-open-tickets']["last_update"] = "2019-04-04";
+$module_conf['centreon-open-tickets']["last_update"] = "2020.02.13";
 $module_conf['centreon-open-tickets']["release_note"] = "https://documentation.centreon.com/docs/centreon-open-tickets/en/latest/release_notes/index.html";
 $module_conf['centreon-open-tickets']["images"] = [
     'images/image1.png',
