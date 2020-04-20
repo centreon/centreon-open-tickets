@@ -1221,7 +1221,6 @@ class IsilogProvider extends AbstractProvider {
             throw new \Exception("couldn't find php curl", 10);
         }
 
-        $webserviceName = 'CENTREONCAT';
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1376,7 +1375,7 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't get categories data
     */
     protected function getCategories() {
-        $webserviceName = 'CENTREONCAT';
+        $webserviceName = $this->rule_data['centreoncat'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1412,7 +1411,7 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't get services data
     */
     protected function getServices() {
-        $webserviceName = 'CENTREONSERVICE';
+        $webserviceName = $this->rule_data['centreonservice'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1448,7 +1447,7 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't get teams data
     */
     protected function getTeam() {
-        $webserviceName = 'CENTREONTEAM';
+        $webserviceName = $this->rule_data['centreonteam'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1484,7 +1483,7 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't get sites data
     */
     protected function getSite() {
-        $webserviceName = 'CENTREONSITE';
+        $webserviceName = $this->rule_data['centreonsite'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1520,7 +1519,7 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't get OU data
     */
     protected function getOU() {
-        $webserviceName = 'CENTREONOU';
+        $webserviceName = $this->rule_data['centreonou'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1556,7 +1555,7 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't get users data
     */
     protected function getUser() {
-        $webserviceName = 'CENTREONUSER';
+        $webserviceName = $this->rule_data['centreonuser'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1592,7 +1591,7 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't get impacts data
     */
     protected function getImpact() {
-        $webserviceName = 'CENTREONIMPACT';
+        $webserviceName = $this->rule_data['centreonimpact'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1628,7 +1627,7 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't get urgencies data
     */
     protected function getUrgency() {
-        $webserviceName = 'CENTREONURGENCY';
+        $webserviceName = $this->rule_data['centreonurgency'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1664,7 +1663,7 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't get informations data
     */
     protected function getOthers() {
-        $webserviceName = 'CENTREONOTHERS';
+        $webserviceName = $this->rule_data['centreonothers'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
