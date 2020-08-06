@@ -713,7 +713,7 @@
 
         // try to get groups
         try {
-            // $listGroups = $this->getCache($entry['Id']);
+            $listGroups = $this->getCache($entry['Id']);
             if (is_null($listGroups)) {
                 $listGroups = $this->getGroups();
                 $this->setCache($entry['Id'], $listGroups, 8 * 3600);
@@ -1002,7 +1002,7 @@
         );
         // try to call the rest api
         try {
-            $curlResult = $this->curlQuery($info);
+            $curlResult = $this->curlQuery($info, false);
             $this->setCache('session_token', $curlResult['session_token'], 8 * 3600);
         } catch (\Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
@@ -1015,6 +1015,7 @@
     * handle every query that we need to do
     *
     * @param {array} $info required information to reach the glpi api
+    * @param {bool} $parseReturnedHeaders wheither we need to parse headers from glpi answers or not
     *
     * @return {array} $curlResult the json decoded data gathered from glpi
     *
@@ -1022,7 +1023,7 @@
     * throw \Exception if we can't get a session token
     * throw \Exception 11 if glpi api fails
     */
-    protected function curlQuery($info) {
+    protected function curlQuery($info, $parseReturnedHeaders = true) {
         // check if php curl is installed
         if (!extension_loaded("curl")) {
             throw new \Exception("couldn't find php curl", 10);
@@ -1040,7 +1041,7 @@
                 } catch (\Exception $e) {
                     throw new \Exception($e->getMessage(), $e->getCode());
                 }
-            } else {
+            } elseif (!preg_grep('/^Session-Token.*/', $info['headers'])) {
                 array_push($info['headers'], 'Session-Token: ' . $sessionToken);
             }
         }
@@ -1050,6 +1051,10 @@
         $apiAddress = $this->_getFormValue('protocol') . '://' . $this->_getFormValue('address') .
             $this->_getFormValue('api_path') . $info['query_endpoint'];
 
+        if (isset($info['get_params'])) {
+            $apiAddress .= $info['get_params'];
+        }
+
         // initiate our curl options
         curl_setopt($curl, CURLOPT_URL, $apiAddress);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $info['headers']);
@@ -1057,6 +1062,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_POST, $info['method']);
         curl_setopt($curl, CURLOPT_TIMEOUT, $this->_getFormValue('timeout'));
+
         // add postData if needed
         if ($info['method']) {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $info['postFields']);
@@ -1066,9 +1072,24 @@
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $info['custom_request']);
         }
 
+        if ($parseReturnedHeaders) {
+            curl_setopt($curl, CURLOPT_HEADERFUNCTION, function ($curlResource, $curlHeader) use (&$curlHeaders) {
+                $length = strlen($curlHeader);
+                $curlHeader = explode(':', $curlHeader, 2);
+
+                if (count($curlHeader) < 2) {
+                    return $length;
+                }
+
+                $curlHeaders[strtolower(trim($curlHeader[0]))][] = trim($curlHeader[1]);
+
+                return $length;
+            });
+        }
+
         // if proxy is set, we add it to curl
         if ($this->_getFormValue('proxy_address') != '' && $this->_getFormValue('proxy_port') != '') {
-                curl_setopt($curl, CURLOPT_PROXY, $this->_getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port'));
+            curl_setopt($curl, CURLOPT_PROXY, $this->_getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port'));
 
             // if proxy authentication configuration is set, we add it to curl
             if ($this->_getFormValue('proxy_username') != '' && $this->_getFormValue('proxy_password') != '') {
@@ -1093,7 +1114,10 @@
         } elseif ($httpCode >= 400) {
             throw new Exception('ENDPOINT: ' . $apiAddress . ' || GLPI ERROR : ' . $curlResult[0] .
             ' || GLPI MESSAGE: ' . $curlResult[1] . ' || HTTP ERROR: ' . $httpCode, 11);
+        } elseif ($httpCode == 206) {
+            $curlResult = $this->getAllObjects($info, $curlHeaders['content-range']);
         }
+
 
         return $curlResult;
     }
@@ -1107,7 +1131,7 @@
     */
     protected function getEntities() {
         // add the api endpoint and method to our info array
-        $info['query_endpoint'] = '/getMyEntities/?is_recursive=1';
+        $info['query_endpoint'] = '/getMyEntities/?is_recursive=1&range=0-1000';
         $info['method'] = 0;
         // set headers
         $info['headers'] = array(
@@ -1141,6 +1165,7 @@
             if (is_null($userId)) {
                 // add the api endpoint and method to our info array
                 $info['query_endpoint'] = '/getFullSession';
+                $info['get_params'] = '?range=0-1000';
                 $info['method'] = 0;
                 // set headers
                 $info['headers'] = array(
@@ -1172,6 +1197,7 @@
 
         // add the api endpoint and method to our info array
         $info['query_endpoint'] = '/User/' . $this->getUserId() . '/group';
+        $info['get_params'] = '?range=0-1000';
         $info['method'] = 0;
         // set headers
         $info['headers'] = array(
@@ -1199,6 +1225,7 @@
     protected function getSuppliers() {
         // add the api endpoint and method to our info array
         $info['query_endpoint'] = '/Supplier';
+        $info['get_params'] = '?range=0-1000';
         $info['method'] = 0;
         // set headers
         $info['headers'] = array(
@@ -1226,6 +1253,7 @@
     protected function getItilCategories() {
         // add the api endpoint and method to our info array
         $info['query_endpoint'] = '/itilCategory';
+        $info['get_params'] = '?range=0-1000';
         $info['method'] = 0;
         // set headers
         $info['headers'] = array(
@@ -1253,6 +1281,7 @@
     protected function getUsers() {
         // add the api endpoint and method to our info array
         $info['query_endpoint'] = '/User';
+        $info['get_params'] = '?range=0-1000';
         $info['method'] = 0;
         // set headers
         $info['headers'] = array(
@@ -1271,9 +1300,33 @@
     }
 
     /*
+    * get all objects from a specific type if range was too small
+    *
+    * @param {array} $info required information to reach the glpi api
+    * @param {array} $range range information
+    *
+    * @return {array} $curlResult json result of the call
+    *
+    * throw \Exception if we can't get data
+    */
+    protected function getAllObjects($info, $range) {
+        preg_match('/\/(.*)/', $range[0], $matches);
+
+        $info['get_params'] = '?range=0-' . $matches[1];
+
+        try {
+            $this->glpiCallResult['response'] = $this->curlQuery($info);
+        } catch (\Exception $e) {
+            throw new  \Exception($e->getMessage(), $e->getCode());
+        }
+
+        return $this->glpiCallResult['response'];
+    }
+
+    /*
     * handle ticket creation in glpi
     *
-    * @params {array} $ticketArguments contains all the ticket arguments
+    * @param {array} $ticketArguments contains all the ticket arguments
     *
     * @return {string} $ticketId ticket id
     *
@@ -1306,7 +1359,7 @@
         $info['postFields'] = json_encode($fields);
 
         try {
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, false);
             $ticketId = $this->glpiCallResult['response']['id'];
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
@@ -1380,7 +1433,7 @@
         $info['postFields'] = json_encode($fields);
 
         try {
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, false);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
@@ -1415,7 +1468,7 @@
         $info['postFields'] = json_encode($fields);
 
         try {
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, false);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
@@ -1450,7 +1503,7 @@
         $info['postFields'] = json_encode($fields);
 
         try {
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, false);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
@@ -1485,7 +1538,7 @@
         $info['postFields'] = json_encode($fields);
 
         try {
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, false);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
@@ -1519,7 +1572,7 @@
         $info['postFields'] = json_encode($fields);
 
         try {
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, false);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
