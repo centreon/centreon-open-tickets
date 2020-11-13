@@ -44,6 +44,8 @@
     const ARG_USER_ROLE = 12;
     const ARG_REQUESTER = 13;
 
+    private const PAGE_SIZE = 20;
+
     protected $_internal_arg_name = array(
         self::ARG_CONTENT => 'content',
         self::ARG_ENTITY => 'entity',
@@ -713,7 +715,7 @@
 
         // try to get groups
         try {
-            // $listGroups = $this->getCache($entry['Id']);
+            $listGroups = $this->getCache($entry['Id']);
             if (is_null($listGroups)) {
                 $listGroups = $this->getGroups();
                 $this->setCache($entry['Id'], $listGroups, 8 * 3600);
@@ -1022,7 +1024,7 @@
     * throw \Exception if we can't get a session token
     * throw \Exception 11 if glpi api fails
     */
-    protected function curlQuery($info) {
+    protected function curlQuery($info, int $offset = null) {
         // check if php curl is installed
         if (!extension_loaded("curl")) {
             throw new \Exception("couldn't find php curl", 10);
@@ -1040,7 +1042,7 @@
                 } catch (\Exception $e) {
                     throw new \Exception($e->getMessage(), $e->getCode());
                 }
-            } else {
+            } elseif (!preg_grep('/^Session-Token\:/', $info['headers'])) {
                 array_push($info['headers'], 'Session-Token: ' . $sessionToken);
             }
         }
@@ -1049,6 +1051,11 @@
 
         $apiAddress = $this->_getFormValue('protocol') . '://' . $this->_getFormValue('address') .
             $this->_getFormValue('api_path') . $info['query_endpoint'];
+
+        if ($offset !== null) {
+            $apiAddress .= preg_match('/.+\?/', $apiAddress) ? '&' : '?';
+            $apiAddress .= 'range=' . $offset . '-' . ($offset + self::PAGE_SIZE);
+        }
 
         // initiate our curl options
         curl_setopt($curl, CURLOPT_URL, $apiAddress);
@@ -1076,21 +1083,55 @@
             }
         }
 
+        // parse headers to manage pagination
+        if ($offset !== null) {
+            $curlHeaders = [];
+            curl_setopt($curl, CURLOPT_HEADERFUNCTION, function ($curlResource, $curlHeader) use (&$curlHeaders) {
+                $length = strlen($curlHeader);
+                $curlHeader = explode(':', $curlHeader, 2);
+
+                if (count($curlHeader) < 2) {
+                    return $length;
+                }
+
+                $curlHeaders[strtolower(trim($curlHeader[0]))][] = trim($curlHeader[1]);
+
+                return $length;
+            });
+        }
+
         // execute curl and get status information
         $curlResult = json_decode(curl_exec($curl), true);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        // if http is 401 and message is about token, perhaps the token has expired, so we get a new one
-        if ($httpCode == 401 && $curlResult[0] == 'ERROR_SESSION_TOKEN_INVALID') {
+        if ($httpCode === 206 && $offset !== null) {
+            // If partial content, get next page
+            if (preg_match('/\/(\d+)/', $curlHeaders['content-range'][0], $matches)) {
+                $total = $matches[1];
+
+                $offset = $offset + self::PAGE_SIZE;
+
+                if ($offset <= $total) {
+                    $curlResult = array_merge_recursive(
+                        $curlResult,
+                        $this->curlQuery($info, $offset)
+                    );
+                }
+            }
+        } elseif ($httpCode == 401 && $curlResult[0] == 'ERROR_SESSION_TOKEN_INVALID') {
+            // if http is 401 and message is about token, perhaps the token has expired, so we get a new one
             try {
                 $this->initSession();
-                $this->curlQuery($info);
+                $this->curlQuery($info, $offset);
             } catch (\Exception $e) {
                 throw new \Exception($e->getMessage(), $e->getCode());
             }
-        // for any other issue, we throw an exception
+        } elseif ($httpCode === 206) {
+            throw new Exception('ENDPOINT: ' . $apiAddress . ' || GLPI ERROR : ' . $curlResult[0] .
+            ' || GLPI MESSAGE: ' . $curlResult[1] . ' || HTTP ERROR: ' . $httpCode, 11);
         } elseif ($httpCode >= 400) {
+            // for any other issue, we throw an exception
             throw new Exception('ENDPOINT: ' . $apiAddress . ' || GLPI ERROR : ' . $curlResult[0] .
             ' || GLPI MESSAGE: ' . $curlResult[1] . ' || HTTP ERROR: ' . $httpCode, 11);
         }
@@ -1107,7 +1148,7 @@
     */
     protected function getEntities() {
         // add the api endpoint and method to our info array
-        $info['query_endpoint'] = '/getMyEntities/?is_recursive=1';
+        $info['query_endpoint'] = '/getMyEntities?is_recursive=1';
         $info['method'] = 0;
         // set headers
         $info['headers'] = array(
@@ -1117,7 +1158,7 @@
         // try to get entities from Glpi
         try {
             // the variable is going to be used outside of this method.
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, 0);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
@@ -1181,7 +1222,7 @@
         // try to get groups from Glpi
         try {
             // the variable is going to be used outside of this method.
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, 0);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
@@ -1208,7 +1249,7 @@
         // try to get suppliers from Glpi
         try {
             // the variable is going to be used outside of this method.
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, 0);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
@@ -1235,7 +1276,7 @@
         // try to get itil categories from Glpi
         try {
             // the variable is going to be used outside of this method.
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, 0);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
@@ -1262,7 +1303,7 @@
         // try to get users from Glpi
         try {
             // the variable is going to be used outside of this method.
-            $this->glpiCallResult['response'] = $this->curlQuery($info);
+            $this->glpiCallResult['response'] = $this->curlQuery($info, 0);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
         }
