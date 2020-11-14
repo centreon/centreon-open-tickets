@@ -1017,6 +1017,7 @@
     * handle every query that we need to do
     *
     * @param {array} $info required information to reach the glpi api
+    * @param int|null $offset pagination offset
     *
     * @return {array} $curlResult the json decoded data gathered from glpi
     *
@@ -1028,6 +1029,10 @@
         // check if php curl is installed
         if (!extension_loaded("curl")) {
             throw new \Exception("couldn't find php curl", 10);
+        }
+
+        if ($offset !== null && $offset < 0) {
+            throw new \InvalidArgumentException('offset must be positive');
         }
 
         // if we aren't trying to initiate the session, we try to get the session token from the cache
