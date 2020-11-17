@@ -1132,9 +1132,6 @@
             } catch (\Exception $e) {
                 throw new \Exception($e->getMessage(), $e->getCode());
             }
-        } elseif ($httpCode === 206) {
-            throw new Exception('ENDPOINT: ' . $apiAddress . ' || GLPI ERROR : ' . $curlResult[0] .
-            ' || GLPI MESSAGE: ' . $curlResult[1] . ' || HTTP ERROR: ' . $httpCode, 11);
         } elseif ($httpCode >= 400) {
             // for any other issue, we throw an exception
             throw new Exception('ENDPOINT: ' . $apiAddress . ' || GLPI ERROR : ' . $curlResult[0] .
