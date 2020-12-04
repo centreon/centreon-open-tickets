@@ -17,13 +17,7 @@ stage('Source') {
 }
 
 stage('Package') {
-  parallel 'centos6': {
-    node {
-      sh 'setup_centreon_build.sh'
-      sh './centreon-build/jobs/open-tickets/3.4/mon-open-tickets-package.sh centos6'
-    }
-  },
-  'centos7': {
+  parallel 'centos7': {
     node {
       sh 'setup_centreon_build.sh'
       sh './centreon-build/jobs/open-tickets/3.4/mon-open-tickets-package.sh centos7'
