@@ -82,7 +82,7 @@ try {
     'centos8': {
       node {
         sh 'setup_centreon_build.sh'
-        sh "./centreon-build/jobs/bam/${serie}/mon-open-tickets-unittest.sh centos8"
+        sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-unittest.sh centos8"
         junit 'ut-be.xml,ut-fe.xml'
       }
     }
