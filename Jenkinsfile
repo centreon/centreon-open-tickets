@@ -41,7 +41,7 @@ try {
     parallel 'centos7': {
       node {
         sh 'setup_centreon_build.sh'
-        sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-source.sh centos7"
+        sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-unittest.sh centos7"
         if (currentBuild.result == 'UNSTABLE')
           currentBuild.result = 'FAILURE'
 
@@ -77,6 +77,13 @@ try {
             sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-analysis.sh"
           }
         }
+      }
+    },
+    'centos8': {
+      node {
+        sh 'setup_centreon_build.sh'
+        sh "./centreon-build/jobs/bam/${serie}/mon-open-tickets-unittest.sh centos8"
+        junit 'ut-be.xml,ut-fe.xml'
       }
     }
     if ((currentBuild.result ?: 'SUCCESS') != 'SUCCESS') {
