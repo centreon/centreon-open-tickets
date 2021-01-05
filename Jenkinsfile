@@ -66,7 +66,7 @@ try {
         recordIssues(
           enabledForFailure: true,
           failOnError: true,
-          qualityGates: [[threshold: 1, type: 'DELTA', unstable: false]],
+          qualityGates: [[threshold: 1, type: 'NEW', unstable: false]],
           tool: phpCodeSniffer(id: 'phpcs', name: 'phpcs', pattern: 'codestyle-be.xml'),
           trendChartType: 'NONE',
           referenceJobName: 'centreon-open-tickets/master'
