@@ -65,7 +65,6 @@ try {
 
         recordIssues(
           enabledForFailure: true,
-          //failOnError: true,
           qualityGates: [[threshold: 1, type: 'DELTA', unstable: false]],
           tool: phpCodeSniffer(id: 'phpcs', name: 'phpcs', pattern: 'codestyle-be.xml'),
           trendChartType: 'NONE',
