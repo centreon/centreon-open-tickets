@@ -1,6 +1,7 @@
 <?php
+
 /*
- * Copyright 2015-2019 Centreon (http://www.centreon.com/)
+ * Copyright 2015-2020 Centreon (http://www.centreon.com/)
  *
  * Centreon is a full-fledged industry-strength solution that meets
  * the needs in IT infrastructure and application monitoring for
@@ -20,7 +21,6 @@
  */
 
 class Centreon_OpenTickets_Request
-
 {
     /**
      *
@@ -46,7 +46,7 @@ class Centreon_OpenTickets_Request
 
         if (isset($_POST)) {
             foreach ($_POST as $key => $value) {
-                   $this->_postVar[$key] = $value;
+                $this->_postVar[$key] = $value;
             }
         }
 
@@ -65,13 +65,6 @@ class Centreon_OpenTickets_Request
      */
     public function getParam($index)
     {
-        if (
-            isset($this->_getVar[$index])) {
-            return $this->_getVar[$index];
-        }
-        if (isset($this->_postVar[$index])) {
-            return $this->_postVar[$index];
-        }
-        return null;
+        return $this->_getVar[$index] ?? $this->_postVar[$index] ?? null;
     }
 }
