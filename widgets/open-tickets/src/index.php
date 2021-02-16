@@ -244,10 +244,10 @@ if (isset($preferences['hide_unreachable_host']) && $preferences['hide_unreachab
     $query = CentreonUtils::conditionBuilder($query, " h.state != 2 ");
 }
 
-if (isset($preferences['hide_disable_notif_host'] && $preferences['hide_disable_notif_host'])) {
+if (isset($preferences['hide_disable_notif_host']) && $preferences['hide_disable_notif_host']) {
     $query = CentreonUtils::conditionBuilder($query, " h.notify != 0 ");
 }
-if (isset($preferences['hide_disable_notif_service'] && $preferences['hide_disable_notif_service'])) {
+if (isset($preferences['hide_disable_notif_service']) && $preferences['hide_disable_notif_service']) {
     $query = CentreonUtils::conditionBuilder($query, " s.notify != 0 ");
 }
 
