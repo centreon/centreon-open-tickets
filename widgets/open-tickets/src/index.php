@@ -401,13 +401,13 @@ while ($row = $res->fetch()) {
             $value = substr($value, 0, $outputLength);
         } elseif (($key == "h_action_url" || $key == "h_notes_url") && $value) {
             $value = CentreonUtils::escapeSecure($hostObj->replaceMacroInString($row['hostname'], $value));
-            if (preg_match("/.\/include\/configuration\/configKnowledge\/proxy\/proxy.php(.*)/i", $value)) {
+            if (preg_match("/^.\/include\/configuration\/configKnowledge\/proxy\/proxy.php(.*)/i", $value)) {
                 $value = "../../" . $value;
             }
         } elseif (($key == "s_action_url" || $key == "s_notes_url") && $value) {
             $value = $hostObj->replaceMacroInString($row['hostname'], $value);
             $value = CentreonUtils::escapeSecure($svcObj->replaceMacroInString($row['service_id'], $value));
-            if (preg_match("/.\/include\/configuration\/configKnowledge\/proxy\/proxy.php(.*)/i", $value)) {
+            if (preg_match("/^.\/include\/configuration\/configKnowledge\/proxy\/proxy.php(.*)/i", $value)) {
                 $value = "../../" . $value;
             }
         } elseif ($key == "criticality_id" && $value != '') {
