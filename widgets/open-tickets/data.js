@@ -5,9 +5,12 @@ function loadPage()
 {
   jQuery.ajax("./src/index.php?widgetId=" + widgetId + "&page=" + pageNumber, {
     success: function (htmlData) {
-      jQuery("#openTicketsTable").empty().append(htmlData);
-      var hostMonitoringTable = jQuery("#openTicketsTable").find("img, style, script, link").load(function () {
-        var h = document.getElementById("openTicketsTable").scrollHeight + 50;
+      jQuery("#openTicketsTable").empty().append(htmlData).append(function () {
+        let horizontalScrollHeight = 0;
+        if (jQuery("#openTicketsTable").outerWidth() < jQuery("#openTicketsTable").get(0).scrollWidth) {
+            horizontalScrollHeight = 20;
+        }
+        const h = jQuery("#openTicketsTable").prop("scrollHeight") + horizontalScrollHeight;
         parent.iResize(window.name, h);
       });
     }
