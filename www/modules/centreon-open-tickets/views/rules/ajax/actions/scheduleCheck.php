@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
@@ -120,7 +121,7 @@ try {
             );
             continue;
         // servuce check action and service description from database is empty (meaning entry is about a host)
-        } elseif ( $isService && (is_null($row['description']) || $row['description'] == '')) {
+        } elseif ($isService && (is_null($row['description']) || $row['description'] == '')) {
             continue;
         }
 
