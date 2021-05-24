@@ -80,6 +80,15 @@ if ($preferences['toolbar_buttons']) {
             "/modules/centreon-open-tickets/images/acknowledge.png' name='ack-ticket' " .
             "style='border: none; height: 22px; vertical-align: middle;' /> ";
         }
+        if ($preferences['action_force_check']
+            && ($canDoAction || $centreon->user->access->checkAction("service_force_check"))
+        ) {
+            $toolbar .= "<label id='buttontoolbar_80' style='font-size: 13px; font-weight: bold; cursor:pointer;'' " . 
+            "for='force-check'>Schedule forced check <input type='image' title='" . _("Service: Schedule Forced Check") . "' alt='" .
+            _("Service: Schedule Forced Check") . "' src='" . $centreon->optGen['oreon_web_path'] .
+            "/modules/centreon-open-tickets/images/schedule_forced_check.png' name='schedule-forced-check-ticket' " .
+            "style='border: none; height: 22px; vertical-align: middle;' /> ";
+        }
     } else {
         $toolbar .= "<input type='image' title='" . _("Close Tickets") . "' alt='" . _("Close Tickets") .
         "' src='" . $centreon->optGen['oreon_web_path'] .
@@ -101,6 +110,11 @@ if ($preferences['toolbar_buttons']) {
             && ($canDoAction || $centreon->user->access->checkAction("service_acknowledgement"))
         ) {
             $toolbar .= "<option value='70'>"._("Service: Acknowledge")."</option>";
+        }
+        if ($preferences['action_force_check']
+            && ($canDoAction || $centreon->user->access->checkAction("service_force_check"))
+        ) {
+            $toolbar .= "<option value='80'>"._("Service: Schedule Force Check")."</option>";
         }
     } else {
         $toolbar .= "<option value='10'>" . _("Close Tickets") . "</option>";
@@ -145,20 +159,20 @@ $(function() {
 
     $("[id^=buttontoolbar_]").click(function() {
         var checkValues = $("input:checked").map(function() {
-                var tmp = $(this).attr('id').split("_");
-                return tmp[1];
-            }).get().join(",");
+            var tmp = $(this).attr('id').split("_");
+            return tmp[1];
+        }).get().join(",");
 
-         if (checkValues != '') {
-             var tmp = $(this).attr('id').split("_");
-             var url = "./widgets/open-tickets/src/action.php?widgetId="+widget_id+"&selection="+checkValues+"&cmd="+tmp[1];
-             // We delete the old one (not really clean. Should be managed by popin itself. Like with a destroy parameters)
-             parent.jQuery('#OTWidgetPopin').parent().remove();
-             var popin = parent.jQuery('<div id="OTWidgetPopin">');
-             popin.centreonPopin({open:true,url:url});
-         } else {
-             alert("<?php echo _('Please select one or more items'); ?>");
-         }
+        if (checkValues != '') {
+            var tmp = $(this).attr('id').split("_");
+            var url = "./widgets/open-tickets/src/action.php?widgetId="+widget_id+"&selection="+checkValues+"&cmd="+tmp[1];
+            // We delete the old one (not really clean. Should be managed by popin itself. Like with a destroy parameters)
+            parent.jQuery('#OTWidgetPopin').parent().remove();
+            var popin = parent.jQuery('<div id="OTWidgetPopin">');
+            popin.centreonPopin({open:true,url:url});
+        } else {
+            alert("<?php echo _('Please select one or more items'); ?>");
+        }
     });
 });
 </script>

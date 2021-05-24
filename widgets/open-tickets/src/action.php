@@ -93,6 +93,19 @@ function service_ack()
     $template->display('acknowledge.ihtml');
 }
 
+function service_force_check()
+{
+    global $cmd, $centreon, $centreon_path;
+
+    $path = $centreon_path . "www/widgets/open-tickets/src/";
+    $title = _("Schedule check");
+    $template = new Smarty();
+    $template = initSmartyTpl($path . 'templates/', $template, "./", $centreon_path);
+    $template->assign('selection', $_REQUEST['selection']);
+    $template->assign('titleLabel', $title);
+    $template->display('schedulecheck.ihtml');
+}
+
 function format_popup()
 {
     global $cmd, $widgetId, $rule, $preferences, $centreon, $centreon_path;
@@ -196,6 +209,8 @@ try {
         remove_tickets();
     } elseif ($cmd == 70) {
         service_ack();
+    } elseif ($cmd == 80) {
+        service_force_check();
     }
 } catch (Exception $e) {
     echo $e->getMessage() . "<br/>";

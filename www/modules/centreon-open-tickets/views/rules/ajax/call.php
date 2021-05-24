@@ -49,8 +49,10 @@ $actions = array(
     "close-ticket" => __DIR__ . "/actions/closeTicket.php",
     "service-ack" => __DIR__ . "/actions/serviceAck.php",
     "upload-file" => __DIR__ . "/actions/uploadFile.php",
-    "remove-file" => __DIR__ . "/actions/removeFile.php"
+    "remove-file" => __DIR__ . "/actions/removeFile.php",
+    "service-force-check" => __DIR__ . "/actions/serviceForceCheck.php"
 );
+
 if (!isset($_POST['data']) && !isset($_REQUEST['action'])) {
     $resultat = array("code" => 1, "msg" => "POST 'data' needed.");
 } else {
