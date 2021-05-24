@@ -124,41 +124,40 @@ if ($preferences['toolbar_buttons']) {
     }
 } else {
     $toolbar .= "<select class='toolbar'>";
-    $toolbar .= "<option value='0'>-- "._("More actions")." -- </option>";
+    $toolbar .= "<option value='0'>-- " . _("More actions") . " -- </option>";
 
     if (!isset($preferences['opened_tickets']) || $preferences['opened_tickets'] == 0) {
         if ($preferences['action_open_hosts']) {
-            $toolbar .= "<option value='4'>"._("Host: Open ticket")."</option>";
+            $toolbar .= "<option value='4'>" . _("Host: Open ticket") . "</option>";
         }
         if ($preferences['action_open_services']) {
-            $toolbar .= "<option value='3'>"._("Service: Open ticket")."</option>";
+            $toolbar .= "<option value='3'>" . _("Service: Open ticket") . "</option>";
         }
         if ($preferences['action_ack']
             && ($canDoAction || $centreon->user->access->checkAction("service_acknowledgement"))
         ) {
-            $toolbar .= "<option value='70'>"._("Service: Acknowledge")."</option>";
+            $toolbar .= "<option value='70'>" . _("Service: Acknowledge") . "</option>";
         }
         if ($preferences['action_host_forced_check']
             && ($canDoAction || $centreon->user->access->checkAction("host_schedule_forced_check"))
         ) {
-            $toolbar .= "<option value='82'>"._("Host: Schedule Forced Check")."</option>";
+            $toolbar .= "<option value='82'>" . _("Host: Schedule Forced Check") . "</option>";
         }
         if ($preferences['action_host_check']
             && ($canDoAction || $centreon->user->access->checkAction("host_schedule_check"))
         ) {
-            $toolbar .= "<option value='83'>"._("Host: Schedule Check")."</option>";
+            $toolbar .= "<option value='83'>" . _("Host: Schedule Check") . "</option>";
         }
         if ($preferences['action_service_forced_check']
             && ($canDoAction || $centreon->user->access->checkAction("service_schedule_forced_check"))
         ) {
-            $toolbar .= "<option value='80'>"._("Service: Schedule Forced Check")."</option>";
+            $toolbar .= "<option value='80'>" . _("Service: Schedule Forced Check") . "</option>";
         }
         if ($preferences['action_service_check']
             && ($canDoAction || $centreon->user->access->checkAction("service_schedule_check"))
         ) {
-            $toolbar .= "<option value='81'>"._("Service: Schedule Check")."</option>";
+            $toolbar .= "<option value='81'>" . _("Service: Schedule Check") . "</option>";
         }
-        
     } else {
         $toolbar .= "<option value='10'>" . _("Close Tickets") . "</option>";
     }
@@ -208,8 +207,10 @@ $(function() {
 
         if (checkValues != '') {
             var tmp = $(this).attr('id').split("_");
-            var url = "./widgets/open-tickets/src/action.php?widgetId="+widget_id+"&selection="+checkValues+"&cmd="+tmp[1];
-            // We delete the old one (not really clean. Should be managed by popin itself. Like with a destroy parameters)
+            var url = "./widgets/open-tickets/src/action.php?widgetId=" 
+                + widget_id + "&selection=" + checkValues + "&cmd=" + tmp[1];
+            // We delete the old one 
+            // (not really clean. Should be managed by popin itself. Like with a destroy parameters)
             parent.jQuery('#OTWidgetPopin').parent().remove();
             var popin = parent.jQuery('<div id="OTWidgetPopin">');
             popin.centreonPopin({open:true,url:url});

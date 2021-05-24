@@ -41,7 +41,7 @@ $centreon_bg = new CentreonXMLBGRequest($dependencyInjector, session_id(), 1, 1,
 <?php
 
 /**
- * service_ack: put an ack on a host and service 
+ * service_ack: put an ack on a host and service
  * @param $autoCloseActionPopup (boolean) set to 1 if you want to automatically close call popup
  */
 function service_ack($autoCloseActionPopup)
@@ -101,7 +101,7 @@ function service_ack($autoCloseActionPopup)
 /**
  * schedule_check: prepare variables for widget popup when scheduling a check
  * @param $isService (boolean) set to 1 if you want to schedule a check on a service
- * @param $forced (boolean) set to 1 if you want to schedule a forced check 
+ * @param $forced (boolean) set to 1 if you want to schedule a forced check
  * @param $autoCloseActionPopup (boolean) set to 1 if you want to automatically close call popup
  */
 function schedule_check($isService, $forced, $autoCloseActionPopup)
