@@ -129,7 +129,7 @@ if ($preferences['toolbar_buttons']) {
         }
     } else {
         $toolbar .= "<input type='image' title='" . _("Close Tickets") . "' alt='" . _("Close Tickets")
-            . "' src='" . $centreon->optGen['oreon_web_path'] 
+            . "' src='" . $centreon->optGen['oreon_web_path']
             . "/modules/centreon-open-tickets/images/close-ticket.svg' id='buttontoolbar_10' "
             . "style='cursor:pointer; border: none;width: 24px; height: 24px;' />";
     }
