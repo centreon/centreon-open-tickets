@@ -148,12 +148,4 @@ try {
     $db->rollback();
 }
 
-$resultat['msg'] = '
-<table class="table">
-    <tr>
-        <td class="FormHeader" colspan="2"><h3 style="color: #00bfb3;">' . _('Service Schedule forced check') . '</td>
-    </tr>
-    <tr>
-        <td class="FormRowField" style="padding-left:15px;">Service schedule forced check</td>
-    </tr>';
-$resultat['msg'] .= '</table>';
+$resultat['msg'] = 'Successfully scheduled the check';

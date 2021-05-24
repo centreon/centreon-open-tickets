@@ -1,12 +1,9 @@
 <form id="Form">
   <div align=center>
-    <div id="form_error" style="color: red"></div>
     <div class="colorbox-popin">
-      <table class="table" style="font-size: 11px;">
-        <tr>
-          <td colspan="2" class="FormHeader"><h3 style="color: #00bfb3;">{$titleLabel}</h3></td>
-        </tr>
-      </table>
+      <h3 style="color: #00bfb3;">{$titleLabel}</h3>
+      <div id="form_error" style="color: #ed1c24"></div>
+      <div id="form_success" style="color: #87bd23"></div>
     </div>
     <div id="OTcountdown" style="color: red"></div>
   </div>
@@ -15,6 +12,7 @@
   var resource_selected = "{$selection}";
   var forced = {$forced};
   var isService = {$isService};
+  var autoCloseActionPopup = {$autoCloseActionPopup}
 </script>
 
 {literal}
@@ -34,20 +32,22 @@ var $callback_countdown = function() {
 };
 
 var $callback_scheduleCheck = function(res) {
-    //jQuery("#form_error").html("Full response: " + res);
     jQuery("#OTcontainer").html('');
     var data_ret = JSON.parse(res);
-    if (data_ret['code'] == 1) {
-        jQuery("#form_error").html(data_ret['msg']);
+
+    // display error messages
+    if (data_ret['code'] === 1) {
+      jQuery("#form_error").html("Full response: " + res);
+    
+    // display success messages and activate pop up auto close
     } else {
-        jQuery("#OTcontainer").html(data_ret['msg']);
-        //if (data_ret['result']['confirm_autoclose'] !== undefined && data_ret['result']['confirm_autoclose'] > 0) {
-            jQuery('#OTWidgetPopin > .close').hide();
-            jQuery('#centreonPopinOverlay').unbind('click');
-            //jQuery("#OTcountdown").html(data_ret['result']['confirm_autoclose']);
-            setTimeout($callback_confirm_autoclose, 1000);
-            setTimeout($callback_countdown, 1000);
-        //}
+      jQuery("#form_success").html(data_ret['msg']);
+      if (autoCloseActionPopup) {
+        jQuery('#OTWidgetPopin > .close').hide();
+        jQuery('#centreonPopinOverlay').unbind('click');
+        setTimeout($callback_confirm_autoclose, 1000);
+        setTimeout($callback_countdown, 1000);
+      }
     }
 };
 
