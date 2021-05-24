@@ -78,15 +78,42 @@ if ($preferences['toolbar_buttons']) {
             "for='ack-ticket'>Acknowledge <input type='image' title='" . _("Service: Acknowledge") . "' alt='" .
             _("Service: Acknowledge") . "' src='" . $centreon->optGen['oreon_web_path'] .
             "/modules/centreon-open-tickets/images/acknowledge.png' name='ack-ticket' " .
-            "style='border: none; height: 22px; vertical-align: middle;' /> </label> |";
+            "style='border: none; height: 22px; vertical-align: middle;' /> </label> | ";
         }
-        if ($preferences['action_force_check']
-            && ($canDoAction || $centreon->user->access->checkAction("service_force_check"))
+        if ($preferences['action_service_forced_check']
+            && ($canDoAction || $centreon->user->access->checkAction("service_schedule_forced_check"))
         ) {
             $toolbar .= "<label id='buttontoolbar_80' style='font-size: 13px; font-weight: bold; cursor:pointer;'' " . 
-            "for='force-check'>Schedule forced check <input type='image' title='" . _("Service: Schedule Forced Check") . "' alt='" .
+            "for='schedule-service-forced-check-ticket'>Service: Schedule forced check <input type='image' title='" . _("Service: Schedule Forced Check") . "' alt='" .
             _("Service: Schedule Forced Check") . "' src='" . $centreon->optGen['oreon_web_path'] .
-            "/modules/centreon-open-tickets/images/schedule_forced_check.png' name='schedule-forced-check-ticket' " .
+            "/modules/centreon-open-tickets/images/schedule_forced_check.png' name='schedule-service-forced-check-ticket' " .
+            "style='border: none; height: 22px; vertical-align: middle;' /> </label> | ";
+        }
+        if ($preferences['action_service_check']
+            && ($canDoAction || $centreon->user->access->checkAction("service_schedule_check"))
+        ) {
+            $toolbar .= "<label id='buttontoolbar_81' style='font-size: 13px; font-weight: bold; cursor:pointer;'' " . 
+            "for='schedule-sevice-check-ticket'>Service: Schedule check <input type='image' title='" . _("Service: Schedule Check") . "' alt='" .
+            _("Service: Schedule Check") . "' src='" . $centreon->optGen['oreon_web_path'] .
+            "/modules/centreon-open-tickets/images/schedule_check.png' name='schedule-service-check-ticket' " .
+            "style='border: none; height: 22px; vertical-align: middle;' /> </label> | ";
+        }
+        if ($preferences['action_host_forced_check']
+            && ($canDoAction || $centreon->user->access->checkAction("host_schedule_forced_check"))
+        ) {
+            $toolbar .= "<label id='buttontoolbar_82' style='font-size: 13px; font-weight: bold; cursor:pointer;'' " . 
+            "for='host-service-forced-check-ticket'>Host: Schedule forced check <input type='image' title='" . _("Host: Schedule Forced Check") . "' alt='" .
+            _("Host: Schedule Forced Check") . "' src='" . $centreon->optGen['oreon_web_path'] .
+            "/modules/centreon-open-tickets/images/schedule_forced_check.png' name='schedule-host-forced-check-ticket' " .
+            "style='border: none; height: 22px; vertical-align: middle;' /> </label> | ";
+        }
+        if ($preferences['action_host_check']
+            && ($canDoAction || $centreon->user->access->checkAction("host_schedule_check"))
+        ) {
+            $toolbar .= "<label id='buttontoolbar_83' style='font-size: 13px; font-weight: bold; cursor:pointer;'' " . 
+            "for='schedule-host-check-ticket'>Host: Schedule check <input type='image' title='" . _("Host: Schedule Check") . "' alt='" .
+            _("Host: Schedule Check") . "' src='" . $centreon->optGen['oreon_web_path'] .
+            "/modules/centreon-open-tickets/images/schedule_check.png' name='schedule-host-check-ticket' " .
             "style='border: none; height: 22px; vertical-align: middle;' /> </label> |";
         }
     } else {
@@ -111,11 +138,27 @@ if ($preferences['toolbar_buttons']) {
         ) {
             $toolbar .= "<option value='70'>"._("Service: Acknowledge")."</option>";
         }
-        if ($preferences['action_force_check']
-            && ($canDoAction || $centreon->user->access->checkAction("service_force_check"))
+        if ($preferences['action_host_forced_check']
+            && ($canDoAction || $centreon->user->access->checkAction("host_schedule_forced_check"))
         ) {
-            $toolbar .= "<option value='80'>"._("Service: Schedule Force Check")."</option>";
+            $toolbar .= "<option value='82'>"._("Host: Schedule Forced Check")."</option>";
         }
+        if ($preferences['action_host_check']
+            && ($canDoAction || $centreon->user->access->checkAction("host_schedule_check"))
+        ) {
+            $toolbar .= "<option value='83'>"._("Host: Schedule Check")."</option>";
+        }
+        if ($preferences['action_service_forced_check']
+            && ($canDoAction || $centreon->user->access->checkAction("service_schedule_forced_check"))
+        ) {
+            $toolbar .= "<option value='80'>"._("Service: Schedule Forced Check")."</option>";
+        }
+        if ($preferences['action_service_check']
+            && ($canDoAction || $centreon->user->access->checkAction("service_schedule_check"))
+        ) {
+            $toolbar .= "<option value='81'>"._("Service: Schedule Check")."</option>";
+        }
+        
     } else {
         $toolbar .= "<option value='10'>" . _("Close Tickets") . "</option>";
     }

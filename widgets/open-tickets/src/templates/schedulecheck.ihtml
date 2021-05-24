@@ -12,7 +12,9 @@
   </div>
 </form>
 <script>
-  var resource_selected = "{$selection}"
+  var resource_selected = "{$selection}";
+  var forced = {$forced};
+  var isService = {$isService};
 </script>
 
 {literal}
@@ -31,7 +33,7 @@ var $callback_countdown = function() {
     }
 };
 
-var $callback_serviceForceCheck = function(res) {
+var $callback_scheduleCheck = function(res) {
     //jQuery("#form_error").html("Full response: " + res);
     jQuery("#OTcontainer").html('');
     var data_ret = JSON.parse(res);
@@ -49,24 +51,26 @@ var $callback_serviceForceCheck = function(res) {
     }
 };
 
-function serviceForceCheck() {
+function scheduleCheck() {
     jQuery("#form_error").html('');
     var data = {
-        "action": "service-force-check",
+        "action": "schedule-check",
         "form": {
-          "selection": resource_selected
+          "selection": resource_selected,
+          "forced": forced,
+          "isService": isService
         }
     }
 
     jQuery("#validForm").empty();
     jQuery("#OTcontainer").html('<div style="margin-top: 50px; margin-bottom:10px">Please wait...</div><div><img src="./widgets/open-tickets/resources/ajax-waiting.gif" / ></div>');
 
-    call_ajax_async(data, $callback_serviceForceCheck, './widgets/open-tickets/src/ajax/callforwardmodule.php');
+    call_ajax_async(data, $callback_scheduleCheck, './widgets/open-tickets/src/ajax/callforwardmodule.php');
     return false;
 }
 
 jQuery(function() {
-  serviceForceCheck()
+  scheduleCheck()
 });
 </script>
 {/literal}

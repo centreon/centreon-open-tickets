@@ -50,7 +50,7 @@ $actions = array(
     "service-ack" => __DIR__ . "/actions/serviceAck.php",
     "upload-file" => __DIR__ . "/actions/uploadFile.php",
     "remove-file" => __DIR__ . "/actions/removeFile.php",
-    "service-force-check" => __DIR__ . "/actions/serviceForceCheck.php"
+    "schedule-check" => __DIR__ . "/actions/scheduleCheck.php"
 );
 
 if (!isset($_POST['data']) && !isset($_REQUEST['action'])) {

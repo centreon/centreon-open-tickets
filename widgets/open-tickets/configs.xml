@@ -77,6 +77,9 @@
     <preference label="Enable action tickets for hosts" name="action_open_hosts" defaultValue="1" type="boolean"/>
     <preference label="Enable action tickets for services" name="action_open_services" defaultValue="1" type="boolean"/>
     <preference label="Enable action acknowledgement" name="action_ack" defaultValue="0" type="boolean"/>
-    <preference label="Enable schedule forced check" name="action_force_check" defaultValue="0" type="boolean"/>
+    <preference label="Enable schedule service forced check" name="action_service_forced_check" defaultValue="0" type="boolean"/>
+    <preference label="Enable schedule service check" name="action_service_check" defaultValue="0" type="boolean"/>
+    <preference label="Enable schedule host forced check" name="action_host_forced_check" defaultValue="0" type="boolean"/>
+    <preference label="Enable schedule host check" name="action_host_check" defaultValue="0" type="boolean"/>
   </preferences>
 </configs>

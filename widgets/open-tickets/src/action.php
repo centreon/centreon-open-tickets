@@ -93,16 +93,24 @@ function service_ack()
     $template->display('acknowledge.ihtml');
 }
 
-function service_force_check()
+/**
+ * schedule_check: prepare variables for widget popup when scheduling a check
+ * @param $isService (boolean) set to 1 if you want to schedule a check on a service
+ * @param $forced (boolean) set to 1 if you want to schedule a forced check 
+ */
+function schedule_check($isService, $forced)
 {
     global $cmd, $centreon, $centreon_path;
 
+    $selection = $_REQUEST['selection'];
     $path = $centreon_path . "www/widgets/open-tickets/src/";
     $title = _("Schedule check");
     $template = new Smarty();
     $template = initSmartyTpl($path . 'templates/', $template, "./", $centreon_path);
-    $template->assign('selection', $_REQUEST['selection']);
+    $template->assign('selection', $selection);
     $template->assign('titleLabel', $title);
+    $template->assign('forced', $forced);
+    $template->assign('isService', $isService);
     $template->display('schedulecheck.ihtml');
 }
 
@@ -209,8 +217,18 @@ try {
         remove_tickets();
     } elseif ($cmd == 70) {
         service_ack();
+    //schedule service forced check
     } elseif ($cmd == 80) {
-        service_force_check();
+        schedule_check(1,1);
+    // schedule service check
+    } elseif ($cmd == 81) {
+        schedule_check(1,0);
+    // schedule host forced check
+    } elseif ($cmd == 82) {
+        schedule_check(0,1);
+    // schedule host check
+    } elseif ($cmd == 83) {
+        schedule_check(0,0);
     }
 } catch (Exception $e) {
     echo $e->getMessage() . "<br/>";

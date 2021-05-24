@@ -26,6 +26,8 @@ $resultat = array(
 
 // We get Host or Service
 $selected_values = explode(',', $get_information['form']['selection']);
+$forced = $get_information['form']['forced'];
+$isService = $get_information['form']['isService'];
 $db_storage = new centreonDBManager('centstorage');
 
 $problems = array();
@@ -102,8 +104,9 @@ try {
     $error_msg = array();
 
     foreach ($problems as $row) {
-        if (is_null($row['description']) || $row['description'] == '') {
-            $command = "SCHEDULE_FORCED_HOST_CHECK;%s;%s";
+        // host check action and service description from database is empty (meaning entry is about a host)
+        if (! $isService && (is_null($row['description']) || $row['description'] == '')) {
+            $command = $forced ? "SCHEDULE_FORCED_HOST_CHECK;%s;%s" : "SCHEDULE_HOST_CHECK;%s;%s";
             call_user_func_array(
                 array($external_cmd, $method_external_name),
                 array(
@@ -116,21 +119,26 @@ try {
                 )
             );
             continue;
+        // servuce check action and service description from database is empty (meaning entry is about a host)
+        } elseif ( $isService && (is_null($row['description']) || $row['description'] == '')) {
+            continue;
         }
 
-        $command = "SCHEDULE_FORCED_SVC_CHECK;%s;%s;%s";
-        call_user_func_array(
-            array($external_cmd, $method_external_name),
-            array(
-                sprintf(
-                    $command,
-                    $row['host_name'],
-                    $row['description'],
-                    time()
-                ),
-                $row['instance_id']
-            )
-        );
+        if ($isService) {
+            $command = $forced ? "SCHEDULE_FORCED_SVC_CHECK;%s;%s;%s" : "SCHEDULE_SVC_CHECK;%s;%s;%s";
+            call_user_func_array(
+                array($external_cmd, $method_external_name),
+                array(
+                    sprintf(
+                        $command,
+                        $row['host_name'],
+                        $row['description'],
+                        time()
+                    ),
+                    $row['instance_id']
+                )
+            );
+        }
     }
 
     $external_cmd->write();
