@@ -78,7 +78,7 @@ if ($preferences['toolbar_buttons']) {
             "for='ack-ticket'>Acknowledge <input type='image' title='" . _("Service: Acknowledge") . "' alt='" .
             _("Service: Acknowledge") . "' src='" . $centreon->optGen['oreon_web_path'] .
             "/modules/centreon-open-tickets/images/acknowledge.png' name='ack-ticket' " .
-            "style='border: none; height: 22px; vertical-align: middle;' /> ";
+            "style='border: none; height: 22px; vertical-align: middle;' /> </label> |";
         }
         if ($preferences['action_force_check']
             && ($canDoAction || $centreon->user->access->checkAction("service_force_check"))
@@ -87,7 +87,7 @@ if ($preferences['toolbar_buttons']) {
             "for='force-check'>Schedule forced check <input type='image' title='" . _("Service: Schedule Forced Check") . "' alt='" .
             _("Service: Schedule Forced Check") . "' src='" . $centreon->optGen['oreon_web_path'] .
             "/modules/centreon-open-tickets/images/schedule_forced_check.png' name='schedule-forced-check-ticket' " .
-            "style='border: none; height: 22px; vertical-align: middle;' /> ";
+            "style='border: none; height: 22px; vertical-align: middle;' /> </label> |";
         }
     } else {
         $toolbar .= "<input type='image' title='" . _("Close Tickets") . "' alt='" . _("Close Tickets") .
