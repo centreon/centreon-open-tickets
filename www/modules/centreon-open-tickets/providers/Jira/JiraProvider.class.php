@@ -363,7 +363,7 @@ class JiraProvider extends AbstractProvider
 
         $result = array();
         foreach ($this->_jira_call_response as $row) {
-            $result[$row['key']] = $this->to_utf8($row['name']);
+            $result[$row['accountId']] = $this->to_utf8($row['displayName']);
         }
 
         $this->saveSession($label_session, $this->_jira_call_response);
@@ -524,7 +524,7 @@ class JiraProvider extends AbstractProvider
 
     protected function listUserJira($filter)
     {
-        $search = 'username=';
+        $search = 'query=';
         if (isset($filter)) {
             $search .= urlencode($filter);
         }
