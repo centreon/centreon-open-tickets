@@ -190,19 +190,19 @@ try {
         if (isset($centreon->optGen['monitoring_ack_sticky']) && $centreon->optGen['monitoring_ack_sticky']) {
             $sticky = 2;
         } else {
-            $sticky =1;
+            $sticky = 1;
         }
 
         if (isset($centreon->optGen['monitoring_ack_notify']) && $centreon->optGen['monitoring_ack_notify']) {
             $notify = 1;
         } else {
-            $notify =0;
+            $notify = 0;
         }
 
         if (isset($centreon->optGen['monitoring_ack_persistent']) && $centreon->optGen['monitoring_ack_persistent']) {
             $persistent = 1;
         } else {
-            $persistent =0;
+            $persistent = 0;
         }
 
         foreach ($selected['host_selected'] as $value) {
