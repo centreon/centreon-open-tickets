@@ -19,6 +19,10 @@
  * limitations under the License.
  */
 
+require_once $centreon_path . 'www/class/centreon.class.php';
+
+global $centreon;
+
 function get_contact_information()
 {
     global $db, $centreon_bg;
@@ -183,6 +187,24 @@ try {
             $method_external_name = 'setProcessCommand';
         }
 
+        if (isset($centreon->optGen['monitoring_ack_sticky']) && $centreon->optGen['monitoring_ack_sticky']) {
+            $sticky = 2;
+        } else {
+            $sticky =1;
+        }
+
+        if (isset($centreon->optGen['monitoring_ack_notify']) && $centreon->optGen['monitoring_ack_notify']) {
+            $notify = 1;
+        } else {
+            $notify =0;
+        }
+
+        if (isset($centreon->optGen['monitoring_ack_persistent']) && $centreon->optGen['monitoring_ack_persistent']) {
+            $persistent = 1;
+        } else {
+            $persistent =0;
+        }
+
         foreach ($selected['host_selected'] as $value) {
             $command = "CHANGE_CUSTOM_HOST_VAR;%s;%s;%s";
             call_user_func_array(
@@ -205,9 +227,9 @@ try {
                         sprintf(
                             $command,
                             $value['name'],
-                            2,
-                            0,
-                            1,
+                            $sticky,
+                            $notify,
+                            $persistent,
                             $contact_infos['alias'],
                             'open ticket: ' . $resultat['result']['ticket_id']
                         ),
@@ -240,9 +262,9 @@ try {
                             $command,
                             $value['host_name'],
                             $value['description'],
-                            2,
-                            0,
-                            1,
+                            $sticky,
+                            $notify,
+                            $persistent,
                             $contact_infos['alias'],
                             'open ticket: ' . $resultat['result']['ticket_id']
                         ),
