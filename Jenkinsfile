@@ -46,7 +46,6 @@ try {
   // sonarQube step to get qualityGate result
   stage('Quality gate') {
     node {
-      sleep 60
       timeout(time: 10, unit: 'MINUTES') {
         def qualityGate = waitForQualityGate()
           if (qualityGate.status != 'OK') {
@@ -57,7 +56,7 @@ try {
       }
     }
   }
-
+ }
   stage('Package') {
     parallel 'centos7': {
       node {
