@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
@@ -26,6 +27,8 @@ $resultat = array(
 
 // We get Host or Service
 $selected_values = explode(',', $get_information['form']['selection']);
+$forced = $get_information['form']['forced'];
+$isService = $get_information['form']['isService'];
 $db_storage = new centreonDBManager('centstorage');
 
 $problems = array();
@@ -89,19 +92,6 @@ while (($row = $dbResult->fetch())) {
     $hosts_done[$row['host_name'] . ';' . $row['description']] = 1;
 }
 
-$persistent = 0;
-$sticky = 0;
-$notify = 0;
-if (isset($get_information['form']['persistent'])) {
-    $persistent = 1;
-}
-if (isset($get_information['form']['sticky'])) {
-    $sticky = 1;
-}
-if (isset($get_information['form']['notify'])) {
-    $notify = 1;
-}
-
 try {
     #fwrite($fp, print_r($problems, true) . "===\n");
     require_once $centreon_path . 'www/class/centreonExternalCommand.class.php';
@@ -115,43 +105,41 @@ try {
     $error_msg = array();
 
     foreach ($problems as $row) {
-        if (is_null($row['description']) || $row['description'] == '') {
-            $command = "ACKNOWLEDGE_HOST_PROBLEM;%s;%s;%s;%s;%s;%s";
+        // host check action and service description from database is empty (meaning entry is about a host)
+        if (! $isService && (is_null($row['description']) || $row['description'] == '')) {
+            $command = $forced ? "SCHEDULE_FORCED_HOST_CHECK;%s;%s" : "SCHEDULE_HOST_CHECK;%s;%s";
             call_user_func_array(
                 array($external_cmd, $method_external_name),
                 array(
                     sprintf(
                         $command,
                         $row['host_name'],
-                        $sticky,
-                        $notify,
-                        $persistent,
-                        $get_information['form']['author'],
-                        $get_information['form']['comment']
+                        time()
                     ),
                     $row['instance_id']
                 )
             );
             continue;
+        // servuce check action and service description from database is empty (meaning entry is about a host)
+        } elseif ($isService && (is_null($row['description']) || $row['description'] == '')) {
+            continue;
         }
 
-        $command = "ACKNOWLEDGE_SVC_PROBLEM;%s;%s;%s;%s;%s;%s;%s";
-        call_user_func_array(
-            array($external_cmd, $method_external_name),
-            array(
-                sprintf(
-                    $command,
-                    $row['host_name'],
-                    $row['description'],
-                    $sticky,
-                    $notify,
-                    $persistent,
-                    $get_information['form']['author'],
-                    $get_information['form']['comment']
-                ),
-                $row['instance_id']
-            )
-        );
+        if ($isService) {
+            $command = $forced ? "SCHEDULE_FORCED_SVC_CHECK;%s;%s;%s" : "SCHEDULE_SVC_CHECK;%s;%s;%s";
+            call_user_func_array(
+                array($external_cmd, $method_external_name),
+                array(
+                    sprintf(
+                        $command,
+                        $row['host_name'],
+                        $row['description'],
+                        time()
+                    ),
+                    $row['instance_id']
+                )
+            );
+        }
     }
 
     $external_cmd->write();
@@ -161,4 +149,4 @@ try {
     $db->rollback();
 }
 
-$resultat['msg'] = 'successfully sent acknowledgement';
+$resultat['msg'] = 'Successfully scheduled the check';
