@@ -110,7 +110,7 @@ class ItopProvider extends AbstractProvider {
     protected function _setDefaultValueMain($body_html = 0) {
         parent::_setDefaultValueMain($body_html = 0);
 
-        $this->default_data['url'] = '{$protocol}://{$address}/webservices/rest.php?version={$version}';
+        $this->default_data['url'] = '{$protocol}://{$address}/pages/UI.php?operation=details&class=UserRequest&id={$ticket_id}';
 
         $this->default_data['format_popup'] = '
 <table class="table">
