@@ -110,7 +110,8 @@ function format_popup()
             'title' => $title,
             'user' => array(
                 'alias' => $centreon->user->alias,
-                'email' => $centreon->user->email
+                'email' => $centreon->user->email,
+                'name' => $centreon->user->name
             )
         ),
         $widgetId,
