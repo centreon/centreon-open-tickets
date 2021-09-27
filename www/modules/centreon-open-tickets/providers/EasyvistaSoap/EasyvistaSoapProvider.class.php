@@ -522,8 +522,14 @@ class EasyvistaSoapProvider extends AbstractProvider
             curl_close($ch);
             return 1;
         }
-
+        
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+        
+        if ($httpCode != 200) {
+            $this->setWsError($this->soap_result);
+            return 1;
+        }
 
         return 0;
     }
