@@ -525,7 +525,7 @@ class Centreon_OpenTickets_Rule
         $result = array();
         $where = '';
         if (!is_null($filter) && $filter != '') {
-            $where = " hg_name LIKE '" . $this->_db->escape($filter) . "' AND ";
+            $where = " hg_name REGEXP '" . $this->_db->escape($filter) . "' AND ";
         }
         $dbResult = $this->_db->query(
             "SELECT hg_id, hg_name FROM hostgroup WHERE " . $where . " hg_activate = '1' ORDER BY hg_name ASC"
@@ -542,7 +542,7 @@ class Centreon_OpenTickets_Rule
         $result = array();
         $where = '';
         if (!is_null($filter) && $filter != '') {
-            $where = " cg_name LIKE '" . $this->_db->escape($filter) . "' AND ";
+            $where = " cg_name REGEXP '" . $this->_db->escape($filter) . "' AND ";
         }
         $dbResult = $this->_db->query(
             "SELECT cg_id, cg_name FROM contactgroup WHERE " . $where . " cg_activate = '1' ORDER BY cg_name ASC"
@@ -559,7 +559,7 @@ class Centreon_OpenTickets_Rule
         $result = array();
         $where = '';
         if (!is_null($filter) && $filter != '') {
-            $where = " sg_name LIKE '" . $this->_db->escape($filter) . "' AND ";
+            $where = " sg_name REGEXP '" . $this->_db->escape($filter) . "' AND ";
         }
         $dbResult = $this->_db->query(
             "SELECT sg_id, sg_name FROM servicegroup WHERE " . $where . " sg_activate = '1' ORDER BY sg_name ASC"
@@ -576,7 +576,7 @@ class Centreon_OpenTickets_Rule
         $result = array();
         $where = '';
         if (!is_null($filter) && $filter != '') {
-            $where = " hc_name LIKE '" . $this->_db->escape($filter) . "' AND ";
+            $where = " hc_name REGEXP '" . $this->_db->escape($filter) . "' AND ";
         }
         $dbResult = $this->_db->query(
             "SELECT hc_id, hc_name
@@ -596,7 +596,7 @@ class Centreon_OpenTickets_Rule
         $result = array();
         $where = '';
         if (!is_null($filter) && $filter != '') {
-            $where = " hc_name LIKE '" . $this->_db->escape($filter) . "' AND ";
+            $where = " hc_name REGEXP '" . $this->_db->escape($filter) . "' AND ";
         }
         $dbResult = $this->_db->query(
             "SELECT hc_id, hc_name
@@ -617,7 +617,7 @@ class Centreon_OpenTickets_Rule
         $result = array();
         $where = '';
         if (!is_null($filter) && $filter != '') {
-            $where = " sc_name LIKE '" . $this->_db->escape($filter) . "' AND ";
+            $where = " sc_name REGEXP '" . $this->_db->escape($filter) . "' AND ";
         }
         $dbResult = $this->_db->query(
             "SELECT sc_id, sc_name
@@ -637,7 +637,7 @@ class Centreon_OpenTickets_Rule
         $result = array();
         $where = '';
         if (!is_null($filter) && $filter != '') {
-            $where = " sc_name LIKE '" . $this->_db->escape($filter) . "' AND ";
+            $where = " sc_name REGEXP '" . $this->_db->escape($filter) . "' AND ";
         }
         $dbResult = $this->_db->query(
             "SELECT sc_id, sc_name
