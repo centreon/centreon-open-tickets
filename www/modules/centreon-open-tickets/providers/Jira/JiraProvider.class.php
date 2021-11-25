@@ -67,7 +67,7 @@ class JiraProvider extends AbstractProvider
             ),
             array('Arg' => self::ARG_DESCRIPTION, 'Value' => '{$body}'),
             array('Arg' => self::ARG_PROJECT, 'Value' => '{$select.jira_project.id}'),
-            array('Arg' => self::ARG_ASSIGNEE, 'Value' => '{$select.jira_assignee.value}'),
+            array('Arg' => self::ARG_ASSIGNEE, 'Value' => '{$select.jira_assignee.id}'),
             array('Arg' => self::ARG_PRIORITY, 'Value' => '{$select.jira_priority.id}'),
             array('Arg' => self::ARG_ISSUETYPE, 'Value' => '{$select.jira_issuetype.id}'),
         );
@@ -549,7 +549,7 @@ class JiraProvider extends AbstractProvider
             && $ticket_arguments[$this->_internal_arg_name[self::ARG_ASSIGNEE]] != ''
         ) {
             $argument['fields']['assignee'] = array(
-                'name' => $ticket_arguments[$this->_internal_arg_name[self::ARG_ASSIGNEE]]
+                'accountId' => $ticket_arguments[$this->_internal_arg_name[self::ARG_ASSIGNEE]]
             );
         }
         if (isset($ticket_arguments[$this->_internal_arg_name[self::ARG_PRIORITY]])
