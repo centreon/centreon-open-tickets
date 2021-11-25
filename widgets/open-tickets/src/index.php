@@ -244,6 +244,13 @@ if (isset($preferences['hide_unreachable_host']) && $preferences['hide_unreachab
     $query = CentreonUtils::conditionBuilder($query, " h.state != 2 ");
 }
 
+if (isset($preferences['hide_disable_notif_host']) && $preferences['hide_disable_notif_host']) {
+    $query = CentreonUtils::conditionBuilder($query, " h.notify != 0 ");
+}
+if (isset($preferences['hide_disable_notif_service']) && $preferences['hide_disable_notif_service']) {
+    $query = CentreonUtils::conditionBuilder($query, " s.notify != 0 ");
+}
+
 # For Open Tickets
 if (!isset($preferences['opened_tickets']) || $preferences['opened_tickets'] == 0) {
     $query .= " AND mop1.timestamp IS NULL ";
@@ -401,9 +408,15 @@ while ($row = $res->fetch()) {
             $value = substr($value, 0, $outputLength);
         } elseif (($key == "h_action_url" || $key == "h_notes_url") && $value) {
             $value = CentreonUtils::escapeSecure($hostObj->replaceMacroInString($row['hostname'], $value));
+            if (preg_match("/^.\/include\/configuration\/configKnowledge\/proxy\/proxy.php(.*)/i", $value)) {
+                $value = "../../" . $value;
+            }
         } elseif (($key == "s_action_url" || $key == "s_notes_url") && $value) {
             $value = $hostObj->replaceMacroInString($row['hostname'], $value);
             $value = CentreonUtils::escapeSecure($svcObj->replaceMacroInString($row['service_id'], $value));
+            if (preg_match("/^.\/include\/configuration\/configKnowledge\/proxy\/proxy.php(.*)/i", $value)) {
+                $value = "../../" . $value;
+            }
         } elseif ($key == "criticality_id" && $value != '') {
             $critData = $criticality->getData($row["criticality_id"], 1);
             $value = "<img src='../../img/media/" . $media->getFilename($critData['icon_id']) .

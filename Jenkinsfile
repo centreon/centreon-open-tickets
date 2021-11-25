@@ -1,12 +1,14 @@
+import groovy.json.JsonSlurper
+
 /*
 ** Variables.
 */
 properties([buildDiscarder(logRotator(numToKeepStr: '50'))])
-def serie = '21.10'
-def maintenanceBranch = "${serie}.x"
+def serie = '22.04'
+def stableBranch = "master"
 if (env.BRANCH_NAME.startsWith('release-')) {
   env.BUILD = 'RELEASE'
-} else if ((env.BRANCH_NAME == 'master') || (env.BRANCH_NAME == maintenanceBranch)) {
+} else if (env.BRANCH_NAME == stableBranch) {
   env.BUILD = 'REFERENCE'
 } else {
   env.BUILD = 'CI'
@@ -84,28 +86,35 @@ try {
 
   // sonarQube step to get qualityGate result
   stage('Quality gate') {
-    timeout(time: 10, unit: 'MINUTES') {
-      def qualityGate = waitForQualityGate()
-      if (qualityGate.status != 'OK') {
-        currentBuild.result = 'FAIL'
+    node {
+      timeout(time: 10, unit: 'MINUTES') {
+        def qualityGate = waitForQualityGate()
+          if (qualityGate.status != 'OK') {
+            currentBuild.result = 'FAIL' 
+          }
+      if ((currentBuild.result ?: 'SUCCESS') != 'SUCCESS') {
+        error("Quality gate failure: ${qualityGate.status}.");
       }
     }
-    if ((currentBuild.result ?: 'SUCCESS') != 'SUCCESS') {
-      error('Quality gate failure: ${qualityGate.status}.');
-    }
   }
-
+ }
   stage('Package') {
     parallel 'centos7': {
       node {
         sh 'setup_centreon_build.sh'
         sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-package.sh centos7"
+        archiveArtifacts artifacts: 'rpms-centos7.tar.gz'
+        stash name: "rpms-centos7", includes: 'output/noarch/*.rpm'
+        sh 'rm -rf output'
       }
     },
     'centos8': {
       node {
         sh 'setup_centreon_build.sh'
         sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-package.sh centos8"
+        archiveArtifacts artifacts: 'rpms-centos8.tar.gz'
+        stash name: "rpms-centos8", includes: 'output/noarch/*.rpm'
+        sh 'rm -rf output'
       }
     }
     if ((currentBuild.result ?: 'SUCCESS') != 'SUCCESS') {
@@ -117,6 +126,8 @@ try {
     stage('Delivery') {
       node {
         sh 'setup_centreon_build.sh'
+        unstash 'rpms-centos7'
+        unstash 'rpms-centos8'
         sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-delivery.sh"
       }
       if ((currentBuild.result ?: 'SUCCESS') != 'SUCCESS') {
