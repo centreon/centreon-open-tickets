@@ -66,7 +66,7 @@ try {
         stash name: "rpms-centos7", includes: 'output/noarch/*.rpm'
         sh 'rm -rf output'
       }
-    }
+    },
     'alma8': {
       node {
         sh 'setup_centreon_build.sh'
