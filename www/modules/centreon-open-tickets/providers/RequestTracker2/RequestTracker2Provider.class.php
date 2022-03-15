@@ -513,7 +513,7 @@ class RequestTracker2Provider extends AbstractProvider
             $this->setWsError("cannot load curl extension");
             return 1;
         }
-        
+
         $this->call_response = null;
 
         $proto = 'http';
@@ -542,7 +542,7 @@ class RequestTracker2Provider extends AbstractProvider
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->rule_data['timeout']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        
+
         self::setProxy(
             $ch,
             array(
