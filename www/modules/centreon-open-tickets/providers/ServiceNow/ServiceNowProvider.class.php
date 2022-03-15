@@ -442,7 +442,8 @@ class ServiceNowProvider extends AbstractProvider
     public static function test($info)
     {
         /* Test arguments */
-        if (!isset($info['instance'])
+        if (
+            !isset($info['instance'])
             || !isset($info['clientId'])
             || !isset($info['clientSecret'])
             || !isset($info['username'])
@@ -453,7 +454,7 @@ class ServiceNowProvider extends AbstractProvider
 
         try {
             $tokens = self::getAccessToken(
-                array(
+                [
                     'instance' => $info['instance'],
                     'client_id' => $info['clientId'],
                     'client_secret' => $info['clientSecret'],
@@ -462,8 +463,8 @@ class ServiceNowProvider extends AbstractProvider
                     'proxy_address' => $info['proxyAddress'],
                     'proxy_port' => $info['proxyPort'],
                     'proxy_username' => $info['proxyUsername'],
-                    'proxy_password' => $info['proxyPassword'],
-                )
+                    'proxy_password' => $info['proxyPassword']
+                ]
             );
             return true;
         } catch (\Exception $e) {
@@ -526,7 +527,7 @@ class ServiceNowProvider extends AbstractProvider
     /**
      * Call a service now Rest webservices
      */
-    protected function callServiceNow($methodName, $params = array())
+    protected function callServiceNow($methodName, $params = [])
     {
         $accessToken = $this->getCache('accessToken');
         $refreshToken = $this->getCache('refreshToken');
