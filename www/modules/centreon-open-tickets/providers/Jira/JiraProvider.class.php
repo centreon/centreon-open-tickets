@@ -145,7 +145,7 @@ class JiraProvider extends AbstractProvider
     {
         $tpl = $this->initSmartyTemplate('providers/Jira/templates');
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("jira" => _("Jira")));
 
@@ -163,19 +163,19 @@ class JiraProvider extends AbstractProvider
 
         $array_form = array(
             'address' => array(
-                'label' => _("Address") . $this->_required_field,
+                'label' => _("Address") . $this->required_field,
                 'html' => $address_html
             ),
             'rest_api_resource' => array(
-                'label' => _("Rest Api Resource") . $this->_required_field,
+                'label' => _("Rest Api Resource") . $this->required_field,
                 'html' => $rest_api_resource_html
             ),
             'username' => array(
-                'label' => _("Username") . $this->_required_field,
+                'label' => _("Username") . $this->required_field,
                 'html' => $username_html
             ),
             'user_token' => array(
-                'label' => _("User Token") . $this->_required_field,
+                'label' => _("User Token") . $this->required_field,
                 'html' => $user_token_html
             ),
             'timeout' => array('label' => _("Timeout"), 'html' => $timeout_html),
@@ -201,9 +201,9 @@ class JiraProvider extends AbstractProvider
 
         $tpl->assign('form', $array_form);
 
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
 
-        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
+        $this->config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
     /**
@@ -245,7 +245,7 @@ class JiraProvider extends AbstractProvider
 
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
-                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''
             ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
@@ -280,7 +280,7 @@ class JiraProvider extends AbstractProvider
 
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
-                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''
             ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
@@ -315,7 +315,7 @@ class JiraProvider extends AbstractProvider
 
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .  (
-                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''
             ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
@@ -349,7 +349,7 @@ class JiraProvider extends AbstractProvider
 
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
-                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''
             ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
@@ -438,7 +438,7 @@ class JiraProvider extends AbstractProvider
 
         $tpl = $this->initSmartyTemplate();
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
         $tpl->assign('service_selected', $service_problems);

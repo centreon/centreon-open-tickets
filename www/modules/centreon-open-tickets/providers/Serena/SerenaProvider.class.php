@@ -120,7 +120,7 @@ class SerenaProvider extends AbstractProvider
     {
         $tpl = $this->initSmartyTemplate('providers/Serena/templates');
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("serena" => _("Serena")));
 
@@ -137,10 +137,10 @@ class SerenaProvider extends AbstractProvider
             $this->getFormValue('timeout') . '" />';
 
         $array_form = array(
-            'endpoint' => array('label' => _("Endpoint") . $this->_required_field, 'html' => $endpoint_html),
+            'endpoint' => array('label' => _("Endpoint") . $this->required_field, 'html' => $endpoint_html),
             'namespace' => array('label' => _("Namespace"), 'html' => $namespace_html),
-            'username' => array('label' => _("Username") . $this->_required_field, 'html' => $username_html),
-            'password' => array('label' => _("Password") . $this->_required_field, 'html' => $password_html),
+            'username' => array('label' => _("Username") . $this->required_field, 'html' => $username_html),
+            'password' => array('label' => _("Password") . $this->required_field, 'html' => $password_html),
             'timeout' => array('label' => _("Timeout"), 'html' => $timeout_html),
             'mappingticket' => array('label' => _("Mapping ticket arguments")),
         );
@@ -164,8 +164,8 @@ class SerenaProvider extends AbstractProvider
         );
 
         $tpl->assign('form', $array_form);
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
     /**
@@ -209,7 +209,7 @@ class SerenaProvider extends AbstractProvider
 
         $tpl = $this->initSmartyTemplate();
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
         $tpl->assign('service_selected', $service_problems);

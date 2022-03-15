@@ -165,7 +165,7 @@ class ServiceNowProvider extends AbstractProvider
     protected function getConfigContainer1Extra()
     {
         $tpl = $this->initSmartyTemplate('providers/ServiceNow/templates');
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("servicenow" => _("Service Now")));
         $tpl->assign('webServiceUrl', './api/internal.php');
@@ -184,15 +184,15 @@ class ServiceNowProvider extends AbstractProvider
 
         $array_form = array(
             'instance_name' => array('label' => _("Instance name") .
-                $this->_required_field, 'html' => $instance_name_html),
+                $this->required_field, 'html' => $instance_name_html),
             'client_id' => array('label' => _("OAuth Client ID") .
-                $this->_required_field, 'html' => $client_id_html),
+                $this->required_field, 'html' => $client_id_html),
             'client_secret' => array('label' => _("OAuth client secret") .
-                $this->_required_field, 'html' => $client_secret_html),
+                $this->required_field, 'html' => $client_secret_html),
             'username' => array('label' => _("OAuth username") .
-                $this->_required_field, 'html' => $username_html),
+                $this->required_field, 'html' => $username_html),
             'password' => array('label' => _("OAuth password") .
-                $this->_required_field, 'html' => $password_html),
+                $this->required_field, 'html' => $password_html),
             'mappingticket' => array('label' => _("Mapping ticket arguments")),
         );
 
@@ -217,8 +217,8 @@ class ServiceNowProvider extends AbstractProvider
         );
 
         $tpl->assign('form', $array_form);
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
     protected function getConfigContainer2Extra()
@@ -263,7 +263,7 @@ class ServiceNowProvider extends AbstractProvider
     protected function assignOtherServiceNow($entry, $method, &$groups_order, &$groups) {
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
-                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''
             ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
@@ -327,7 +327,7 @@ class ServiceNowProvider extends AbstractProvider
 
         $tpl = $this->initSmartyTemplate();
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
         $tpl->assign('service_selected', $service_problems);

@@ -73,7 +73,7 @@ class MailProvider extends AbstractProvider
     {
         $tpl = $this->initSmartyTemplate('providers/Mail/templates');
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("mail" => _("Mail")));
 
@@ -87,9 +87,9 @@ class MailProvider extends AbstractProvider
             ($this->getFormValue('ishtml') == 'yes' ? 'checked' : '') . '/>';
 
         $array_form = array(
-            'from' => array('label' => _("From") . $this->_required_field, 'html' => $from_html),
-            'to' => array('label' => _("To") . $this->_required_field, 'html' => $to_html),
-            'subject' => array('label' => _("Subject") . $this->_required_field, 'html' => $subject_html),
+            'from' => array('label' => _("From") . $this->required_field, 'html' => $from_html),
+            'to' => array('label' => _("To") . $this->required_field, 'html' => $to_html),
+            'subject' => array('label' => _("Subject") . $this->required_field, 'html' => $subject_html),
             'header' => array('label' => _("Headers")),
             'ishtml' => array('label' => _("Use html"), 'html' => $ishtml_html),
         );
@@ -105,8 +105,8 @@ class MailProvider extends AbstractProvider
         );
 
         $tpl->assign('form', $array_form);
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['headerMail'] = $this->getCloneValue('headerMail');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['clones']['headerMail'] = $this->getCloneValue('headerMail');
     }
 
     /**
@@ -158,7 +158,7 @@ class MailProvider extends AbstractProvider
         }
 
         $tpl = $this->initSmartyTemplate();
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
         $tpl->assign('service_selected', $service_problems);

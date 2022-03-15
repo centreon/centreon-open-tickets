@@ -106,7 +106,7 @@ class BmcFootprints11Provider extends AbstractProvider
     {
         $tpl = $this->initSmartyTemplate('providers/BmcFootprints11/templates');
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("bmc" => _("BMC Footprints 11")));
 
@@ -127,11 +127,11 @@ class BmcFootprints11Provider extends AbstractProvider
             $this->getFormValue('timeout') . '" />';
 
         $array_form = [
-            'address' => ['label' => _("Address") . $this->_required_field, 'html' => $address_html],
-            'wspath' => ['label' => _("Webservice Path") . $this->_required_field, 'html' => $wspath_html],
-            'action' => ['label' => _("Action") . $this->_required_field, 'html' => $action_html],
-            'username' => ['label' => _("Username") . $this->_required_field, 'html' => $username_html],
-            'password' => ['label' => _("Password") . $this->_required_field, 'html' => $password_html],
+            'address' => ['label' => _("Address") . $this->required_field, 'html' => $address_html],
+            'wspath' => ['label' => _("Webservice Path") . $this->required_field, 'html' => $wspath_html],
+            'action' => ['label' => _("Action") . $this->required_field, 'html' => $action_html],
+            'username' => ['label' => _("Username") . $this->required_field, 'html' => $username_html],
+            'password' => ['label' => _("Password") . $this->required_field, 'html' => $password_html],
             'https' => ['label' => _("Use https"), 'html' => $https_html],
             'timeout' => ['label' => _("Timeout"), 'html' => $timeout_html],
             'mappingticket' => ['label' => _("Mapping ticket arguments")],
@@ -167,10 +167,10 @@ class BmcFootprints11Provider extends AbstractProvider
 
         $tpl->assign('form', $array_form);
 
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
 
-        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
-        $this->_config['clones']['mappingTicketProjectField'] = $this->getCloneValue('mappingTicketProjectField');
+        $this->config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
+        $this->config['clones']['mappingTicketProjectField'] = $this->getCloneValue('mappingTicketProjectField');
     }
 
     /**
@@ -224,7 +224,7 @@ class BmcFootprints11Provider extends AbstractProvider
 
         $tpl = $this->initSmartyTemplate();
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
         $tpl->assign('service_selected', $service_problems);

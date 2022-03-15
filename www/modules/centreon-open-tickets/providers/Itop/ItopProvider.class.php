@@ -295,12 +295,12 @@ class ItopProvider extends AbstractProvider
     {
         $tpl = new Smarty();
         $tpl = initSmartyTplForPopup(
-            $this->_centreon_open_tickets_path,
+            $this->centreon_open_tickets_path,
             $tpl,
             'providers/Itop/templates',
-            $this->_centreon_path
+            $this->centreon_path
         );
-        $tpl->assign('centreon_open_tickets_path', $this->_centreon_open_tickets_path);
+        $tpl->assign('centreon_open_tickets_path', $this->centreon_open_tickets_path);
         $tpl->assign('img_brick', './modules/centreon-open-tickets/images/brick.png');
         $tpl->assign('header', array('Itop' => _("Itop Rest Api")));
         $tpl->assign('webServiceUrl', './api/internal.php');
@@ -322,19 +322,19 @@ class ItopProvider extends AbstractProvider
         // this array is here to link a label with the html code that we've wrote above
         $array_form = array(
              'address' => array(
-                 'label' => _('Address') . $this->_required_field,
+                 'label' => _('Address') . $this->required_field,
                  'html' => $address_html
              ),
              'username' => array(
-                 'label' => _('Username') . $this->_required_field,
+                 'label' => _('Username') . $this->required_field,
                  'html' => $username_html
              ),
              'password' => array(
-                 'label' => _('Password') . $this->_required_field,
+                 'label' => _('Password') . $this->required_field,
                  'html' => $password_html
              ),
              'api_version' => array(
-                 'label' => _('API version') . $this->_required_field,
+                 'label' => _('API version') . $this->required_field,
                  'html' => $api_version_html
              ),
              'protocol' => array(
@@ -377,8 +377,8 @@ class ItopProvider extends AbstractProvider
         );
 
         $tpl->assign('form', $array_form);
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
     protected function getConfigContainer2Extra()
@@ -456,7 +456,7 @@ class ItopProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''),
+                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
 
@@ -507,7 +507,7 @@ class ItopProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''),
+                (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0),
             'filter' => $entry['Filter']
         );
@@ -553,9 +553,9 @@ class ItopProvider extends AbstractProvider
         );
         // initiate smarty variables
         $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/Abstract/templates',
-        $this->_centreon_path);
-        $tpl->assign('centreon_open_tickets_path', $this->_centreon_open_tickets_path);
+        $tpl = initSmartyTplForPopup($this->centreon_open_tickets_path, $tpl, 'providers/Abstract/templates',
+        $this->centreon_path);
+        $tpl->assign('centreon_open_tickets_path', $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
         $tpl->assign('service_selected', $service_problems);

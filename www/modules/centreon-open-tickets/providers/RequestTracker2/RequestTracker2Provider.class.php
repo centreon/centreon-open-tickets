@@ -116,7 +116,7 @@ class RequestTracker2Provider extends AbstractProvider
     {
         $tpl = $this->initSmartyTemplate('providers/RequestTracker2/templates');
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign("header", array("rt" => _("RequestTracker")));
 
@@ -133,9 +133,9 @@ class RequestTracker2Provider extends AbstractProvider
             $this->getFormValue('timeout') . '" />';
 
         $array_form = array(
-            'address' => array('label' => _("Address") . $this->_required_field, 'html' => $address_html),
-            'path' => array('label' => _("Path") . $this->_required_field, 'html' => $path_html),
-            'token' => array('label' => _("Token") . $this->_required_field, 'html' => $token_html),
+            'address' => array('label' => _("Address") . $this->required_field, 'html' => $address_html),
+            'path' => array('label' => _("Path") . $this->required_field, 'html' => $path_html),
+            'token' => array('label' => _("Token") . $this->required_field, 'html' => $token_html),
             'https' => array('label' => _("Use https"), 'html' => $https_html),
             'timeout' => array('label' => _("Timeout"), 'html' => $timeout_html),
             'mappingticket' => array('label' => _("Mapping ticket arguments")),
@@ -169,9 +169,9 @@ class RequestTracker2Provider extends AbstractProvider
         );
 
         $tpl->assign('form', $array_form);
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
-        $this->_config['clones']['mappingTicketDynamicField'] = $this->getCloneValue('mappingTicketDynamicField');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
+        $this->config['clones']['mappingTicketDynamicField'] = $this->getCloneValue('mappingTicketDynamicField');
     }
 
     /**
@@ -217,7 +217,7 @@ class RequestTracker2Provider extends AbstractProvider
 
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
-                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''
             ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
@@ -253,7 +253,7 @@ class RequestTracker2Provider extends AbstractProvider
 
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
-                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : ''
+                isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''
             ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
@@ -333,7 +333,7 @@ class RequestTracker2Provider extends AbstractProvider
 
         $tpl = $this->initSmartyTemplate();
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
         $tpl->assign('service_selected', $service_problems);

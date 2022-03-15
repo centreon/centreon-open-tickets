@@ -385,12 +385,12 @@ class GlpiRestApiProvider extends AbstractProvider
         // initiate smarty and a few variables.
         $tpl = new Smarty();
         $tpl = initSmartyTplForPopup(
-            $this->_centreon_open_tickets_path,
+            $this->centreon_open_tickets_path,
             $tpl,
             'providers/GlpiRestApi/templates',
-            $this->_centreon_path
+            $this->centreon_path
         );
-        $tpl->assign('centreon_open_tickets_path', $this->_centreon_open_tickets_path);
+        $tpl->assign('centreon_open_tickets_path', $this->centreon_open_tickets_path);
         $tpl->assign('img_brick', './modules/centreon-open-tickets/images/brick.png');
         $tpl->assign('header', array('GlpiRestApi' => _("Glpi Rest Api")));
         $tpl->assign('webServiceUrl', './api/internal.php');
@@ -414,23 +414,23 @@ class GlpiRestApiProvider extends AbstractProvider
         // this array is here to link a label with the html code that we've wrote above
         $array_form = array(
             'address' => array(
-                'label' => _('Address') . $this->_required_field,
+                'label' => _('Address') . $this->required_field,
                 'html' => $address_html
             ),
             'api_path' => array(
-                'label' => _('API path') . $this->_required_field,
+                'label' => _('API path') . $this->required_field,
                 'html' => $api_path_html
             ),
             'protocol' => array(
-                'label' => _('Protocol') . $this->_required_field,
+                'label' => _('Protocol') . $this->required_field,
                 'html' => $protocol_html
             ),
             'user_token' => array(
-                'label' => _('User token') . $this->_required_field,
+                'label' => _('User token') . $this->required_field,
                 'html' => $user_token_html
             ),
             'app_token' => array(
-                'label' => _('APP token') . $this->_required_field,
+                'label' => _('APP token') . $this->required_field,
                 'html' => $app_token_html
             ),
             'timeout' => array(
@@ -478,8 +478,8 @@ class GlpiRestApiProvider extends AbstractProvider
         );
 
         $tpl->assign('form', $array_form);
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
     protected function getConfigContainer2Extra()
@@ -563,7 +563,7 @@ class GlpiRestApiProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -617,7 +617,7 @@ class GlpiRestApiProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -671,7 +671,7 @@ class GlpiRestApiProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -725,7 +725,7 @@ class GlpiRestApiProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -780,7 +780,7 @@ class GlpiRestApiProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -834,7 +834,7 @@ class GlpiRestApiProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -908,10 +908,10 @@ class GlpiRestApiProvider extends AbstractProvider
 
         // initiate smarty variables
         $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/Abstract/templates',
-        $this->_centreon_path);
+        $tpl = initSmartyTplForPopup($this->centreon_open_tickets_path, $tpl, 'providers/Abstract/templates',
+        $this->centreon_path);
 
-        $tpl->assign('centreon_open_tickets_path', $this->_centreon_open_tickets_path);
+        $tpl->assign('centreon_open_tickets_path', $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
         $tpl->assign('service_selected', $service_problems);
