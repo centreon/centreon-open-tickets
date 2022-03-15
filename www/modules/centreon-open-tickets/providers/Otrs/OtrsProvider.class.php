@@ -312,7 +312,7 @@ class OtrsProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_otrs_call_response['response'] as $row) {
+        foreach ($this->otrs_call_response['response'] as $row) {
             if (!isset($entry['Filter']) || is_null($entry['Filter']) || $entry['Filter'] == '') {
                 $result[$row['id']] = $this->to_utf8($row['name']);
                 continue;
@@ -323,7 +323,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $this->saveSession('otrs_queue', $this->_otrs_call_response['response']);
+        $this->saveSession('otrs_queue', $this->otrs_call_response['response']);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -347,7 +347,7 @@ class OtrsProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_otrs_call_response['response'] as $row) {
+        foreach ($this->otrs_call_response['response'] as $row) {
             if (!isset($entry['Filter']) || is_null($entry['Filter']) || $entry['Filter'] == '') {
                 $result[$row['id']] = $this->to_utf8($row['name']);
                 continue;
@@ -358,7 +358,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $this->saveSession('otrs_priority', $this->_otrs_call_response['response']);
+        $this->saveSession('otrs_priority', $this->otrs_call_response['response']);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -382,7 +382,7 @@ class OtrsProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_otrs_call_response['response'] as $row) {
+        foreach ($this->otrs_call_response['response'] as $row) {
             if (!isset($entry['Filter']) || is_null($entry['Filter']) || $entry['Filter'] == '') {
                 $result[$row['id']] = $this->to_utf8($row['name']);
                 continue;
@@ -393,7 +393,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $this->saveSession('otrs_state', $this->_otrs_call_response['response']);
+        $this->saveSession('otrs_state', $this->otrs_call_response['response']);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -417,7 +417,7 @@ class OtrsProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_otrs_call_response['response'] as $row) {
+        foreach ($this->otrs_call_response['response'] as $row) {
             if (!isset($entry['Filter']) || is_null($entry['Filter']) || $entry['Filter'] == '') {
                 $result[$row['id']] = $this->to_utf8($row['name']);
                 continue;
@@ -428,7 +428,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $this->saveSession('otrs_type', $this->_otrs_call_response['response']);
+        $this->saveSession('otrs_type', $this->otrs_call_response['response']);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -452,7 +452,7 @@ class OtrsProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_otrs_call_response['response'] as $row) {
+        foreach ($this->otrs_call_response['response'] as $row) {
             if (!isset($entry['Filter']) || is_null($entry['Filter']) || $entry['Filter'] == '') {
                 $result[$row['id']] = $this->to_utf8($row['name']);
                 continue;
@@ -463,7 +463,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $this->saveSession('otrs_customeruser', $this->_otrs_call_response['response']);
+        $this->saveSession('otrs_customeruser', $this->otrs_call_response['response']);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -487,7 +487,7 @@ class OtrsProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_otrs_call_response['response'] as $row) {
+        foreach ($this->otrs_call_response['response'] as $row) {
             if (!isset($entry['Filter']) || is_null($entry['Filter']) || $entry['Filter'] == '') {
                 $result[$row['id']] = $this->to_utf8($row['name']);
                 continue;
@@ -498,7 +498,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $this->saveSession($label_session, $this->_otrs_call_response['response']);
+        $this->saveSession($label_session, $this->otrs_call_response['response']);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -634,7 +634,7 @@ class OtrsProvider extends AbstractProvider
                 'contact' => $contact,
                 'host_problems' => $host_problems,
                 'service_problems' => $service_problems,
-                'ticket_value' => $this->_otrs_call_response['TicketNumber'],
+                'ticket_value' => $this->otrs_call_response['TicketNumber'],
                 'subject' => $ticket_arguments['Subject'],
                 'data_type' => self::DATA_TYPE_JSON,
                 'data' => json_encode(
@@ -853,14 +853,14 @@ class OtrsProvider extends AbstractProvider
             return -1;
         }
 
-        $this->otrs_session = $this->_otrs_call_response['SessionID'];
+        $this->otrs_session = $this->otrs_call_response['SessionID'];
         $this->otrs_connected = 1;
         return 0;
     }
 
     protected function callRest($function, $argument)
     {
-        $this->_otrs_call_response = null;
+        $this->otrs_call_response = null;
 
         $proto = 'http';
         if (isset($this->rule_data['https']) && $this->rule_data['https'] == 'yes') {
@@ -911,7 +911,7 @@ class OtrsProvider extends AbstractProvider
             return 1;
         }
 
-        $this->_otrs_call_response = $decoded_result;
+        $this->otrs_call_response = $decoded_result;
         return 0;
     }
 

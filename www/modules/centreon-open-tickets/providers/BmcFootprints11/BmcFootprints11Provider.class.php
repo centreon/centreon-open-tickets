@@ -190,7 +190,7 @@ class BmcFootprints11Provider extends AbstractProvider
         $this->save_config['simple']['username'] = $this->submitted_config['username'];
         $this->save_config['simple']['password'] = $this->submitted_config['password'];
         $this->save_config['simple']['https'] = (
-            isset($this->submitted_config['https']) && $this->_submitted_config['https'] == 'yes'
+            isset($this->submitted_config['https']) && $this->submitted_config['https'] == 'yes'
         ) ? $this->submitted_config['https'] : '';
         $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
 

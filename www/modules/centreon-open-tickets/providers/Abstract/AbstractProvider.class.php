@@ -209,7 +209,7 @@ abstract class AbstractProvider
 
     protected function getSession($key)
     {
-        if (!is_null($key) && !is_null($this->uniq_id) && isset($_SESSION['ot_save_' . $this->_uniq_id][$key])) {
+        if (!is_null($key) && !is_null($this->uniq_id) && isset($_SESSION['ot_save_' . $this->uniq_id][$key])) {
             return $_SESSION['ot_save_' . $this->uniq_id][$key];
         }
         return null;
@@ -465,7 +465,7 @@ Output: {$service.output|substr:0:1024}
 
     protected function checkFormValue($uniq_id, $error_msg)
     {
-        if (!isset($this->submitted_config[$uniq_id]) || $this->_submitted_config[$uniq_id] == '') {
+        if (!isset($this->submitted_config[$uniq_id]) || $this->submitted_config[$uniq_id] == '') {
             $this->check_error_message .= $this->check_error_message_append . $error_msg;
             $this->check_error_message_append = '<br/>';
         }
@@ -744,10 +744,10 @@ Output: {$service.output|substr:0:1024}
         $this->save_config['simple']['macro_ticket_id'] = $this->submitted_config['macro_ticket_id'];
         $this->save_config['simple']['confirm_autoclose'] = $this->submitted_config['confirm_autoclose'];
         $this->save_config['simple']['ack'] = (
-            isset($this->submitted_config['ack']) && $this->_submitted_config['ack'] == 'yes'
+            isset($this->submitted_config['ack']) && $this->submitted_config['ack'] == 'yes'
         ) ? $this->submitted_config['ack'] : '';
         $this->save_config['simple']['attach_files'] =
-            (isset($this->submitted_config['attach_files']) && $this->_submitted_config['attach_files'] == 'yes'
+            (isset($this->submitted_config['attach_files']) && $this->submitted_config['attach_files'] == 'yes'
         ) ? $this->submitted_config['attach_files'] : '';
         $this->save_config['simple']['close_ticket_enable'] =
             (isset($this->submitted_config['close_ticket_enable'])

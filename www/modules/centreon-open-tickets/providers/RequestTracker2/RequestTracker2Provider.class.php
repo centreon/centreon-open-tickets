@@ -383,7 +383,7 @@ class RequestTracker2Provider extends AbstractProvider
                 'contact' => $contact,
                 'host_problems' => $host_problems,
                 'service_problems' => $service_problems,
-                'ticket_value' => $this->_call_response['id'],
+                'ticket_value' => $this->call_response['id'],
                 'subject' => $ticket_arguments['Subject'],
                 'data_type' => self::DATA_TYPE_JSON,
                 'data' => json_encode(
@@ -419,8 +419,8 @@ class RequestTracker2Provider extends AbstractProvider
                 return [-1, $items];
             }
 
-            $items = array_merge($items, $this->_call_response['items']);
-            if ($this->_call_response['total'] < ($page * $per_page)) {
+            $items = array_merge($items, $this->call_response['items']);
+            if ($this->call_response['total'] < ($page * $per_page)) {
                 break;
             }
 
@@ -443,7 +443,7 @@ class RequestTracker2Provider extends AbstractProvider
             return [-1, $items];
         }
 
-        $customField = array_shift($this->_call_response['items']);
+        $customField = array_shift($this->call_response['items']);
         /*
          * Format:
          *    {
@@ -462,7 +462,7 @@ class RequestTracker2Provider extends AbstractProvider
         }
 
         $duplicated = [];
-        foreach ($this->_call_response['Values'] as $value) {
+        foreach ($this->call_response['Values'] as $value) {
             if (isset($duplicated[$value])) {
                 continue;
             }
@@ -514,7 +514,7 @@ class RequestTracker2Provider extends AbstractProvider
             return 1;
         }
         
-        $this->_call_response = null;
+        $this->call_response = null;
 
         $proto = 'http';
         if (isset($this->rule_data['https']) && $this->rule_data['https'] == 'yes') {
@@ -576,7 +576,7 @@ class RequestTracker2Provider extends AbstractProvider
 
         curl_close($ch);
 
-        $this->_call_response = $decoded_result;
+        $this->call_response = $decoded_result;
         return 0;
     }
 }

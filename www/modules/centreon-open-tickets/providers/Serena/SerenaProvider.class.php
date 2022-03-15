@@ -389,7 +389,7 @@ class SerenaProvider extends AbstractProvider
 
     protected function callSOAP($data)
     {
-        $this->_otrs_call_response = null;
+        $this->otrs_call_response = null;
 
         $base_url = $this->rule_data['endpoint'];
         $ch = curl_init($base_url);

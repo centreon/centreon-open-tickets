@@ -66,7 +66,7 @@ class BmcItsmProvider extends AbstractProvider
          'z2Attachment_3_attachmentOrigSize', 'zTmpEventGUID'
     );
 
-    protected $_internal_arguments = array(
+    protected $internal_arguments = array(
         'Action' => array('id' => 1, 'soap' => 'z1D_Action'),
         'Service Type' => array('id' => 2, 'soap' => 'Service_Type'),
         'Subject' => array('id' => 3, 'soap' => 'Description'),
@@ -100,15 +100,15 @@ class BmcItsmProvider extends AbstractProvider
 
         $this->default_data['clones']['mappingTicket'] = array(
             array(
-                'Arg' => $this->_internal_arguments['Subject']['id'],
+                'Arg' => $this->internal_arguments['Subject']['id'],
                 'Value' => 'Issue {include file="file:$centreon_open_tickets_path/providers' .
                     '/Abstract/templates/display_title.ihtml"}'
             ),
-            array('Arg' => $this->_internal_arguments['Content']['id'], 'Value' => '{$body}'),
-            array('Arg' => $this->_internal_arguments['Action']['id'], 'Value' => 'CREATE'),
-            array('Arg' => $this->_internal_arguments['Status']['id'], 'Value' => 'Assigned'),
-            array('Arg' => $this->_internal_arguments['Source']['id'], 'Value' => 'Supervision'),
-            array('Arg' => $this->_internal_arguments['Type Service']['id'], 'Value' => 'Infrastructure Event'),
+            array('Arg' => $this->internal_arguments['Content']['id'], 'Value' => '{$body}'),
+            array('Arg' => $this->internal_arguments['Action']['id'], 'Value' => 'CREATE'),
+            array('Arg' => $this->internal_arguments['Status']['id'], 'Value' => 'Assigned'),
+            array('Arg' => $this->internal_arguments['Source']['id'], 'Value' => 'Supervision'),
+            array('Arg' => $this->internal_arguments['Type Service']['id'], 'Value' => 'Infrastructure Event'),
         );
     }
 
@@ -202,8 +202,8 @@ class BmcItsmProvider extends AbstractProvider
             'size="20"  type="text" />';
         $mappingTicketArg_html = '<select id="mappingTicketArg_#index#" name="mappingTicketArg[#index#]" ' .
             'type="select-one">';
-        ksort($this->_internal_arguments);
-        foreach ($this->_internal_arguments as $label => $array) {
+        ksort($this->internal_arguments);
+        foreach ($this->internal_arguments as $label => $array) {
             $mappingTicketArg_html .= '<option value="' . $array['id'] . '">' . _($label) . '</options>';
         }
         $mappingTicketArg_html .= '</select>';
@@ -273,7 +273,7 @@ class BmcItsmProvider extends AbstractProvider
                     $result_str = null;
                 }
 
-                foreach ($this->_internal_arguments as $arg) {
+                foreach ($this->internal_arguments as $arg) {
                     if ($arg['id'] == $value['Arg']) {
                         $ticket_arguments[$arg['soap']] = $result_str;
                         break;
@@ -360,7 +360,7 @@ class BmcItsmProvider extends AbstractProvider
 
     protected function callSOAP($data)
     {
-        $this->_otrs_call_response = null;
+        $this->otrs_call_response = null;
 
         $base_url = $this->rule_data['endpoint'];
         $ch = curl_init($base_url);

@@ -258,7 +258,7 @@ class JiraProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_jira_call_response as $row) {
+        foreach ($this->jira_call_response as $row) {
             if (!isset($entry['Filter']) || is_null($entry['Filter']) || $entry['Filter'] == '') {
                 $result[$row['id']] = $this->to_utf8($row['name']);
                 continue;
@@ -269,7 +269,7 @@ class JiraProvider extends AbstractProvider
             }
         }
 
-        $this->saveSession('jira_project', $this->_jira_call_response);
+        $this->saveSession('jira_project', $this->jira_call_response);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -293,7 +293,7 @@ class JiraProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_jira_call_response as $row) {
+        foreach ($this->jira_call_response as $row) {
             if (!isset($entry['Filter']) || is_null($entry['Filter']) || $entry['Filter'] == '') {
                 $result[$row['id']] = $this->to_utf8($row['name']);
                 continue;
@@ -304,7 +304,7 @@ class JiraProvider extends AbstractProvider
             }
         }
 
-        $this->saveSession('jira_priority', $this->_jira_call_response);
+        $this->saveSession('jira_priority', $this->jira_call_response);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -328,7 +328,7 @@ class JiraProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_jira_call_response as $row) {
+        foreach ($this->jira_call_response as $row) {
             if (!isset($entry['Filter']) || is_null($entry['Filter']) || $entry['Filter'] == '') {
                 $result[$row['id']] = $this->to_utf8($row['name']);
                 continue;
@@ -339,7 +339,7 @@ class JiraProvider extends AbstractProvider
             }
         }
 
-        $this->saveSession('jira_issuetype', $this->_jira_call_response);
+        $this->saveSession('jira_issuetype', $this->jira_call_response);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -362,11 +362,11 @@ class JiraProvider extends AbstractProvider
         }
 
         $result = array();
-        foreach ($this->_jira_call_response as $row) {
+        foreach ($this->jira_call_response as $row) {
             $result[$row['key']] = $this->to_utf8($row['name']);
         }
 
-        $this->saveSession($label_session, $this->_jira_call_response);
+        $this->saveSession($label_session, $this->jira_call_response);
         $groups[$entry['Id']]['values'] = $result;
     }
 
@@ -473,11 +473,11 @@ class JiraProvider extends AbstractProvider
                 'contact' => $contact,
                 'host_problems' => $host_problems,
                 'service_problems' => $service_problems,
-                'ticket_value' => $this->_jira_call_response['key'],
+                'ticket_value' => $this->jira_call_response['key'],
                 'subject' => $ticket_arguments[$this->internal_arg_name[self::ARG_SUMMARY]],
                 'data_type' => self::DATA_TYPE_JSON,
                 'data' => json_encode(
-                    array('ticket_key' => $this->_jira_call_response['key'], 'arguments' => $ticket_arguments)
+                    array('ticket_key' => $this->jira_call_response['key'], 'arguments' => $ticket_arguments)
                 )
             )
         );
@@ -579,7 +579,7 @@ class JiraProvider extends AbstractProvider
 
     protected function callRest($function, $argument = null)
     {
-        $this->_jira_call_response = null;
+        $this->jira_call_response = null;
 
         $proto = 'https';
 
@@ -607,7 +607,7 @@ class JiraProvider extends AbstractProvider
         curl_setopt(
             $ch,
             CURLOPT_USERPWD,
-            $this->getFormValue('username', false) . ':' . $this->_getFormValue('user_token', false)
+            $this->getFormValue('username', false) . ':' . $this->getFormValue('user_token', false)
         );
         self::setProxy(
             $ch,
@@ -642,7 +642,7 @@ class JiraProvider extends AbstractProvider
 
         curl_close($ch);
 
-        $this->_jira_call_response = $decoded_result;
+        $this->jira_call_response = $decoded_result;
         return 0;
     }
 }

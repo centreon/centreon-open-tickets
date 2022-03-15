@@ -1080,7 +1080,7 @@ class GlpiRestApiProvider extends AbstractProvider
 
         $curl = curl_init();
 
-        $apiAddress = $this->getFormValue('protocol') . '://' . $this->_getFormValue('address') .
+        $apiAddress = $this->getFormValue('protocol') . '://' . $this->getFormValue('address') .
             $this->getFormValue('api_path') . $info['query_endpoint'];
 
         if ($offset !== null) {
@@ -1107,23 +1107,23 @@ class GlpiRestApiProvider extends AbstractProvider
         // if proxy is set, we add it to curl
         if (
             $this->getFormValue('proxy_address') != ''
-            && $this->_getFormValue('proxy_port') != ''
+            && $this->getFormValue('proxy_port') != ''
         ) {
             curl_setopt(
                 $curl,
                 CURLOPT_PROXY,
-                $this->getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port')
+                $this->getFormValue('proxy_address') . ':' . $this->getFormValue('proxy_port')
             );
 
             // if proxy authentication configuration is set, we add it to curl
             if (
                 $this->getFormValue('proxy_username') != ''
-                && $this->_getFormValue('proxy_password') != ''
+                && $this->getFormValue('proxy_password') != ''
             ) {
                 curl_setopt(
                     $curl,
                     CURLOPT_PROXYUSERPWD,
-                    $this->getFormValue('proxy_username') . ':' . $this->_getFormValue('proxy_password')
+                    $this->getFormValue('proxy_username') . ':' . $this->getFormValue('proxy_password')
                 );
             }
         }
