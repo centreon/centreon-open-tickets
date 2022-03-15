@@ -382,14 +382,7 @@ class GlpiRestApiProvider extends AbstractProvider
     */
     protected function getConfigContainer1Extra()
     {
-        // initiate smarty and a few variables.
-        $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup(
-            $this->centreon_open_tickets_path,
-            $tpl,
-            'providers/GlpiRestApi/templates',
-            $this->centreon_path
-        );
+        $tpl = $this->initSmartyTemplate('providers/GlpiRestApi/templates');
         $tpl->assign('centreon_open_tickets_path', $this->centreon_open_tickets_path);
         $tpl->assign('img_brick', './modules/centreon-open-tickets/images/brick.png');
         $tpl->assign('header', array('GlpiRestApi' => _("Glpi Rest Api")));

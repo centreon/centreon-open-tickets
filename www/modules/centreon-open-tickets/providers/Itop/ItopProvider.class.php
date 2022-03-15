@@ -551,14 +551,7 @@ class ItopProvider extends AbstractProvider
             'ticket_is_ok' => 0,
             'ticket_time' => time()
         );
-        // initiate smarty variables
-        $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup(
-            $this->centreon_open_tickets_path,
-            $tpl,
-            'providers/Abstract/templates',
-            $this->centreon_path
-        );
+        $tpl = $this->initSmartyTemplate();
         $tpl->assign('centreon_open_tickets_path', $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
