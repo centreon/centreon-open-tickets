@@ -1080,11 +1080,18 @@
 
         // if proxy is set, we add it to curl
         if ($this->getFormValue('proxy_address') != '' && $this->_getFormValue('proxy_port') != '') {
-                curl_setopt($curl, CURLOPT_PROXY, $this->getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port'));
+            curl_setopt($curl, CURLOPT_PROXY, $this->getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port'));
 
             // if proxy authentication configuration is set, we add it to curl
-            if ($this->getFormValue('proxy_username') != '' && $this->_getFormValue('proxy_password') != '') {
-                curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->getFormValue('proxy_username') . ':' . $this->_getFormValue('proxy_password'));
+            if (
+                $this->getFormValue('proxy_username') != ''
+                && $this->_getFormValue('proxy_password') != ''
+            ) {
+                curl_setopt(
+                    $curl,
+                    CURLOPT_PROXYUSERPWD,
+                    $this->getFormValue('proxy_username') . ':' . $this->_getFormValue('proxy_password')
+                );
             }
         }
 

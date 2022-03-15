@@ -115,7 +115,8 @@ abstract class AbstractProvider
         $this->rule_data = $rule->get($rule_id);
         $this->rule_list = $rule->getRuleList();
 
-        if (is_null($rule_id)
+        if (
+            is_null($rule_id)
             || !isset($this->rule_data['provider_id'])
             || $provider_id != $this->rule_data['provider_id']
         ) {
@@ -125,7 +126,8 @@ abstract class AbstractProvider
             $this->setDefaultValueExtra();
         }
         // We reset value. We have changed provider on same form
-        if (isset($this->rule_data['provider_id'])
+        if (
+            isset($this->rule_data['provider_id'])
             && $provider_id != $this->rule_data['provider_id']
         ) {
             $this->rule_data = array();
@@ -162,7 +164,10 @@ abstract class AbstractProvider
 
     protected function clearSession()
     {
-        if (!is_null($this->_uniq_id) && isset($_SESSION['ot_save_' . $this->_uniq_id])) {
+        if (
+            !is_null($this->_uniq_id)
+            && isset($_SESSION['ot_save_' . $this->_uniq_id])
+        ) {
             unset($_SESSION['ot_save_' . $this->_uniq_id]);
         }
     }
@@ -407,7 +412,7 @@ Output: {$service.output|substr:0:1024}
      *
      * @return a string
      */
-    protected function getFormValue($uniq_id, $htmlentities=true)
+    protected function getFormValue($uniq_id, $htmlentities = true)
     {
         $value = '';
         if (isset($this->rule_data[$uniq_id]) && !is_null($this->rule_data[$uniq_id])) {
