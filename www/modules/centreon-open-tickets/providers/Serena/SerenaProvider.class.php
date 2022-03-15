@@ -92,8 +92,8 @@ class SerenaProvider extends AbstractProvider
      */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
 
         $this->checkFormValue('endpoint', "Please set 'Endpoint' value");
         $this->checkFormValue('namespace', "Please set 'Namespace' value");
@@ -106,8 +106,8 @@ class SerenaProvider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -186,13 +186,13 @@ class SerenaProvider extends AbstractProvider
 
     protected function saveConfigExtra()
     {
-        $this->_save_config['simple']['endpoint'] = $this->_submitted_config['endpoint'];
-        $this->_save_config['simple']['namespace'] = $this->_submitted_config['namespace'];
-        $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
-        $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
+        $this->save_config['simple']['endpoint'] = $this->submitted_config['endpoint'];
+        $this->save_config['simple']['namespace'] = $this->submitted_config['namespace'];
+        $this->save_config['simple']['username'] = $this->submitted_config['username'];
+        $this->save_config['simple']['password'] = $this->submitted_config['password'];
+        $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );

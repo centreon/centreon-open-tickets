@@ -117,8 +117,8 @@ class JiraProvider extends AbstractProvider
      */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
 
         $this->checkFormValue('address', "Please set 'Address' value");
         $this->checkFormValue('rest_api_resource', "Please set 'Rest Api Resource' value");
@@ -131,8 +131,8 @@ class JiraProvider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -217,13 +217,13 @@ class JiraProvider extends AbstractProvider
 
     protected function saveConfigExtra()
     {
-        $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
-        $this->_save_config['simple']['rest_api_resource'] = $this->_submitted_config['rest_api_resource'];
-        $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
-        $this->_save_config['simple']['user_token'] = $this->_submitted_config['user_token'];
-        $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
+        $this->save_config['simple']['address'] = $this->submitted_config['address'];
+        $this->save_config['simple']['rest_api_resource'] = $this->submitted_config['rest_api_resource'];
+        $this->save_config['simple']['username'] = $this->submitted_config['username'];
+        $this->save_config['simple']['user_token'] = $this->submitted_config['user_token'];
+        $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
@@ -604,7 +604,11 @@ class JiraProvider extends AbstractProvider
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->rule_data['timeout']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_USERPWD, $this->getFormValue('username', false) . ':' . $this->_getFormValue('user_token', false));
+        curl_setopt(
+            $ch,
+            CURLOPT_USERPWD,
+            $this->getFormValue('username', false) . ':' . $this->_getFormValue('user_token', false)
+        );
         self::setProxy(
             $ch,
             array(

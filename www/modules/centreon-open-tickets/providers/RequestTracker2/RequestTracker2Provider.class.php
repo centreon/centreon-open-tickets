@@ -90,8 +90,8 @@ class RequestTracker2Provider extends AbstractProvider
      */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
         $this->checkFormValue('address', "Please set 'Address' value");
         $this->checkFormValue('path', "Please set 'Path' value");
         $this->checkFormValue('timeout', "Please set 'Timeout' value");
@@ -102,8 +102,8 @@ class RequestTracker2Provider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -185,19 +185,19 @@ class RequestTracker2Provider extends AbstractProvider
 
     protected function saveConfigExtra()
     {
-        $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
-        $this->_save_config['simple']['path'] = $this->_submitted_config['path'];
-        $this->_save_config['simple']['token'] = $this->_submitted_config['token'];
-        $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https'])
-            && $this->_submitted_config['https'] == 'yes')
-            ? $this->_submitted_config['https'] : '';
-        $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
+        $this->save_config['simple']['address'] = $this->submitted_config['address'];
+        $this->save_config['simple']['path'] = $this->submitted_config['path'];
+        $this->save_config['simple']['token'] = $this->submitted_config['token'];
+        $this->save_config['simple']['https'] = (isset($this->submitted_config['https'])
+            && $this->submitted_config['https'] == 'yes')
+            ? $this->submitted_config['https'] : '';
+        $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
-        $this->_save_config['clones']['mappingTicketDynamicField'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicketDynamicField'] = $this->getCloneSubmitted(
             'mappingTicketDynamicField',
             array('Name', 'Value')
         );

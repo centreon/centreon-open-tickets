@@ -143,8 +143,8 @@ class ServiceNowProvider extends AbstractProvider
     */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
         $this->checkFormValue('instance_name', 'Please set a instance.');
         $this->checkFormValue('client_id', 'Please set a OAuth2 client id.');
         $this->checkFormValue('client_secret', 'Please set a OAuth2 client secret.');
@@ -154,8 +154,8 @@ class ServiceNowProvider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -230,13 +230,13 @@ class ServiceNowProvider extends AbstractProvider
     */
     protected function saveConfigExtra()
     {
-        $this->_save_config['simple']['instance_name'] = $this->_submitted_config['instance_name'];
-        $this->_save_config['simple']['client_id'] = $this->_submitted_config['client_id'];
-        $this->_save_config['simple']['client_secret'] = $this->_submitted_config['client_secret'];
-        $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
-        $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
+        $this->save_config['simple']['instance_name'] = $this->submitted_config['instance_name'];
+        $this->save_config['simple']['client_id'] = $this->submitted_config['client_id'];
+        $this->save_config['simple']['client_secret'] = $this->submitted_config['client_secret'];
+        $this->save_config['simple']['username'] = $this->submitted_config['username'];
+        $this->save_config['simple']['password'] = $this->submitted_config['password'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
@@ -350,7 +350,7 @@ class ServiceNowProvider extends AbstractProvider
 
         /* Create ticket */
         try {
-            $data = $this->_submitted_config;
+            $data = $this->submitted_config;
             $data['ticket_arguments'] = $ticket_arguments;
             $resultInfo = $this->callServiceNow('createTicket', $data);
         } catch (\Exception $e) {

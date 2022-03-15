@@ -39,16 +39,16 @@ class SimpleProvider extends AbstractProvider
      */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
 
         $this->checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
         $this->checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 

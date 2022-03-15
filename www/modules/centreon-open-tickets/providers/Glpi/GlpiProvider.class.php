@@ -21,8 +21,8 @@
 
 class GlpiProvider extends AbstractProvider
 {
-    protected $_glpi_connected = 0;
-    protected $_glpi_session = null;
+    protected $glpi_connected = 0;
+    protected $glpi_session = null;
 
     public const GPLI_ENTITIES_TYPE = 10;
     public const GPLI_GROUPS_TYPE = 11;
@@ -148,8 +148,8 @@ class GlpiProvider extends AbstractProvider
      */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
         $this->checkFormValue('address', "Please set 'Address' value");
         $this->checkFormValue('timeout', "Please set 'Timeout' value");
         $this->checkFormValue('username', "Please set 'Username' value");
@@ -160,8 +160,8 @@ class GlpiProvider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -239,17 +239,17 @@ class GlpiProvider extends AbstractProvider
 
     protected function saveConfigExtra()
     {
-        $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
-        $this->_save_config['simple']['path'] = $this->_submitted_config['path'];
-        $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
-        $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        $this->_save_config['simple']['https'] = (
-            isset($this->_submitted_config['https'])
-            && $this->_submitted_config['https'] == 'yes'
-        ) ? $this->_submitted_config['https'] : '';
-        $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
+        $this->save_config['simple']['address'] = $this->submitted_config['address'];
+        $this->save_config['simple']['path'] = $this->submitted_config['path'];
+        $this->save_config['simple']['username'] = $this->submitted_config['username'];
+        $this->save_config['simple']['password'] = $this->submitted_config['password'];
+        $this->save_config['simple']['https'] = (
+            isset($this->submitted_config['https'])
+            && $this->submitted_config['https'] == 'yes'
+        ) ? $this->submitted_config['https'] : '';
+        $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
@@ -508,8 +508,8 @@ class GlpiProvider extends AbstractProvider
         if (!is_null($this->rule_data['path']) || $this->rule_data['path'] != '') {
             $url = $this->rule_data['path'];
         }
-        if ($this->_glpi_connected == 1) {
-            $url .= '?session=' . $this->_glpi_session;
+        if ($this->glpi_connected == 1) {
+            $url .= '?session=' . $this->glpi_session;
         }
 
         $request = xmlrpc_encode_request($method, $args, array('encoding' => 'utf-8', 'escaping' => 'markup'));
@@ -546,7 +546,7 @@ class GlpiProvider extends AbstractProvider
 
     protected function listEntitiesGlpi()
     {
-        if ($this->_glpi_connected == 0) {
+        if ($this->glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
             }
@@ -562,7 +562,7 @@ class GlpiProvider extends AbstractProvider
 
     protected function listGroupsGlpi($filter = null)
     {
-        if ($this->_glpi_connected == 0) {
+        if ($this->glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
             }
@@ -581,7 +581,7 @@ class GlpiProvider extends AbstractProvider
 
     protected function listItilCategoriesGlpi($filter = null)
     {
-        if ($this->_glpi_connected == 0) {
+        if ($this->glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
             }
@@ -606,7 +606,7 @@ class GlpiProvider extends AbstractProvider
 
     protected function createTicketGlpi($arguments)
     {
-        if ($this->_glpi_connected == 0) {
+        if ($this->glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
             }
@@ -622,7 +622,7 @@ class GlpiProvider extends AbstractProvider
 
     protected function listObjects($arguments)
     {
-        if ($this->_glpi_connected == 0) {
+        if ($this->glpi_connected == 0) {
             if ($this->loginGlpi() == -1) {
                 return -1;
             }
@@ -638,7 +638,7 @@ class GlpiProvider extends AbstractProvider
 
     protected function logoutGlpi()
     {
-        if ($this->_glpi_connected == 0) {
+        if ($this->glpi_connected == 0) {
             return 0;
         }
         $this->glpi_call_response = $this->requestRpc('glpi.doLogout');
@@ -651,7 +651,7 @@ class GlpiProvider extends AbstractProvider
 
     protected function loginGlpi()
     {
-        if ($this->_glpi_connected == 1) {
+        if ($this->glpi_connected == 1) {
             return 0;
         }
         if (!extension_loaded("xmlrpc")) {
@@ -670,8 +670,8 @@ class GlpiProvider extends AbstractProvider
             return -1;
         }
 
-        $this->_glpi_session = $this->glpi_call_response['response']['session'];
-        $this->_glpi_connected = 1;
+        $this->glpi_session = $this->glpi_call_response['response']['session'];
+        $this->glpi_connected = 1;
         return 0;
     }
 }

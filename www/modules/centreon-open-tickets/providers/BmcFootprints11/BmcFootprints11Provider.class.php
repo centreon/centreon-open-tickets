@@ -77,8 +77,8 @@ class BmcFootprints11Provider extends AbstractProvider
      */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
 
         $this->checkFormValue('address', "Please set 'Address' value");
         $this->checkFormValue('wspath', "Please set 'Webservice Path' value");
@@ -92,8 +92,8 @@ class BmcFootprints11Provider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -184,21 +184,21 @@ class BmcFootprints11Provider extends AbstractProvider
 
     protected function saveConfigExtra()
     {
-        $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
-        $this->_save_config['simple']['wspath'] = $this->_submitted_config['wspath'];
-        $this->_save_config['simple']['action'] = $this->_submitted_config['action'];
-        $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
-        $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        $this->_save_config['simple']['https'] = (
-            isset($this->_submitted_config['https']) && $this->_submitted_config['https'] == 'yes'
-        ) ? $this->_submitted_config['https'] : '';
-        $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
+        $this->save_config['simple']['address'] = $this->submitted_config['address'];
+        $this->save_config['simple']['wspath'] = $this->submitted_config['wspath'];
+        $this->save_config['simple']['action'] = $this->submitted_config['action'];
+        $this->save_config['simple']['username'] = $this->submitted_config['username'];
+        $this->save_config['simple']['password'] = $this->submitted_config['password'];
+        $this->save_config['simple']['https'] = (
+            isset($this->submitted_config['https']) && $this->_submitted_config['https'] == 'yes'
+        ) ? $this->submitted_config['https'] : '';
+        $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
-        $this->_save_config['clones']['mappingTicketProjectField'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicketProjectField'] = $this->getCloneSubmitted(
             'mappingTicketProjectField',
             array('Name', 'Value')
         );

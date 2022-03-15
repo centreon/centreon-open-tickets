@@ -49,8 +49,8 @@ class MailProvider extends AbstractProvider
      */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
         $this->checkFormValue('from', "Please set 'From' value");
         $this->checkFormValue('to', "Please set 'To' value");
         $this->checkFormValue('subject', "Please set 'Subject' value");
@@ -59,8 +59,8 @@ class MailProvider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -120,14 +120,14 @@ class MailProvider extends AbstractProvider
 
     protected function saveConfigExtra()
     {
-        $this->_save_config['clones']['headerMail'] = $this->getCloneSubmitted('headerMail', array('Name', 'Value'));
-        $this->_save_config['simple']['from'] = $this->_submitted_config['from'];
-        $this->_save_config['simple']['to'] = $this->_submitted_config['to'];
-        $this->_save_config['simple']['subject'] = $this->_submitted_config['subject'];
-        $this->_save_config['simple']['ishtml'] = (
-            isset($this->_submitted_config['ishtml'])
-            && $this->_submitted_config['ishtml'] == 'yes'
-        ) ? $this->_submitted_config['ishtml'] : '';
+        $this->save_config['clones']['headerMail'] = $this->getCloneSubmitted('headerMail', array('Name', 'Value'));
+        $this->save_config['simple']['from'] = $this->submitted_config['from'];
+        $this->save_config['simple']['to'] = $this->submitted_config['to'];
+        $this->save_config['simple']['subject'] = $this->submitted_config['subject'];
+        $this->save_config['simple']['ishtml'] = (
+            isset($this->submitted_config['ishtml'])
+            && $this->submitted_config['ishtml'] == 'yes'
+        ) ? $this->submitted_config['ishtml'] : '';
     }
 
     public function validateFormatPopup()

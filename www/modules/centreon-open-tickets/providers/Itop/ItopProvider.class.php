@@ -269,8 +269,8 @@ class ItopProvider extends AbstractProvider
     */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
 
         $this->checkFormValue('address', 'Please set the "Address" value');
         $this->checkFormValue('api_version', 'Please set the "API version" value');
@@ -281,8 +281,8 @@ class ItopProvider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new \Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new \Exception($this->check_error_message);
         }
     }
 
@@ -392,13 +392,13 @@ class ItopProvider extends AbstractProvider
     */
     protected function saveConfigExtra()
     {
-        $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
-        $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
-        $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        $this->_save_config['simple']['api_version'] = $this->_submitted_config['api_version'];
-        $this->_save_config['simple']['protocol'] = $this->_submitted_config['protocol'];
-        $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
+        $this->save_config['simple']['address'] = $this->submitted_config['address'];
+        $this->save_config['simple']['username'] = $this->submitted_config['username'];
+        $this->save_config['simple']['password'] = $this->submitted_config['password'];
+        $this->save_config['simple']['api_version'] = $this->submitted_config['api_version'];
+        $this->save_config['simple']['protocol'] = $this->submitted_config['protocol'];
+        $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
+        $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             ['Arg', 'Value']
         );

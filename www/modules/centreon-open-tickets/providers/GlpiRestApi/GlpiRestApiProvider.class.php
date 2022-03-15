@@ -358,8 +358,8 @@ class GlpiRestApiProvider extends AbstractProvider
     */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
 
         $this->checkFormValue('address', 'Please set "Address" value');
         $this->checkFormValue('api_path', 'Please set "API path" value');
@@ -370,8 +370,8 @@ class GlpiRestApiProvider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -493,15 +493,15 @@ class GlpiRestApiProvider extends AbstractProvider
     */
     protected function saveConfigExtra()
     {
-        $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
-        $this->_save_config['simple']['api_path'] = $this->_submitted_config['api_path'];
-        $this->_save_config['simple']['protocol'] = $this->_submitted_config['protocol'];
-        $this->_save_config['simple']['user_token'] = $this->_submitted_config['user_token'];
-        $this->_save_config['simple']['app_token'] = $this->_submitted_config['app_token'];
-        $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
+        $this->save_config['simple']['address'] = $this->submitted_config['address'];
+        $this->save_config['simple']['api_path'] = $this->submitted_config['api_path'];
+        $this->save_config['simple']['protocol'] = $this->submitted_config['protocol'];
+        $this->save_config['simple']['user_token'] = $this->submitted_config['user_token'];
+        $this->save_config['simple']['app_token'] = $this->submitted_config['app_token'];
+        $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
 
         // saves the ticket arguments
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted('mappingTicket', ['Arg', 'Value']);
+        $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted('mappingTicket', ['Arg', 'Value']);
     }
 
     /*

@@ -144,8 +144,8 @@ class OtrsProvider extends AbstractProvider
      */
     protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
         $this->checkFormValue('address', "Please set 'Address' value");
         $this->checkFormValue('rest_link', "Please set 'Rest Link' value");
         $this->checkFormValue('webservice_name', "Please set 'Webservice Name' value");
@@ -158,8 +158,8 @@ class OtrsProvider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -259,22 +259,22 @@ class OtrsProvider extends AbstractProvider
 
     protected function saveConfigExtra()
     {
-        $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
-        $this->_save_config['simple']['path'] = $this->_submitted_config['path'];
-        $this->_save_config['simple']['rest_link'] = $this->_submitted_config['rest_link'];
-        $this->_save_config['simple']['webservice_name'] = $this->_submitted_config['webservice_name'];
-        $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
-        $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
-        $this->_save_config['simple']['https'] = (isset($this->_submitted_config['https'])
-            && $this->_submitted_config['https'] == 'yes')
-            ? $this->_submitted_config['https'] : '';
-        $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
+        $this->save_config['simple']['address'] = $this->submitted_config['address'];
+        $this->save_config['simple']['path'] = $this->submitted_config['path'];
+        $this->save_config['simple']['rest_link'] = $this->submitted_config['rest_link'];
+        $this->save_config['simple']['webservice_name'] = $this->submitted_config['webservice_name'];
+        $this->save_config['simple']['username'] = $this->submitted_config['username'];
+        $this->save_config['simple']['password'] = $this->submitted_config['password'];
+        $this->save_config['simple']['https'] = (isset($this->submitted_config['https'])
+            && $this->submitted_config['https'] == 'yes')
+            ? $this->submitted_config['https'] : '';
+        $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
-        $this->_save_config['clones']['mappingTicketDynamicField'] = $this->getCloneSubmitted(
+        $this->save_config['clones']['mappingTicketDynamicField'] = $this->getCloneSubmitted(
             'mappingTicketDynamicField',
             array('Name', 'Value')
         );
