@@ -18,7 +18,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-class ItopProvider extends AbstractProvider {
+class ItopProvider extends AbstractProvider
+{
     protected $_proxy_enabled = 1;
     protected $_close_advanced = 1;
 
@@ -37,7 +38,7 @@ class ItopProvider extends AbstractProvider {
     const ARG_IMPACT = 8;
     const ARG_URGENCY = 9;
 
-    protected $_internal_arg_name = array(
+    protected $_internal_arg_name = [
         self::ARG_CONTENT => 'content',
         self::ARG_TITLE => 'title',
         self::ARG_ORGANIZATION => 'organization',
@@ -47,13 +48,15 @@ class ItopProvider extends AbstractProvider {
         self::ARG_SERVICE_SUBCATEGORY => 'service_subcategory',
         self::ARG_IMPACT => 'impact',
         self::ARG_URGENCY => 'urgency'
-    );
+    ];
+
     /*
     * Set default values for our rule form options
     *
     * @return {void}
     */
-    protected function setDefaultValueExtra() {
+    protected function setDefaultValueExtra()
+    {
         $this->default_data['address'] = '10.30.2.22/itop/web';
         $this->default_data['api_version'] = '1.4';
         $this->default_data['username'] = '';
@@ -107,7 +110,8 @@ class ItopProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function setDefaultValueMain($body_html = 0) {
+    protected function setDefaultValueMain($body_html = 0)
+    {
         parent::setDefaultValueMain($body_html = 0);
 
         $this->default_data['url'] = '{$protocol}://{$address}/webservices/rest.php?version={$version}';
@@ -263,7 +267,8 @@ class ItopProvider extends AbstractProvider {
     *
     * @throw \Exception when a form field is not set
     */
-    protected function checkConfigForm() {
+    protected function checkConfigForm()
+    {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
 
@@ -286,7 +291,8 @@ class ItopProvider extends AbstractProvider {
     *
     * return {void}
     */
-    protected function getConfigContainer1Extra() {
+    protected function getConfigContainer1Extra()
+    {
         $tpl = new Smarty();
         $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/Itop/templates',
             $this->_centreon_path);
@@ -371,21 +377,27 @@ class ItopProvider extends AbstractProvider {
         $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
-    protected function getConfigContainer2Extra() {}
+    protected function getConfigContainer2Extra()
+    {
+    }
 
     /*
     * Saves the rule form in the database
     *
     * @return {void}
     */
-    protected function saveConfigExtra() {
+    protected function saveConfigExtra()
+    {
         $this->_save_config['simple']['address'] = $this->_submitted_config['address'];
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
         $this->_save_config['simple']['api_version'] = $this->_submitted_config['api_version'];
         $this->_save_config['simple']['protocol'] = $this->_submitted_config['protocol'];
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
+        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
+            'mappingTicket',
+            ['Arg', 'Value']
+        );
     }
 
     /*
@@ -393,7 +405,8 @@ class ItopProvider extends AbstractProvider {
     *
     * @return {string} $str html code that add an option to a select
     */
-    protected function getGroupListOptions() {
+    protected function getGroupListOptions()
+    {
         $str = '<option value="' . self::ITOP_SERVICE_TYPE . '">Service</option>' .
             '<option value="' . self::ITOP_CALLER_TYPE . '">Caller</option>' .
             '<option value="' . self::ITOP_ORGANIZATION_TYPE . '">Organization</option>' .
@@ -410,7 +423,8 @@ class ItopProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function assignOthers($entry, &$groups_order, &$groups) {
+    protected function assignOthers($entry, &$groups_order, &$groups)
+    {
         if ($entry['Type'] == self::ITOP_ORGANIZATION_TYPE) {
             $this->assignItopOrganizations($entry, $groups_order, $groups);
         } elseif ($entry['Type'] == self::ITOP_CALLER_TYPE ||
@@ -431,7 +445,8 @@ class ItopProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get organizations from itop
     */
-    protected function assignItopOrganizations($entry, &$groups_order, &$groups) {
+    protected function assignItopOrganizations($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -481,7 +496,8 @@ class ItopProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function assignItopAjax($entry, &$groups_order, &$groups) {
+    protected function assignItopAjax($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -500,7 +516,8 @@ class ItopProvider extends AbstractProvider {
     *
     * @return {array} telling us if there is a missing parameter
     */
-    public function validateFormatPopup() {
+    public function validateFormatPopup()
+    {
         $result = array('code' => 0, 'message' => 'ok');
         $this->validateFormatPopupLists($result);
         return $result;
@@ -519,7 +536,8 @@ class ItopProvider extends AbstractProvider {
     *
     * @return {array} $result will tell us if the submit ticket action resulted in a ticket being opened
     */
-    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems, $extraTicketArguments=array()) {
+    protected function doSubmit($db_storage, $contact, $host_problems, $service_problems, $extraTicketArguments = [])
+    {
         // initiate a result array
         $result = array(
             'ticket_id' => null,
@@ -580,7 +598,8 @@ class ItopProvider extends AbstractProvider {
     * throw \Exception if there are some missing parameters
     * throw \Exception if the connection failed
     */
-    static public function test($info) {
+    static public function test($info)
+    {
         // this is called through our javascript code. Those parameters are already checked in JS code.
         // but since this function is public, we check again because anyone could use this function
         if (!isset($info['address']) || !isset($info['api_version']) || !isset($info['username'])
@@ -640,7 +659,8 @@ class ItopProvider extends AbstractProvider {
     * throw \Exception 10 if php-curl is not installed
     * throw \Exception 11 if itop api fails
     */
-    protected function curlQuery($data) {
+    protected function curlQuery($data)
+    {
         // check if php curl is installed
         if (!extension_loaded("curl")) {
             throw new \Exception("couldn't find php curl", 10);
@@ -694,7 +714,8 @@ class ItopProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get organizations data
     */
-    protected function getOrganizations() {
+    protected function getOrganizations()
+    {
         $key = "SELECT Organization WHERE status='active'";
 
         $data = array(
@@ -722,7 +743,8 @@ class ItopProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get callers data
     */
-    public function getCallers($data) {
+    public function getCallers($data)
+    {
         $key = "SELECT Person WHERE status='active'";
 
         if (preg_match('/(.*?)___(.*)/', $data['organization_value'], $matches)) {
@@ -766,7 +788,8 @@ class ItopProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get services data
     */
-    public function getServices($data) {
+    public function getServices($data)
+    {
         $key = "SELECT Service";
 
         if (preg_match('/(.*?)___(.*)/', $data['organization_value'], $matches)) {
@@ -811,7 +834,8 @@ class ItopProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get service subcategories data
     */
-    public function getServiceSubcategories($data) {
+    public function getServiceSubcategories($data)
+    {
         $key = "SELECT ServiceSubcategory";
 
         if (preg_match('/(.*?)___(.*)/', $data['service_value'], $matches)) {
@@ -846,7 +870,8 @@ class ItopProvider extends AbstractProvider {
         return $listServiceSubcategories;
     }
 
-    protected function createTicket($ticketArguments) {
+    protected function createTicket($ticketArguments)
+    {
         $data = array (
             'operation' => 'core/create',
             'class' => 'UserRequest',
@@ -915,7 +940,8 @@ class ItopProvider extends AbstractProvider {
     *
     * throw \Exception if it can't close the ticket
     */
-    protected function closeTicketItop($ticketId) {
+    protected function closeTicketItop($ticketId)
+    {
 
         $data = array(
             'operation' => 'core/update',
@@ -943,7 +969,8 @@ class ItopProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    public function closeTicket(&$tickets) {
+    public function closeTicket(&$tickets)
+    {
         if ($this->doCloseTicket()) {
             foreach ($tickets as $k => $v) {
                 try {

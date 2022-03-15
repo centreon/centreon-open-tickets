@@ -106,7 +106,8 @@ abstract class AbstractProvider
         $rule_id,
         $submitted_config = null,
         $provider_id
-    ) {
+    )
+    {
         $this->_rule = $rule;
         $this->_centreon_path = $centreon_path;
         $this->_centreon_open_tickets_path = $centreon_open_tickets_path;

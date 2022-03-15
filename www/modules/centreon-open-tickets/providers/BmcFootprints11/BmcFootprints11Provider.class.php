@@ -28,14 +28,14 @@ class BmcFootprints11Provider extends AbstractProvider
     const ARG_PRIORITYNUMBER = 5;
     const ARG_ASSIGNEE = 6;
 
-    protected $_internal_arg_name = array(
+    protected $_internal_arg_name = [
         self::ARG_TITLE => 'Title',
         self::ARG_DESCRIPTION => 'Description',
         self::ARG_STATUS => 'Status',
         self::ARG_PROJECTID => 'ProjectID',
         self::ARG_PRIORITYNUMBER => 'PriorityNumber',
-        self::ARG_ASSIGNEE => 'Assignee',
-    );
+        self::ARG_ASSIGNEE => 'Assignee'
+    ];
 
     function __destruct()
     {
@@ -130,17 +130,17 @@ class BmcFootprints11Provider extends AbstractProvider
         $timeout_html = '<input size="2" name="timeout" type="text" value="' .
             $this->getFormValue('timeout') . '" />';
 
-        $array_form = array(
-            'address' => array('label' => _("Address") . $this->_required_field, 'html' => $address_html),
-            'wspath' => array('label' => _("Webservice Path") . $this->_required_field, 'html' => $wspath_html),
-            'action' => array('label' => _("Action") . $this->_required_field, 'html' => $action_html),
-            'username' => array('label' => _("Username") . $this->_required_field, 'html' => $username_html),
-            'password' => array('label' => _("Password") . $this->_required_field, 'html' => $password_html),
-            'https' => array('label' => _("Use https"), 'html' => $https_html),
-            'timeout' => array('label' => _("Timeout"), 'html' => $timeout_html),
-            'mappingticket' => array('label' => _("Mapping ticket arguments")),
-            'mappingticketprojectfield' => array('label' => _("Mapping ticket project field")),
-        );
+        $array_form = [
+            'address' => ['label' => _("Address") . $this->_required_field, 'html' => $address_html],
+            'wspath' => ['label' => _("Webservice Path") . $this->_required_field, 'html' => $wspath_html],
+            'action' => ['label' => _("Action") . $this->_required_field, 'html' => $action_html],
+            'username' => ['label' => _("Username") . $this->_required_field, 'html' => $username_html],
+            'password' => ['label' => _("Password") . $this->_required_field, 'html' => $password_html],
+            'https' => ['label' => _("Use https"), 'html' => $https_html],
+            'timeout' => ['label' => _("Timeout"), 'html' => $timeout_html],
+            'mappingticket' => ['label' => _("Mapping ticket arguments")],
+            'mappingticketprojectfield' => ['label' => _("Mapping ticket project field")]
+        ];
 
         // mapping Ticket clone
         $mappingTicketValue_html = '<input id="mappingTicketValue_#index#" name="mappingTicketValue[#index#]" ' .
