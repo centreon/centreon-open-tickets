@@ -1009,7 +1009,8 @@ Output: {$service.output|substr:0:1024}
     {
         if (isset($this->rule_data['clones']['groupList'])) {
             foreach ($this->rule_data['clones']['groupList'] as $values) {
-                if ($values['Mandatory'] == 1
+                if (
+                    $values['Mandatory'] == 1
                     && isset($this->submitted_config['select_' . $values['Id']])
                     && $this->submitted_config['select_' . $values['Id']] == '-1'
                 ) {
@@ -1498,7 +1499,7 @@ Output: {$service.output|substr:0:1024}
         return $_SESSION['ot_cache_' . $this->rule_id][$key]['value'];
     }
 
-    static protected function setProxy(&$ch, $info)
+    protected static function setProxy(&$ch, $info)
     {
         if (is_null($info['proxy_address']) || !isset($info['proxy_address']) || $info['proxy_address'] == '') {
             return 1;

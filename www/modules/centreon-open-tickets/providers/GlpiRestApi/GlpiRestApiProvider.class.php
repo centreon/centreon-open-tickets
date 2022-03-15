@@ -908,8 +908,12 @@ class GlpiRestApiProvider extends AbstractProvider
 
         // initiate smarty variables
         $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup($this->centreon_open_tickets_path, $tpl, 'providers/Abstract/templates',
-        $this->centreon_path);
+        $tpl = initSmartyTplForPopup(
+            $this->centreon_open_tickets_path,
+            $tpl,
+            'providers/Abstract/templates',
+            $this->centreon_path
+        );
 
         $tpl->assign('centreon_open_tickets_path', $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);

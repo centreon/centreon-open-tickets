@@ -260,7 +260,8 @@ class ServiceNowProvider extends AbstractProvider
         return $str;
     }
 
-    protected function assignOtherServiceNow($entry, $method, &$groups_order, &$groups) {
+    protected function assignOtherServiceNow($entry, $method, &$groups_order, &$groups)
+    {
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) . (
                 isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : ''
@@ -397,7 +398,7 @@ class ServiceNowProvider extends AbstractProvider
      * @param string $password The ServiceName OAuth password
      * @return array The tokens
      */
-    static protected function getAccessToken($info)
+    protected static function getAccessToken($info)
     {
         $url = 'https://' . $info['instance'] . '.service-now.com/oauth_token.do';
         $postfields = 'grant_type=password';
@@ -438,7 +439,7 @@ class ServiceNowProvider extends AbstractProvider
      * @param array The post information from webservice
      * @return boolean
      */
-    static public function test($info)
+    public static function test($info)
     {
         /* Test arguments */
         if (!isset($info['instance'])
