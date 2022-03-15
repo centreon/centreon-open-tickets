@@ -53,7 +53,7 @@ class ItopProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function _setDefaultValueExtra() {
+    protected function setDefaultValueExtra() {
         $this->default_data['address'] = '10.30.2.22/itop/web';
         $this->default_data['api_version'] = '1.4';
         $this->default_data['username'] = '';
@@ -107,8 +107,8 @@ class ItopProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function _setDefaultValueMain($body_html = 0) {
-        parent::_setDefaultValueMain($body_html = 0);
+    protected function setDefaultValueMain($body_html = 0) {
+        parent::setDefaultValueMain($body_html = 0);
 
         $this->default_data['url'] = '{$protocol}://{$address}/webservices/rest.php?version={$version}';
 
@@ -263,18 +263,18 @@ class ItopProvider extends AbstractProvider {
     *
     * @throw \Exception when a form field is not set
     */
-    protected function _checkConfigForm() {
+    protected function checkConfigForm() {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
 
-        $this->_checkFormValue('address', 'Please set the "Address" value');
-        $this->_checkFormValue('api_version', 'Please set the "API version" value');
-        $this->_checkFormValue('username', 'Please set the "Username" value');
-        $this->_checkFormValue('password', 'Please set the "Password" value');
-        $this->_checkFormValue('protocol', 'Please set the "Protocol" value');
-        $this->_checkFormInteger('timeout', '"Timeout" must be an integer');
+        $this->checkFormValue('address', 'Please set the "Address" value');
+        $this->checkFormValue('api_version', 'Please set the "API version" value');
+        $this->checkFormValue('username', 'Please set the "Username" value');
+        $this->checkFormValue('password', 'Please set the "Password" value');
+        $this->checkFormValue('protocol', 'Please set the "Protocol" value');
+        $this->checkFormInteger('timeout', '"Timeout" must be an integer');
 
-        $this->_checkLists();
+        $this->checkLists();
 
         if ($this->_check_error_message != '') {
             throw new \Exception($this->_check_error_message);
@@ -286,7 +286,7 @@ class ItopProvider extends AbstractProvider {
     *
     * return {void}
     */
-    protected function _getConfigContainer1Extra() {
+    protected function getConfigContainer1Extra() {
         $tpl = new Smarty();
         $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/Itop/templates',
             $this->_centreon_path);
@@ -297,17 +297,17 @@ class ItopProvider extends AbstractProvider {
 
         // we create the html that is going to be displayed
         $address_html = '<input size="50" name="address" type="text" value="' .
-            $this->_getFormValue('address') . '" />';
+            $this->getFormValue('address') . '" />';
         $username_html = '<input size="50" name="username" type="text" value="' .
-            $this->_getFormValue('username') . '" />';
+            $this->getFormValue('username') . '" />';
         $password_html = '<input size="50" name="password" type="password" value="' .
-            $this->_getFormValue('password') . '" />';
+            $this->getFormValue('password') . '" />';
         $api_version_html = '<input size="50" name="api_version" type="text" value ="' .
-            $this->_getFormValue('api_version') . '" />';
+            $this->getFormValue('api_version') . '" />';
         $protocol_html = '<input size="2" name="protocol" type="text" value="' .
-            $this->_getFormValue('protocol') . '" />';
+            $this->getFormValue('protocol') . '" />';
         $timeout_html = '<input size="2" name="timeout" type="text" value="' .
-            $this->_getFormValue('timeout') . '" />';
+            $this->getFormValue('timeout') . '" />';
 
         // this array is here to link a label with the html code that we've wrote above
         $array_form = array(
@@ -368,10 +368,10 @@ class ItopProvider extends AbstractProvider {
 
         $tpl->assign('form', $array_form);
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
+        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
-    protected function _getConfigContainer2Extra() {}
+    protected function getConfigContainer2Extra() {}
 
     /*
     * Saves the rule form in the database
@@ -385,7 +385,7 @@ class ItopProvider extends AbstractProvider {
         $this->_save_config['simple']['api_version'] = $this->_submitted_config['api_version'];
         $this->_save_config['simple']['protocol'] = $this->_submitted_config['protocol'];
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
-        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
+        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
     }
 
     /*
@@ -647,28 +647,28 @@ class ItopProvider extends AbstractProvider {
         }
 
         $query = array(
-            'auth_user' => $this->_getFormValue('username'),
-            'auth_pwd' => $this->_getFormValue('password'),
+            'auth_user' => $this->getFormValue('username'),
+            'auth_pwd' => $this->getFormValue('password'),
             'json_data' => json_encode($data)
         );
 
         $curl = curl_init();
-        $apiAddress = $this->_getFormValue('protocol') . '://' . $this->_getFormValue('address') .
-        '/webservices/rest.php?version=' . $this->_getFormValue('api_version');
+        $apiAddress = $this->getFormValue('protocol') . '://' . $this->_getFormValue('address') .
+        '/webservices/rest.php?version=' . $this->getFormValue('api_version');
         // initiate our curl options
         curl_setopt($curl, CURLOPT_URL, $apiAddress);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($query));
-        curl_setopt($curl, CURLOPT_TIMEOUT, $this->_getFormValue('timeout'));
+        curl_setopt($curl, CURLOPT_TIMEOUT, $this->getFormValue('timeout'));
 
         // if proxy is set, we add it to curl
-        if ($this->_getFormValue('proxy_address') != '' && $this->_getFormValue('proxy_port') != '') {
-            curl_setopt($curl, CURLOPT_PROXY, $this->_getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port'));
+        if ($this->getFormValue('proxy_address') != '' && $this->_getFormValue('proxy_port') != '') {
+            curl_setopt($curl, CURLOPT_PROXY, $this->getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port'));
             // if proxy authentication configuration is set, we add it to curl
-            if ($this->_getFormValue('proxy_username') != '' && $this->_getFormValue('proxy_password') != '') {
-                curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->_getFormValue('proxy_username') . ':' . $this->_getFormValue('proxy_password'));
+            if ($this->getFormValue('proxy_username') != '' && $this->_getFormValue('proxy_password') != '') {
+                curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->getFormValue('proxy_username') . ':' . $this->_getFormValue('proxy_password'));
             }
         }
         // execute curl and get status information

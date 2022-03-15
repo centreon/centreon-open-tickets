@@ -53,7 +53,7 @@ class JiraProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _setDefaultValueExtra()
+    protected function setDefaultValueExtra()
     {
         $this->default_data['address'] = 'xxx.atlassian.net';
         $this->default_data['rest_api_resource'] = '/rest/api/latest/';
@@ -73,9 +73,9 @@ class JiraProvider extends AbstractProvider
         );
     }
 
-    protected function _setDefaultValueMain($body_html = 0)
+    protected function setDefaultValueMain($body_html = 0)
     {
-        parent::_setDefaultValueMain($body_html);
+        parent::setDefaultValueMain($body_html);
 
         #$this->default_data['url'] = 'http://{$address}/index.pl?Action=AgentTicketZoom;TicketNumber={$ticket_id}';
         $this->default_data['clones']['groupList'] = array(
@@ -115,21 +115,21 @@ class JiraProvider extends AbstractProvider
      *
      * @return a string
      */
-    protected function _checkConfigForm()
+    protected function checkConfigForm()
     {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
 
-        $this->_checkFormValue('address', "Please set 'Address' value");
-        $this->_checkFormValue('rest_api_resource', "Please set 'Rest Api Resource' value");
-        $this->_checkFormValue('timeout', "Please set 'Timeout' value");
-        $this->_checkFormValue('username', "Please set 'Username' value");
-        $this->_checkFormValue('user_token', "Please set 'User Token' value");
-        $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
-        $this->_checkFormInteger('timeout', "'Timeout' must be a number");
-        $this->_checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
+        $this->checkFormValue('address', "Please set 'Address' value");
+        $this->checkFormValue('rest_api_resource', "Please set 'Rest Api Resource' value");
+        $this->checkFormValue('timeout', "Please set 'Timeout' value");
+        $this->checkFormValue('username', "Please set 'Username' value");
+        $this->checkFormValue('user_token', "Please set 'User Token' value");
+        $this->checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
+        $this->checkFormInteger('timeout', "'Timeout' must be a number");
+        $this->checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
 
-        $this->_checkLists();
+        $this->checkLists();
 
         if ($this->_check_error_message != '') {
             throw new Exception($this->_check_error_message);
@@ -141,7 +141,7 @@ class JiraProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra()
+    protected function getConfigContainer1Extra()
     {
         $tpl = $this->initSmartyTemplate('providers/Jira/templates');
 
@@ -151,15 +151,15 @@ class JiraProvider extends AbstractProvider
 
         // Form
         $address_html = '<input size="50" name="address" type="text" value="' .
-            $this->_getFormValue('address') . '" />';
+            $this->getFormValue('address') . '" />';
         $rest_api_resource_html = '<input size="50" name="rest_api_resource" type="text" value="' .
-            $this->_getFormValue('rest_api_resource') . '" />';
+            $this->getFormValue('rest_api_resource') . '" />';
         $username_html = '<input size="50" name="username" type="text" value="' .
-            $this->_getFormValue('username') . '" />';
+            $this->getFormValue('username') . '" />';
         $user_token_html = '<input size="50" name="user_token" type="password" value="' .
-            $this->_getFormValue('user_token') . '" autocomplete="off" />';
+            $this->getFormValue('user_token') . '" autocomplete="off" />';
         $timeout_html = '<input size="2" name="timeout" type="text" value="' .
-            $this->_getFormValue('timeout') . '" />';
+            $this->getFormValue('timeout') . '" />';
 
         $array_form = array(
             'address' => array(
@@ -203,7 +203,7 @@ class JiraProvider extends AbstractProvider
 
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
 
-        $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
+        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
     /**
@@ -211,7 +211,7 @@ class JiraProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra()
+    protected function getConfigContainer2Extra()
     {
     }
 
@@ -223,7 +223,7 @@ class JiraProvider extends AbstractProvider
         $this->_save_config['simple']['user_token'] = $this->_submitted_config['user_token'];
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted(
+        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
@@ -601,14 +601,14 @@ class JiraProvider extends AbstractProvider
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->rule_data['timeout']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_USERPWD, $this->_getFormValue('username', false) . ':' . $this->_getFormValue('user_token', false));
+        curl_setopt($ch, CURLOPT_USERPWD, $this->getFormValue('username', false) . ':' . $this->_getFormValue('user_token', false));
         self::setProxy(
             $ch,
             array(
-                'proxy_address' => $this->_getFormValue('proxy_address', false),
-                'proxy_port' => $this->_getFormValue('proxy_port', false),
-                'proxy_username' => $this->_getFormValue('proxy_username', false),
-                'proxy_password' => $this->_getFormValue('proxy_password', false),
+                'proxy_address' => $this->getFormValue('proxy_address', false),
+                'proxy_port' => $this->getFormValue('proxy_port', false),
+                'proxy_username' => $this->getFormValue('proxy_username', false),
+                'proxy_password' => $this->getFormValue('proxy_password', false),
             )
         );
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

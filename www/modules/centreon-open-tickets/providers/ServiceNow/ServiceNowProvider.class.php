@@ -56,7 +56,7 @@ class ServiceNowProvider extends AbstractProvider
     /**
     * Set the default extra data
     */
-    protected function _setDefaultValueExtra()
+    protected function setDefaultValueExtra()
     {
         $this->default_data['clones']['mappingTicket'] = array(
             array(
@@ -78,9 +78,9 @@ class ServiceNowProvider extends AbstractProvider
     /**
     * Add default data
     */
-    protected function _setDefaultValueMain($body_html = 0)
+    protected function setDefaultValueMain($body_html = 0)
     {
-        parent::_setDefaultValueMain($body_html);
+        parent::setDefaultValueMain($body_html);
 
         $this->default_data['url'] = 'https://{$instance_name}.service-now.com/' .
             'nav_to.do?uri=incident.do?sys_id={$ticket_id}';
@@ -141,18 +141,18 @@ class ServiceNowProvider extends AbstractProvider
     /**
     * Check the configuration form
     */
-    protected function _checkConfigForm()
+    protected function checkConfigForm()
     {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
-        $this->_checkFormValue('instance_name', 'Please set a instance.');
-        $this->_checkFormValue('client_id', 'Please set a OAuth2 client id.');
-        $this->_checkFormValue('client_secret', 'Please set a OAuth2 client secret.');
-        $this->_checkFormValue('username', 'Please set a OAuth2 username.');
-        $this->_checkFormValue('password', 'Please set a OAuth2 password.');
-        $this->_checkFormInteger('proxy_port', "'Proxy port' must be a number");
+        $this->checkFormValue('instance_name', 'Please set a instance.');
+        $this->checkFormValue('client_id', 'Please set a OAuth2 client id.');
+        $this->checkFormValue('client_secret', 'Please set a OAuth2 client secret.');
+        $this->checkFormValue('username', 'Please set a OAuth2 username.');
+        $this->checkFormValue('password', 'Please set a OAuth2 password.');
+        $this->checkFormInteger('proxy_port', "'Proxy port' must be a number");
 
-        $this->_checkLists();
+        $this->checkLists();
 
         if ($this->_check_error_message != '') {
             throw new Exception($this->_check_error_message);
@@ -162,7 +162,7 @@ class ServiceNowProvider extends AbstractProvider
     /**
     * Prepare the extra configuration block
     */
-    protected function _getConfigContainer1Extra()
+    protected function getConfigContainer1Extra()
     {
         $tpl = $this->initSmartyTemplate('providers/ServiceNow/templates');
         $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
@@ -172,15 +172,15 @@ class ServiceNowProvider extends AbstractProvider
 
         // Form
         $instance_name_html = '<input size="50" name="instance_name" type="text" value="' .
-            $this->_getFormValue('instance_name') . '" />';
+            $this->getFormValue('instance_name') . '" />';
         $client_id_html = '<input size="50" name="client_id" type="text" value="' .
-            $this->_getFormValue('client_id') . '" />';
+            $this->getFormValue('client_id') . '" />';
         $client_secret_html = '<input size="50" name="client_secret" type="password" value="' .
-            $this->_getFormValue('client_secret') . '" autocomplete="off" />';
+            $this->getFormValue('client_secret') . '" autocomplete="off" />';
         $username_html = '<input size="50" name="username" type="text" value="' .
-            $this->_getFormValue('username') . '" />';
+            $this->getFormValue('username') . '" />';
         $password_html = '<input size="50" name="password" type="password" value="' .
-            $this->_getFormValue('password') . '" autocomplete="off" />';
+            $this->getFormValue('password') . '" autocomplete="off" />';
 
         $array_form = array(
             'instance_name' => array('label' => _("Instance name") .
@@ -218,10 +218,10 @@ class ServiceNowProvider extends AbstractProvider
 
         $tpl->assign('form', $array_form);
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
+        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
-    protected function _getConfigContainer2Extra()
+    protected function getConfigContainer2Extra()
     {
     }
 
@@ -236,7 +236,7 @@ class ServiceNowProvider extends AbstractProvider
         $this->_save_config['simple']['username'] = $this->_submitted_config['username'];
         $this->_save_config['simple']['password'] = $this->_submitted_config['password'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted(
+        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
@@ -477,14 +477,14 @@ class ServiceNowProvider extends AbstractProvider
      */
     protected function refreshToken($refreshToken)
     {
-        $instance = $this->_getFormValue('instance_name', false);
+        $instance = $this->getFormValue('instance_name', false);
         $url = 'https://' . $instance . '.service-now.com/oauth_token.do';
         $postfields = 'grant_type=refresh_token';
         $postfields .= '&client_id=' . urlencode(
-            $this->_getFormValue('client_id', false)
+            $this->getFormValue('client_id', false)
         );
         $postfields .= '&client_secret=' . urlencode(
-            $this->_getFormValue('client_secret', false)
+            $this->getFormValue('client_secret', false)
         );
         $postfields .= '&refresh_token=' . $refreshToken;
 
@@ -498,10 +498,10 @@ class ServiceNowProvider extends AbstractProvider
         self::setProxy(
             $ch,
             array(
-                'proxy_address' => $this->_getFormValue('proxy_address', false),
-                'proxy_port' => $this->_getFormValue('proxy_port', false),
-                'proxy_username' => $this->_getFormValue('proxy_username', false),
-                'proxy_password' => $this->_getFormValue('proxy_password', false),
+                'proxy_address' => $this->getFormValue('proxy_address', false),
+                'proxy_port' => $this->getFormValue('proxy_port', false),
+                'proxy_username' => $this->getFormValue('proxy_username', false),
+                'proxy_password' => $this->getFormValue('proxy_password', false),
             )
         );
 
@@ -532,15 +532,15 @@ class ServiceNowProvider extends AbstractProvider
         if (is_null($refreshToken)) {
             $tokens = self::getAccessToken(
                 array(
-                    'instance' => $this->_getFormValue('instance_name', false),
-                    'client_id' => $this->_getFormValue('client_id', false),
-                    'client_secret' => $this->_getFormValue('client_secret', false),
-                    'username' => $this->_getFormValue('username', false),
-                    'password' => $this->_getFormValue('password', false),
-                    'proxy_address' => $this->_getFormValue('proxy_address', false),
-                    'proxy_port' => $this->_getFormValue('proxy_port', false),
-                    'proxy_username' => $this->_getFormValue('proxy_username', false),
-                    'proxy_password' => $this->_getFormValue('proxy_password', false)
+                    'instance' => $this->getFormValue('instance_name', false),
+                    'client_id' => $this->getFormValue('client_id', false),
+                    'client_secret' => $this->getFormValue('client_secret', false),
+                    'username' => $this->getFormValue('username', false),
+                    'password' => $this->getFormValue('password', false),
+                    'proxy_address' => $this->getFormValue('proxy_address', false),
+                    'proxy_port' => $this->getFormValue('proxy_port', false),
+                    'proxy_username' => $this->getFormValue('proxy_username', false),
+                    'proxy_password' => $this->getFormValue('proxy_password', false)
                 )
             );
             $accessToken = $tokens['accessToken'];
@@ -566,7 +566,7 @@ class ServiceNowProvider extends AbstractProvider
      */
     protected function runHttpRequest($uri, $accessToken, $method = 'GET', $data = null)
     {
-        $instance = $this->_getFormValue('instance_name', false);
+        $instance = $this->getFormValue('instance_name', false);
         $url = 'https://' . $instance . '.service-now.com' . $uri;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -582,10 +582,10 @@ class ServiceNowProvider extends AbstractProvider
         self::setProxy(
             $ch,
             array(
-                'proxy_address' => $this->_getFormValue('proxy_address', false),
-                'proxy_port' => $this->_getFormValue('proxy_port', false),
-                'proxy_username' => $this->_getFormValue('proxy_username', false),
-                'proxy_password' => $this->_getFormValue('proxy_password', false)
+                'proxy_address' => $this->getFormValue('proxy_address', false),
+                'proxy_port' => $this->getFormValue('proxy_port', false),
+                'proxy_username' => $this->getFormValue('proxy_username', false),
+                'proxy_password' => $this->getFormValue('proxy_password', false)
             )
         );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

@@ -26,19 +26,19 @@ abstract class AbstractProvider
     /**
      * Set the default extra data
      */
-    abstract protected function _setDefaultValueExtra();
+    abstract protected function setDefaultValueExtra();
     /**
      * Check the configuration form
      */
-    abstract protected function _checkConfigForm();
+    abstract protected function checkConfigForm();
     /**
      * Prepare the extra configuration block
      */
-    abstract protected function _getConfigContainer1Extra();
+    abstract protected function getConfigContainer1Extra();
     /**
      * Prepare the extra configuration block
      */
-    abstract protected function _getConfigContainer2Extra();
+    abstract protected function getConfigContainer2Extra();
     /**
      * Add specific configuration field
      */
@@ -121,8 +121,8 @@ abstract class AbstractProvider
         ) {
             $this->default_data = array();
             $this->default_data['clones'] = array();
-            $this->_setDefaultValueMain();
-            $this->_setDefaultValueExtra();
+            $this->setDefaultValueMain();
+            $this->setDefaultValueExtra();
         }
         // We reset value. We have changed provider on same form
         if (isset($this->rule_data['provider_id'])
@@ -220,7 +220,7 @@ abstract class AbstractProvider
         return $value;
     }
 
-    protected function _setDefaultValueMain($body_html = 0)
+    protected function setDefaultValueMain($body_html = 0)
     {
         $this->default_data['macro_ticket_id'] = 'TICKET_ID';
         $this->default_data['ack'] = 'yes';
@@ -373,7 +373,7 @@ Output: {$service.output|substr:0:1024}
      *
      * @return a array
      */
-    protected function _getCloneValue($uniq_id)
+    protected function getCloneValue($uniq_id)
     {
         $format_values = array();
         if (isset($this->rule_data['clones'][$uniq_id]) && is_array($this->rule_data['clones'][$uniq_id])) {
@@ -407,7 +407,7 @@ Output: {$service.output|substr:0:1024}
      *
      * @return a string
      */
-    protected function _getFormValue($uniq_id, $htmlentities=true)
+    protected function getFormValue($uniq_id, $htmlentities=true)
     {
         $value = '';
         if (isset($this->rule_data[$uniq_id]) && !is_null($this->rule_data[$uniq_id])) {
@@ -422,9 +422,9 @@ Output: {$service.output|substr:0:1024}
         return $value;
     }
 
-    protected function _checkLists()
+    protected function checkLists()
     {
-        $groupList = $this->_getCloneSubmitted(
+        $groupList = $this->getCloneSubmitted(
             'groupList',
             array('Id', 'Label', 'Type', 'Filter', 'Mandatory', 'Sort')
         );
@@ -446,7 +446,7 @@ Output: {$service.output|substr:0:1024}
         }
     }
 
-    protected function _checkFormInteger($uniq_id, $error_msg)
+    protected function checkFormInteger($uniq_id, $error_msg)
     {
         if (isset($this->_submitted_config[$uniq_id])
             && $this->_submitted_config[$uniq_id] != ''
@@ -457,7 +457,7 @@ Output: {$service.output|substr:0:1024}
         }
     }
 
-    protected function _checkFormValue($uniq_id, $error_msg)
+    protected function checkFormValue($uniq_id, $error_msg)
     {
         if (!isset($this->_submitted_config[$uniq_id]) || $this->_submitted_config[$uniq_id] == '') {
             $this->_check_error_message .= $this->_check_error_message_append . $error_msg;
@@ -472,10 +472,10 @@ Output: {$service.output|substr:0:1024}
      */
     public function getConfig()
     {
-        $this->_getConfigContainer1Extra();
-        $this->_getConfigContainer1Main();
-        $this->_getConfigContainer2Main();
-        $this->_getConfigContainer2Extra();
+        $this->getConfigContainer1Extra();
+        $this->getConfigContainer1Main();
+        $this->getConfigContainer2Main();
+        $this->getConfigContainer2Extra();
 
         return $this->_config;
     }
@@ -499,7 +499,7 @@ Output: {$service.output|substr:0:1024}
      *
      * @return void
      */
-    protected function _getConfigContainer1Main()
+    protected function getConfigContainer1Main()
     {
         $tpl = $this->initSmartyTemplate();
 
@@ -509,15 +509,15 @@ Output: {$service.output|substr:0:1024}
         $tpl->assign("header", array("close_ticket" => _("Close Ticket")));
 
         // Form
-        $url_html = '<input size="50" name="url" type="text" value="' . $this->_getFormValue('url') . '" />';
+        $url_html = '<input size="50" name="url" type="text" value="' . $this->getFormValue('url') . '" />';
         $message_confirm_html = '<textarea rows="8" cols="70" name="message_confirm">' .
-            $this->_getFormValue('message_confirm') . '</textarea>';
+            $this->getFormValue('message_confirm') . '</textarea>';
         $ack_html = '<input type="checkbox" name="ack" value="yes" ' .
-            ($this->_getFormValue('ack') == 'yes' ? 'checked' : '') . '/>';
+            ($this->getFormValue('ack') == 'yes' ? 'checked' : '') . '/>';
         $close_ticket_enable_html = '<input type="checkbox" name="close_ticket_enable" value="yes" ' .
-            ($this->_getFormValue('close_ticket_enable') == 'yes' ? 'checked' : '') . '/>';
+            ($this->getFormValue('close_ticket_enable') == 'yes' ? 'checked' : '') . '/>';
         $error_close_centreon_html = '<input type="checkbox" name="error_close_centreon" value="yes" ' .
-            ($this->_getFormValue('error_close_centreon') == 'yes' ? 'checked' : '') . '/>';
+            ($this->getFormValue('error_close_centreon') == 'yes' ? 'checked' : '') . '/>';
 
         $array_form = array(
             'url' => array('label' => _("Url"), 'html' => $url_html),
@@ -605,9 +605,9 @@ Output: {$service.output|substr:0:1024}
         $tpl->assign('form', $array_form);
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1main.ihtml');
 
-        $this->_config['clones']['groupList'] = $this->_getCloneValue('groupList');
-        $this->_config['clones']['customList'] = $this->_getCloneValue('customList');
-        $this->_config['clones']['bodyList'] = $this->_getCloneValue('bodyList');
+        $this->_config['clones']['groupList'] = $this->getCloneValue('groupList');
+        $this->_config['clones']['customList'] = $this->getCloneValue('customList');
+        $this->_config['clones']['bodyList'] = $this->getCloneValue('bodyList');
     }
 
     /**
@@ -615,7 +615,7 @@ Output: {$service.output|substr:0:1024}
      *
      * @return void
      */
-    protected function _getConfigContainer2Main()
+    protected function getConfigContainer2Main()
     {
         $tpl = $this->initSmartyTemplate();
 
@@ -634,23 +634,23 @@ Output: {$service.output|substr:0:1024}
 
         // Form
         $confirm_autoclose_html = '<input size="5" name="confirm_autoclose" type="text" value="' .
-            $this->_getFormValue('confirm_autoclose') . '" />';
+            $this->getFormValue('confirm_autoclose') . '" />';
         $macro_ticket_id_html = '<input size="50" name="macro_ticket_id" type="text" value="' .
-            $this->_getFormValue('macro_ticket_id') . '" />';
+            $this->getFormValue('macro_ticket_id') . '" />';
         $format_popup_html = '<textarea rows="8" cols="70" name="format_popup">' .
-            $this->_getFormValue('format_popup') . '</textarea>';
+            $this->getFormValue('format_popup') . '</textarea>';
         $attach_files_html = '<input type="checkbox" name="attach_files" value="yes" ' .
-            ($this->_getFormValue('attach_files') == 'yes' ? 'checked' : '') . '/>';
+            ($this->getFormValue('attach_files') == 'yes' ? 'checked' : '') . '/>';
 
         //Proxy
         $proxy_address_html = '<input size="50" name="proxy_address" type="text" value="' .
-            $this->_getFormValue('proxy_address') . '" />';
+            $this->getFormValue('proxy_address') . '" />';
         $proxy_port_html = '<input size="10" name="proxy_port" type="text" value="' .
-            $this->_getFormValue('proxy_port') . '" />';
+            $this->getFormValue('proxy_port') . '" />';
         $proxy_username_html = '<input size="50" name="proxy_username" type="text" value="' .
-            $this->_getFormValue('proxy_username') . '" />';
+            $this->getFormValue('proxy_username') . '" />';
         $proxy_password_html = '<input size="50" name="proxy_password" type="password" value="' .
-            $this->_getFormValue('proxy_password') . '" autocomplete="off" />';
+            $this->getFormValue('proxy_password') . '" autocomplete="off" />';
 
         $array_form = array(
             'macro_ticket_id' => array(
@@ -697,11 +697,11 @@ Output: {$service.output|substr:0:1024}
 
         $this->_config['container2_html'] .= $tpl->fetch('conf_container2main.ihtml');
 
-        $this->_config['clones']['chainruleList'] = $this->_getCloneValue('chainruleList');
-        $this->_config['clones']['commandList'] = $this->_getCloneValue('commandList');
+        $this->_config['clones']['chainruleList'] = $this->getCloneValue('chainruleList');
+        $this->_config['clones']['commandList'] = $this->getCloneValue('commandList');
     }
 
-    protected function _getCloneSubmitted($clone_key, $values)
+    protected function getCloneSubmitted($clone_key, $values)
     {
         $result = array();
 
@@ -749,20 +749,20 @@ Output: {$service.output|substr:0:1024}
         $this->_save_config['simple']['format_popup'] = $this->_submitted_config['format_popup'];
         $this->_save_config['simple']['message_confirm'] = $this->_submitted_config['message_confirm'];
 
-        $this->_save_config['clones']['groupList'] = $this->_getCloneSubmitted(
+        $this->_save_config['clones']['groupList'] = $this->getCloneSubmitted(
             'groupList',
             array('Id', 'Label', 'Type', 'Filter', 'Mandatory', 'Sort')
         );
-        $this->_save_config['clones']['customList'] = $this->_getCloneSubmitted(
+        $this->_save_config['clones']['customList'] = $this->getCloneSubmitted(
             'customList',
             array('Id', 'Value', 'Label', 'Default')
         );
-        $this->_save_config['clones']['bodyList'] = $this->_getCloneSubmitted(
+        $this->_save_config['clones']['bodyList'] = $this->getCloneSubmitted(
             'bodyList',
             array('Name', 'Value', 'Default')
         );
-        $this->_save_config['clones']['chainruleList'] = $this->_getCloneSubmitted('chainruleList', array('Provider'));
-        $this->_save_config['clones']['commandList'] = $this->_getCloneSubmitted('commandList', array('Cmd'));
+        $this->_save_config['clones']['chainruleList'] = $this->getCloneSubmitted('chainruleList', array('Provider'));
+        $this->_save_config['clones']['commandList'] = $this->getCloneSubmitted('commandList', array('Cmd'));
 
         $this->_save_config['simple']['proxy_address'] = isset(
             $this->_submitted_config['proxy_address']
@@ -780,7 +780,7 @@ Output: {$service.output|substr:0:1024}
 
     public function saveConfig()
     {
-        $this->_checkConfigForm();
+        $this->checkConfigForm();
         $this->_save_config = array('clones' => array(), 'simple' => array());
 
         $this->saveConfigMain();

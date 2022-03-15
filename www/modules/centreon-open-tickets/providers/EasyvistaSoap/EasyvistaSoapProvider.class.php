@@ -102,7 +102,7 @@ class EasyvistaSoapProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _setDefaultValueExtra()
+    protected function setDefaultValueExtra()
     {
         $this->default_data['address'] = '127.0.0.1';
         $this->default_data['wspath'] = '/WebService/SmoBridge.php';
@@ -116,9 +116,9 @@ class EasyvistaSoapProvider extends AbstractProvider
         );
     }
 
-    protected function _setDefaultValueMain($body_html = 0)
+    protected function setDefaultValueMain($body_html = 0)
     {
-        parent::_setDefaultValueMain($body_html);
+        parent::setDefaultValueMain($body_html);
 
         $this->default_data['url'] = 'http://{$address}/TicketNumber={$ticket_id}';
     }
@@ -128,22 +128,22 @@ class EasyvistaSoapProvider extends AbstractProvider
      *
      * @return a string
      */
-    protected function _checkConfigForm()
+    protected function checkConfigForm()
     {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
 
-        $this->_checkFormValue('address', "Please set 'Address' value");
-        $this->_checkFormValue('wspath', "Please set 'Webservice Path' value");
-        $this->_checkFormValue('timeout', "Please set 'Timeout' value");
-        $this->_checkFormValue('username', "Please set 'Username' value");
-        $this->_checkFormValue('password', "Please set 'Password' value");
-        $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
-        $this->_checkFormInteger('timeout', "'Timeout' must be a number");
-        $this->_checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
-        $this->_checkFormInteger('proxy_port', "'Proxy port' must be a number");
+        $this->checkFormValue('address', "Please set 'Address' value");
+        $this->checkFormValue('wspath', "Please set 'Webservice Path' value");
+        $this->checkFormValue('timeout', "Please set 'Timeout' value");
+        $this->checkFormValue('username', "Please set 'Username' value");
+        $this->checkFormValue('password', "Please set 'Password' value");
+        $this->checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
+        $this->checkFormInteger('timeout', "'Timeout' must be a number");
+        $this->checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
+        $this->checkFormInteger('proxy_port', "'Proxy port' must be a number");
 
-        $this->_checkLists();
+        $this->checkLists();
 
         if ($this->_check_error_message != '') {
             throw new Exception($this->_check_error_message);
@@ -155,7 +155,7 @@ class EasyvistaSoapProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra()
+    protected function getConfigContainer1Extra()
     {
         $tpl = $this->initSmartyTemplate('providers/EasyvistaSoap/templates');
 
@@ -165,17 +165,17 @@ class EasyvistaSoapProvider extends AbstractProvider
 
         // Form
         $address_html = '<input size="50" name="address" type="text" value="' .
-            $this->_getFormValue('address') . '" />';
+            $this->getFormValue('address') . '" />';
         $wspath_html = '<input size="50" name="wspath" type="text" value="' .
-            $this->_getFormValue('wspath') . '" />';
+            $this->getFormValue('wspath') . '" />';
         $username_html = '<input size="50" name="username" type="text" value="' .
-            $this->_getFormValue('username') . '" />';
+            $this->getFormValue('username') . '" />';
         $password_html = '<input size="50" name="password" type="password" value="' .
-            $this->_getFormValue('password') . '" autocomplete="off" />';
+            $this->getFormValue('password') . '" autocomplete="off" />';
         $https_html = '<input type="checkbox" name="https" value="yes" ' .
-            ($this->_getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
+            ($this->getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
         $timeout_html = '<input size="2" name="timeout" type="text" value="' .
-            $this->_getFormValue('timeout') . '" />';
+            $this->getFormValue('timeout') . '" />';
 
         $array_form = array(
             'address' => array('label' => _("Address") . $this->_required_field, 'html' => $address_html),
@@ -228,7 +228,7 @@ class EasyvistaSoapProvider extends AbstractProvider
 
         $tpl->assign('form', $array_form);
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
+        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
     /**
@@ -236,7 +236,7 @@ class EasyvistaSoapProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra()
+    protected function getConfigContainer2Extra()
     {
         $tpl = $this->initSmartyTemplate('providers/EasyvistaSoap/templates');
 
@@ -245,7 +245,7 @@ class EasyvistaSoapProvider extends AbstractProvider
         $tpl->assign("header", array("easyvista" => _("Easyvista")));
 
         $updatefields_html = '<input size="50" name="ez_updatefields" type="text" value="' .
-            $this->_getFormValue('ez_updatefields') . '" />';
+            $this->getFormValue('ez_updatefields') . '" />';
         $array_form = array(
             'ez_updatefields' => array('label' => _("Update fields"), 'html' => $updatefields_html),
         );
@@ -266,7 +266,7 @@ class EasyvistaSoapProvider extends AbstractProvider
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
         $this->_save_config['simple']['ez_updatefields'] = $this->_submitted_config['ez_updatefields'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted(
+        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
@@ -493,10 +493,10 @@ class EasyvistaSoapProvider extends AbstractProvider
         self::setProxy(
             $ch,
             array(
-                'proxy_address' => $this->_getFormValue('proxy_address', false),
-                'proxy_port' => $this->_getFormValue('proxy_port', false),
-                'proxy_username' => $this->_getFormValue('proxy_username', false),
-                'proxy_password' => $this->_getFormValue('proxy_password', false)
+                'proxy_address' => $this->getFormValue('proxy_address', false),
+                'proxy_port' => $this->getFormValue('proxy_port', false),
+                'proxy_username' => $this->getFormValue('proxy_username', false),
+                'proxy_password' => $this->getFormValue('proxy_password', false)
             )
         );
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");

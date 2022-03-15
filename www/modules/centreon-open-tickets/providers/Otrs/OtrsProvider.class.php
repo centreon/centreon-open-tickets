@@ -69,7 +69,7 @@ class OtrsProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _setDefaultValueExtra()
+    protected function setDefaultValueExtra()
     {
         $this->default_data['address'] = '127.0.0.1';
         $this->default_data['path'] = '/otrs';
@@ -94,9 +94,9 @@ class OtrsProvider extends AbstractProvider
         );
     }
 
-    protected function _setDefaultValueMain($body_html = 0)
+    protected function setDefaultValueMain($body_html = 0)
     {
-        parent::_setDefaultValueMain(1);
+        parent::setDefaultValueMain(1);
         $this->default_data['url'] = 'http://{$address}/index.pl?Action=AgentTicketZoom;TicketNumber={$ticket_id}';
         $this->default_data['clones']['groupList'] = array(
             array(
@@ -142,21 +142,21 @@ class OtrsProvider extends AbstractProvider
      *
      * @return a string
      */
-    protected function _checkConfigForm()
+    protected function checkConfigForm()
     {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
-        $this->_checkFormValue('address', "Please set 'Address' value");
-        $this->_checkFormValue('rest_link', "Please set 'Rest Link' value");
-        $this->_checkFormValue('webservice_name', "Please set 'Webservice Name' value");
-        $this->_checkFormValue('timeout', "Please set 'Timeout' value");
-        $this->_checkFormValue('username', "Please set 'Username' value");
-        $this->_checkFormValue('password', "Please set 'Password' value");
-        $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
-        $this->_checkFormInteger('timeout', "'Timeout' must be a number");
-        $this->_checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
+        $this->checkFormValue('address', "Please set 'Address' value");
+        $this->checkFormValue('rest_link', "Please set 'Rest Link' value");
+        $this->checkFormValue('webservice_name', "Please set 'Webservice Name' value");
+        $this->checkFormValue('timeout', "Please set 'Timeout' value");
+        $this->checkFormValue('username', "Please set 'Username' value");
+        $this->checkFormValue('password', "Please set 'Password' value");
+        $this->checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
+        $this->checkFormInteger('timeout', "'Timeout' must be a number");
+        $this->checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
 
-        $this->_checkLists();
+        $this->checkLists();
 
         if ($this->_check_error_message != '') {
             throw new Exception($this->_check_error_message);
@@ -168,7 +168,7 @@ class OtrsProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra()
+    protected function getConfigContainer1Extra()
     {
         $tpl = $this->initSmartyTemplate('providers/Otrs/templates');
 
@@ -178,21 +178,21 @@ class OtrsProvider extends AbstractProvider
 
         // Form
         $address_html = '<input size="50" name="address" type="text" value="' .
-            $this->_getFormValue('address') . '" />';
+            $this->getFormValue('address') . '" />';
         $path_html = '<input size="50" name="path" type="text" value="' .
-            $this->_getFormValue('path') . '" />';
+            $this->getFormValue('path') . '" />';
         $rest_link_html = '<input size="50" name="rest_link" type="text" value="' .
-            $this->_getFormValue('rest_link') . '" />';
+            $this->getFormValue('rest_link') . '" />';
         $webservice_name_html = '<input size="50" name="webservice_name" type="text" value="' .
-            $this->_getFormValue('webservice_name') . '" />';
+            $this->getFormValue('webservice_name') . '" />';
         $username_html = '<input size="50" name="username" type="text" value="' .
-            $this->_getFormValue('username') . '" />';
+            $this->getFormValue('username') . '" />';
         $password_html = '<input size="50" name="password" type="password" value="' .
-            $this->_getFormValue('password') . '" autocomplete="off" />';
+            $this->getFormValue('password') . '" autocomplete="off" />';
         $https_html = '<input type="checkbox" name="https" value="yes" ' .
-            ($this->_getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
+            ($this->getFormValue('https') == 'yes' ? 'checked' : '') . '/>';
         $timeout_html = '<input size="2" name="timeout" type="text" value="' .
-            $this->_getFormValue('timeout') . '" />';
+            $this->getFormValue('timeout') . '" />';
 
         $array_form = array(
             'address' => array('label' => _("Address") . $this->_required_field, 'html' => $address_html),
@@ -244,8 +244,8 @@ class OtrsProvider extends AbstractProvider
 
         $tpl->assign('form', $array_form);
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->_getCloneValue('mappingTicket');
-        $this->_config['clones']['mappingTicketDynamicField'] = $this->_getCloneValue('mappingTicketDynamicField');
+        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
+        $this->_config['clones']['mappingTicketDynamicField'] = $this->getCloneValue('mappingTicketDynamicField');
     }
 
     /**
@@ -253,7 +253,7 @@ class OtrsProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra()
+    protected function getConfigContainer2Extra()
     {
     }
 
@@ -270,11 +270,11 @@ class OtrsProvider extends AbstractProvider
             ? $this->_submitted_config['https'] : '';
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
 
-        $this->_save_config['clones']['mappingTicket'] = $this->_getCloneSubmitted(
+        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
             'mappingTicket',
             array('Arg', 'Value')
         );
-        $this->_save_config['clones']['mappingTicketDynamicField'] = $this->_getCloneSubmitted(
+        $this->_save_config['clones']['mappingTicketDynamicField'] = $this->getCloneSubmitted(
             'mappingTicketDynamicField',
             array('Name', 'Value')
         );

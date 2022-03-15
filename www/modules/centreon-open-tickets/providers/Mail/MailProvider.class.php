@@ -27,12 +27,12 @@ class MailProvider extends AbstractProvider
 {
     protected $_attach_files = 1;
 
-    protected function _setDefaultValueMain($body_html = 0)
+    protected function setDefaultValueMain($body_html = 0)
     {
-        parent::_setDefaultValueMain(1);
+        parent::setDefaultValueMain(1);
     }
 
-    protected function _setDefaultValueExtra()
+    protected function setDefaultValueExtra()
     {
         $this->default_data['from'] = '{$user.email}';
         $this->default_data['subject'] =
@@ -47,17 +47,17 @@ class MailProvider extends AbstractProvider
      *
      * @return a string
      */
-    protected function _checkConfigForm()
+    protected function checkConfigForm()
     {
         $this->_check_error_message = '';
         $this->_check_error_message_append = '';
-        $this->_checkFormValue('from', "Please set 'From' value");
-        $this->_checkFormValue('to', "Please set 'To' value");
-        $this->_checkFormValue('subject', "Please set 'Subject' value");
-        $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
-        $this->_checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
+        $this->checkFormValue('from', "Please set 'From' value");
+        $this->checkFormValue('to', "Please set 'To' value");
+        $this->checkFormValue('subject', "Please set 'Subject' value");
+        $this->checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
+        $this->checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
 
-        $this->_checkLists();
+        $this->checkLists();
 
         if ($this->_check_error_message != '') {
             throw new Exception($this->_check_error_message);
@@ -69,7 +69,7 @@ class MailProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra()
+    protected function getConfigContainer1Extra()
     {
         $tpl = $this->initSmartyTemplate('providers/Mail/templates');
 
@@ -78,13 +78,13 @@ class MailProvider extends AbstractProvider
         $tpl->assign("header", array("mail" => _("Mail")));
 
         // Form
-        $from_html = '<input size="50" name="from" type="text" value="' . $this->_getFormValue('from') . '" />';
-        $to_html = '<input size="50" name="to" type="text" value="' . $this->_getFormValue('to') . '" />';
+        $from_html = '<input size="50" name="from" type="text" value="' . $this->getFormValue('from') . '" />';
+        $to_html = '<input size="50" name="to" type="text" value="' . $this->getFormValue('to') . '" />';
         $subject_html = '<input size="50" name="subject" type="text" value="'
-            . html_entity_decode($this->_getFormValue('subject'), ENT_QUOTES, 'UTF-8')
+            . html_entity_decode($this->getFormValue('subject'), ENT_QUOTES, 'UTF-8')
             . '" />';
         $ishtml_html = '<input type="checkbox" name="ishtml" value="yes" ' .
-            ($this->_getFormValue('ishtml') == 'yes' ? 'checked' : '') . '/>';
+            ($this->getFormValue('ishtml') == 'yes' ? 'checked' : '') . '/>';
 
         $array_form = array(
             'from' => array('label' => _("From") . $this->_required_field, 'html' => $from_html),
@@ -106,7 +106,7 @@ class MailProvider extends AbstractProvider
 
         $tpl->assign('form', $array_form);
         $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['headerMail'] = $this->_getCloneValue('headerMail');
+        $this->_config['clones']['headerMail'] = $this->getCloneValue('headerMail');
     }
 
     /**
@@ -114,13 +114,13 @@ class MailProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra()
+    protected function getConfigContainer2Extra()
     {
     }
 
     protected function saveConfigExtra()
     {
-        $this->_save_config['clones']['headerMail'] = $this->_getCloneSubmitted('headerMail', array('Name', 'Value'));
+        $this->_save_config['clones']['headerMail'] = $this->getCloneSubmitted('headerMail', array('Name', 'Value'));
         $this->_save_config['simple']['from'] = $this->_submitted_config['from'];
         $this->_save_config['simple']['to'] = $this->_submitted_config['to'];
         $this->_save_config['simple']['subject'] = $this->_submitted_config['subject'];
