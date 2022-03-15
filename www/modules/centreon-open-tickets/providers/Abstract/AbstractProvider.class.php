@@ -511,8 +511,13 @@ Output: {$service.output|substr:0:1024}
 
         $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
-        $tpl->assign("header", array("common" => _("Common")));
-        $tpl->assign("header", array("close_ticket" => _("Close Ticket")));
+        $tpl->assign(
+            "header",
+            [
+                "common" => _("Common"),
+                "close_ticket" => _("Close Ticket")
+            ]
+        );
 
         // Form
         $url_html = '<input size="50" name="url" type="text" value="' . $this->getFormValue('url') . '" />';
@@ -630,11 +635,11 @@ Output: {$service.output|substr:0:1024}
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
         $tpl->assign(
             "header",
-            array(
+            [
                 "proxy_settings" => _("Proxy settings"),
                 "title" => _("Rules"),
                 "common" => _("Common")
-            )
+            ]
         );
         $tpl->assign("proxy_enabled", $this->proxy_enabled);
 

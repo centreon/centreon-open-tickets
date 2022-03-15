@@ -22,7 +22,7 @@
 class OtrsProvider extends AbstractProvider
 {
     protected $otrs_connected = 0;
-    protected $_otrs_session = null;
+    protected $otrs_session = null;
     protected $attach_files = 1;
     protected $close_advanced = 1;
 
@@ -667,7 +667,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $argument = array('SessionID' => $this->_otrs_session);
+        $argument = array('SessionID' => $this->otrs_session);
         if ($this->callRest('QueueGet', $argument) == 1) {
             return -1;
         }
@@ -683,7 +683,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $argument = array('SessionID' => $this->_otrs_session);
+        $argument = array('SessionID' => $this->otrs_session);
         if ($this->callRest('PriorityGet', $argument) == 1) {
             return -1;
         }
@@ -699,7 +699,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $argument = array('SessionID' => $this->_otrs_session);
+        $argument = array('SessionID' => $this->otrs_session);
         if ($this->callRest('StateGet', $argument) == 1) {
             return -1;
         }
@@ -715,7 +715,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $argument = array('SessionID' => $this->_otrs_session);
+        $argument = array('SessionID' => $this->otrs_session);
         if ($this->callRest('TypeGet', $argument) == 1) {
             return -1;
         }
@@ -731,7 +731,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $argument = array('SessionID' => $this->_otrs_session);
+        $argument = array('SessionID' => $this->otrs_session);
         if ($this->callRest('CustomerUserGet', $argument) == 1) {
             return -1;
         }
@@ -747,7 +747,7 @@ class OtrsProvider extends AbstractProvider
             }
         }
 
-        $argument = array('SessionID' => $this->_otrs_session);
+        $argument = array('SessionID' => $this->otrs_session);
         if ($this->callRest('UserGet', $argument) == 1) {
             return -1;
         }
@@ -764,7 +764,7 @@ class OtrsProvider extends AbstractProvider
         }
 
         $argument = array(
-            'SessionID' => $this->_otrs_session,
+            'SessionID' => $this->otrs_session,
             'TicketNumber' => $ticket_number,
             'Ticket' => array(
                 'State' => 'closed successful',
@@ -787,7 +787,7 @@ class OtrsProvider extends AbstractProvider
         }
 
         $argument = array(
-            'SessionID' => $this->_otrs_session,
+            'SessionID' => $this->otrs_session,
             'Ticket' => array(
                 'Title'             => $ticket_arguments['Subject'],
                 //'QueueID'         => xxx,
@@ -853,7 +853,7 @@ class OtrsProvider extends AbstractProvider
             return -1;
         }
 
-        $this->_otrs_session = $this->_otrs_call_response['SessionID'];
+        $this->otrs_session = $this->_otrs_call_response['SessionID'];
         $this->otrs_connected = 1;
         return 0;
     }
