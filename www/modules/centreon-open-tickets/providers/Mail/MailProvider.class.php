@@ -19,7 +19,9 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/library/class.phpmailer.php';
+use PHPMailer\PHPMailer\PHPMailer;
+
+require_once __DIR__ . '/library/PHPMailer.php';
 
 class MailProvider extends AbstractProvider
 {
@@ -33,12 +35,9 @@ class MailProvider extends AbstractProvider
     protected function _setDefaultValueExtra()
     {
         $this->default_data['from'] = '{$user.email}';
-        $this->default_data['subject'] = htmlentities(
+        $this->default_data['subject'] =
             'Issue {$ticket_id} - {include file="file:$centreon_open_tickets_path' .
-            '/providers/Abstract/templates/display_title.ihtml"}',
-            ENT_QUOTES,
-            'UTF-8'
-        );
+            '/providers/Abstract/templates/display_title.ihtml"}';
         $this->default_data['clones']['headerMail'] = array();
         $this->default_data['ishtml'] = 'yes';
     }
@@ -124,11 +123,7 @@ class MailProvider extends AbstractProvider
         $this->_save_config['clones']['headerMail'] = $this->_getCloneSubmitted('headerMail', array('Name', 'Value'));
         $this->_save_config['simple']['from'] = $this->_submitted_config['from'];
         $this->_save_config['simple']['to'] = $this->_submitted_config['to'];
-        $this->_save_config['simple']['subject'] = htmlentities(
-            $this->_submitted_config['subject'],
-            ENT_QUOTES,
-            'UTF-8'
-        );
+        $this->_save_config['simple']['subject'] = $this->_submitted_config['subject'];
         $this->_save_config['simple']['ishtml'] = (
             isset($this->_submitted_config['ishtml'])
             && $this->_submitted_config['ishtml'] == 'yes'
@@ -178,6 +173,7 @@ class MailProvider extends AbstractProvider
         $subject = $tpl->fetch('eval.ihtml');
 
         $mail = new PHPMailer();
+        $mail->CharSet = 'utf-8';
         $mail->setFrom($from);
         $mail->addAddress($this->rule_data['to']);
         if (isset($this->rule_data['ishtml']) && $this->rule_data['ishtml'] == 'yes') {
@@ -212,10 +208,7 @@ class MailProvider extends AbstractProvider
                     'data_type' => self::DATA_TYPE_JSON,
                     'data' => json_encode(
                         array(
-                            'body' => $this->body,
-                            'from' => $from,
-                            'headers' => $headers,
-                            'to' => $this->rule_data['to']
+                            'mail' => $mail->getSentMIMEMessage()
                         )
                     )
                 )
