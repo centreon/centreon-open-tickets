@@ -22,7 +22,7 @@
 class EasyvistaSoapProvider extends AbstractProvider
 {
     protected $proxy_enabled = 1;
-    protected $_attach_files = 1;
+    protected $attach_files = 1;
 
     public const ARG_ACCOUNT = 1;
     public const ARG_CATALOG_GUID = 2;

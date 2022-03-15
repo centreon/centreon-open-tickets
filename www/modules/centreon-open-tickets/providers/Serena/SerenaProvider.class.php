@@ -21,12 +21,12 @@
 
 class SerenaProvider extends AbstractProvider
 {
-    const ARG_PROJECT_ID = 1;
-    const ARG_SUBJECT = 2;
-    const ARG_CONTENT = 3;
-    const ARG_CATEGORY = 4;
-    const ARG_SUB_CATEGORY = 5;
-    const ARG_SUB_CATEGORY_DETAILS = 6;
+    public const ARG_PROJECT_ID = 1;
+    public const ARG_SUBJECT = 2;
+    public const ARG_CONTENT = 3;
+    public const ARG_CATEGORY = 4;
+    public const ARG_SUB_CATEGORY = 5;
+    public const ARG_SUB_CATEGORY_DETAILS = 6;
 
     protected $internal_arg_name = array(
         self::ARG_PROJECT_ID => 'project_id',

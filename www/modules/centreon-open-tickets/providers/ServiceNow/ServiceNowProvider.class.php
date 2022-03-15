@@ -23,23 +23,23 @@ class ServiceNowProvider extends AbstractProvider
 {
     protected $proxy_enabled = 1;
 
-    const SERVICENOW_LIST_CATEGORY = 20;
-    const SERVICENOW_LIST_SUBCATEGORY = 21;
-    const SERVICENOW_LIST_IMPACT = 22;
-    const SERVICENOW_LIST_URGENCY = 23;
-    const SERVICENOW_LIST_ASSIGNMENT_GROUP = 24;
-    const SERVICENOW_LIST_ASSIGNED_TO = 25;
-    const SERVICENOW_LIST_SEVERITY = 26;
+    public const SERVICENOW_LIST_CATEGORY = 20;
+    public const SERVICENOW_LIST_SUBCATEGORY = 21;
+    public const SERVICENOW_LIST_IMPACT = 22;
+    public const SERVICENOW_LIST_URGENCY = 23;
+    public const SERVICENOW_LIST_ASSIGNMENT_GROUP = 24;
+    public const SERVICENOW_LIST_ASSIGNED_TO = 25;
+    public const SERVICENOW_LIST_SEVERITY = 26;
 
-    const ARG_SHORT_DESCRIPTION = 1;
-    const ARG_COMMENTS = 2;
-    const ARG_IMPACT = 3;
-    const ARG_URGENCY = 4;
-    const ARG_CATEGORY = 5;
-    const ARG_SUBCATEGORY = 6;
-    const ARG_ASSIGNED_TO = 7;
-    const ARG_ASSIGNMENT_GROUP = 8;
-    const ARG_SEVERITY = 9;
+    public const ARG_SHORT_DESCRIPTION = 1;
+    public const ARG_COMMENTS = 2;
+    public const ARG_IMPACT = 3;
+    public const ARG_URGENCY = 4;
+    public const ARG_CATEGORY = 5;
+    public const ARG_SUBCATEGORY = 6;
+    public const ARG_ASSIGNED_TO = 7;
+    public const ARG_ASSIGNMENT_GROUP = 8;
+    public const ARG_SEVERITY = 9;
 
     protected $internal_arg_name = array(
         self::ARG_SHORT_DESCRIPTION => 'ShortDescription',

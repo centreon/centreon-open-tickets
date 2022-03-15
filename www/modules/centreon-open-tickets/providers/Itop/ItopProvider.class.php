@@ -23,20 +23,20 @@ class ItopProvider extends AbstractProvider
     protected $proxy_enabled = 1;
     protected $close_advanced = 1;
 
-    const ITOP_ORGANIZATION_TYPE = 10;
-    const ITOP_CALLER_TYPE = 11;
-    const ITOP_SERVICE_TYPE = 12;
-    const ITOP_SERVICE_SUBCATEGORY_TYPE = 13;
+    public const ITOP_ORGANIZATION_TYPE = 10;
+    public const ITOP_CALLER_TYPE = 11;
+    public const ITOP_SERVICE_TYPE = 12;
+    public const ITOP_SERVICE_SUBCATEGORY_TYPE = 13;
 
-    const ARG_CONTENT = 1;
-    const ARG_TITLE = 2;
-    const ARG_ORGANIZATION = 3;
-    const ARG_CALLER = 4;
-    const ARG_ORIGIN = 5;
-    const ARG_SERVICE = 6;
-    const ARG_SERVICE_SUBCATEGORY = 7;
-    const ARG_IMPACT = 8;
-    const ARG_URGENCY = 9;
+    public const ARG_CONTENT = 1;
+    public const ARG_TITLE = 2;
+    public const ARG_ORGANIZATION = 3;
+    public const ARG_CALLER = 4;
+    public const ARG_ORIGIN = 5;
+    public const ARG_SERVICE = 6;
+    public const ARG_SERVICE_SUBCATEGORY = 7;
+    public const ARG_IMPACT = 8;
+    public const ARG_URGENCY = 9;
 
     protected $internal_arg_name = [
         self::ARG_CONTENT => 'content',

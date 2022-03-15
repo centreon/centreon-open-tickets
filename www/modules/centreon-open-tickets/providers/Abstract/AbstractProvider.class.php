@@ -75,24 +75,24 @@ abstract class AbstractProvider
     protected $_submitted_config = null;
     protected $_check_error_message = '';
     protected $_save_config = array();
-    protected $_widget_id;
-    protected $_uniq_id;
-    protected $_attach_files = 0;
+    protected $widget_id;
+    protected $uniq_id;
+    protected $attach_files = 0;
     protected $close_advanced = 0;
     protected $proxy_enabled = 0;
 
-    const HOSTGROUP_TYPE = 0;
-    const HOSTCATEGORY_TYPE = 1;
-    const HOSTSEVERITY_TYPE = 2;
-    const SERVICEGROUP_TYPE = 3;
-    const SERVICECATEGORY_TYPE = 4;
-    const SERVICESEVERITY_TYPE = 5;
-    const SERVICECONTACTGROUP_TYPE = 6;
-    const CUSTOM_TYPE = 7;
-    const BODY_TYPE = 8;
+    public const HOSTGROUP_TYPE = 0;
+    public const HOSTCATEGORY_TYPE = 1;
+    public const HOSTSEVERITY_TYPE = 2;
+    public const SERVICEGROUP_TYPE = 3;
+    public const SERVICECATEGORY_TYPE = 4;
+    public const SERVICESEVERITY_TYPE = 5;
+    public const SERVICECONTACTGROUP_TYPE = 6;
+    public const CUSTOM_TYPE = 7;
+    public const BODY_TYPE = 8;
 
-    const DATA_TYPE_JSON = 0;
-    const DATA_TYPE_XML = 1;
+    public const DATA_TYPE_JSON = 0;
+    public const DATA_TYPE_XML = 1;
 
     /**
      * constructor
@@ -133,8 +133,8 @@ abstract class AbstractProvider
             $this->rule_data = array();
         }
 
-        $this->_widget_id = null;
-        $this->_uniq_id = null;
+        $this->widget_id = null;
+        $this->uniq_id = null;
     }
 
     protected function initSmartyTemplate($path = "providers/Abstract/templates")
@@ -154,39 +154,39 @@ abstract class AbstractProvider
 
     public function setWidgetId($widget_id)
     {
-        $this->_widget_id = $widget_id;
+        $this->widget_id = $widget_id;
     }
 
     public function setUniqId($uniq_id)
     {
-        $this->_uniq_id = $uniq_id;
+        $this->uniq_id = $uniq_id;
     }
 
     protected function clearSession()
     {
         if (
-            !is_null($this->_uniq_id)
-            && isset($_SESSION['ot_save_' . $this->_uniq_id])
+            !is_null($this->uniq_id)
+            && isset($_SESSION['ot_save_' . $this->uniq_id])
         ) {
-            unset($_SESSION['ot_save_' . $this->_uniq_id]);
+            unset($_SESSION['ot_save_' . $this->uniq_id]);
         }
     }
 
     protected function saveSession($key, $value)
     {
-        if (!is_null($this->_uniq_id)) {
-            if (!isset($_SESSION['ot_save_' . $this->_uniq_id])) {
-                $_SESSION['ot_save_' . $this->_uniq_id] = array();
+        if (!is_null($this->uniq_id)) {
+            if (!isset($_SESSION['ot_save_' . $this->uniq_id])) {
+                $_SESSION['ot_save_' . $this->uniq_id] = array();
             }
-            $_SESSION['ot_save_' . $this->_uniq_id][$key] = $value;
+            $_SESSION['ot_save_' . $this->uniq_id][$key] = $value;
         }
     }
 
     protected function getUploadFiles()
     {
         $upload_files = array();
-        if (isset($_SESSION['ot_upload_files'][$this->_uniq_id])) {
-            foreach (array_keys($_SESSION['ot_upload_files'][$this->_uniq_id]) as $filepath) {
+        if (isset($_SESSION['ot_upload_files'][$this->uniq_id])) {
+            foreach (array_keys($_SESSION['ot_upload_files'][$this->uniq_id]) as $filepath) {
                 $filename = basename($filepath);
                 if (preg_match('/^.*?__(.*)/', $filename, $matches)) {
                     $upload_files[] = array('filepath' => $filepath, 'filename' => $matches[1]);
@@ -204,13 +204,13 @@ abstract class AbstractProvider
             unlink($file['filepath']);
         }
 
-        unset($_SESSION['ot_upload_files'][$this->_uniq_id]);
+        unset($_SESSION['ot_upload_files'][$this->uniq_id]);
     }
 
     protected function getSession($key)
     {
-        if (!is_null($key) && !is_null($this->_uniq_id) && isset($_SESSION['ot_save_' . $this->_uniq_id][$key])) {
-            return $_SESSION['ot_save_' . $this->_uniq_id][$key];
+        if (!is_null($key) && !is_null($this->uniq_id) && isset($_SESSION['ot_save_' . $this->_uniq_id][$key])) {
+            return $_SESSION['ot_save_' . $this->uniq_id][$key];
         }
         return null;
     }
@@ -669,7 +669,7 @@ Output: {$service.output|substr:0:1024}
             'command' => array('label' => _("Commands")),
             'attach_files' => array(
                 'label' => _("Attach Files"),
-                "enable" => $this->_attach_files,
+                "enable" => $this->attach_files,
                 'html' => $attach_files_html
             ),
             'proxy_address' => array('label' => _("Proxy address"), 'html' => $proxy_address_html),

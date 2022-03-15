@@ -23,17 +23,17 @@ class JiraProvider extends AbstractProvider
 {
     protected $proxy_enabled = 1;
 
-    const JIRA_PROJECT = 30;
-    const JIRA_ASSIGNEE = 31;
-    const JIRA_ISSUETYPE = 32;
-    const JIRA_PRIORITY = 33;
+    public const JIRA_PROJECT = 30;
+    public const JIRA_ASSIGNEE = 31;
+    public const JIRA_ISSUETYPE = 32;
+    public const JIRA_PRIORITY = 33;
 
-    const ARG_PROJECT = 1;
-    const ARG_SUMMARY = 2;
-    const ARG_DESCRIPTION = 3;
-    const ARG_ASSIGNEE = 4;
-    const ARG_ISSUETYPE = 5;
-    const ARG_PRIORITY = 6;
+    public const ARG_PROJECT = 1;
+    public const ARG_SUMMARY = 2;
+    public const ARG_DESCRIPTION = 3;
+    public const ARG_ASSIGNEE = 4;
+    public const ARG_ISSUETYPE = 5;
+    public const ARG_PRIORITY = 6;
 
     protected $internal_arg_name = array(
         self::ARG_PROJECT => 'Project',
@@ -545,21 +545,24 @@ class JiraProvider extends AbstractProvider
             ),
         );
 
-        if (isset($ticket_arguments[$this->internal_arg_name[self::ARG_ASSIGNEE]])
+        if (
+            isset($ticket_arguments[$this->internal_arg_name[self::ARG_ASSIGNEE]])
             && $ticket_arguments[$this->internal_arg_name[self::ARG_ASSIGNEE]] != ''
         ) {
             $argument['fields']['assignee'] = array(
                 'name' => $ticket_arguments[$this->internal_arg_name[self::ARG_ASSIGNEE]]
             );
         }
-        if (isset($ticket_arguments[$this->internal_arg_name[self::ARG_PRIORITY]])
+        if (
+            isset($ticket_arguments[$this->internal_arg_name[self::ARG_PRIORITY]])
             && $ticket_arguments[$this->internal_arg_name[self::ARG_PRIORITY]] != ''
         ) {
             $argument['fields']['priority'] = array(
                 'id' => $ticket_arguments[$this->internal_arg_name[self::ARG_PRIORITY]]
             );
         }
-        if (isset($ticket_arguments[$this->internal_arg_name[self::ARG_ISSUETYPE]])
+        if (
+            isset($ticket_arguments[$this->internal_arg_name[self::ARG_ISSUETYPE]])
             && $ticket_arguments[$this->internal_arg_name[self::ARG_ISSUETYPE]] != ''
         ) {
             $argument['fields']['issuetype'] = array(

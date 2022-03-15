@@ -24,20 +24,20 @@ class GlpiProvider extends AbstractProvider
     protected $_glpi_connected = 0;
     protected $_glpi_session = null;
 
-    const GPLI_ENTITIES_TYPE = 10;
-    const GPLI_GROUPS_TYPE = 11;
-    const GLPI_ITIL_CATEGORIES_TYPE = 12;
+    public const GPLI_ENTITIES_TYPE = 10;
+    public const GPLI_GROUPS_TYPE = 11;
+    public const GLPI_ITIL_CATEGORIES_TYPE = 12;
 
-    const ARG_CONTENT = 1;
-    const ARG_ENTITY = 2;
-    const ARG_URGENCY = 3;
-    const ARG_IMPACT = 4;
-    const ARG_CATEGORY = 5;
-    const ARG_USER = 6;
-    const ARG_USER_EMAIL = 7;
-    const ARG_GROUP = 8;
-    const ARG_GROUP_ASSIGN = 9;
-    const ARG_TITLE = 10;
+    public const ARG_CONTENT = 1;
+    public const ARG_ENTITY = 2;
+    public const ARG_URGENCY = 3;
+    public const ARG_IMPACT = 4;
+    public const ARG_CATEGORY = 5;
+    public const ARG_USER = 6;
+    public const ARG_USER_EMAIL = 7;
+    public const ARG_GROUP = 8;
+    public const ARG_GROUP_ASSIGN = 9;
+    public const ARG_TITLE = 10;
 
     protected $internal_arg_name = array(
         self::ARG_CONTENT => 'content',

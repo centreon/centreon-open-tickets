@@ -23,14 +23,14 @@ class RequestTracker2Provider extends AbstractProvider
 {
     protected $proxy_enabled = 1;
 
-    const RT_QUEUE_TYPE = 10;
-    const RT_CUSTOMFIELD_TYPE = 11;
+    public const RT_QUEUE_TYPE = 10;
+    public const RT_CUSTOMFIELD_TYPE = 11;
 
-    const ARG_QUEUE = 1;
-    const ARG_SUBJECT = 2;
-    const ARG_REQUESTOR = 3;
-    const ARG_CC = 4;
-    const ARG_CONTENT = 5;
+    public const ARG_QUEUE = 1;
+    public const ARG_SUBJECT = 2;
+    public const ARG_REQUESTOR = 3;
+    public const ARG_CC = 4;
+    public const ARG_CONTENT = 5;
 
     protected $internal_arg_name = array(
         self::ARG_QUEUE => 'Queue',
@@ -483,7 +483,8 @@ class RequestTracker2Provider extends AbstractProvider
             'Content' => $ticket_arguments[$this->internal_arg_name[self::ARG_CONTENT]],
         );
 
-        if (isset($ticket_arguments[$this->internal_arg_name[self::ARG_CC]])
+        if (
+            isset($ticket_arguments[$this->internal_arg_name[self::ARG_CC]])
             && $ticket_arguments[$this->internal_arg_name[self::ARG_CC]] != ''
         ) {
             $argument['Cc'] = $ticket_arguments[$this->internal_arg_name[self::ARG_CC]];

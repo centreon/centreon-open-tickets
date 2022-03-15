@@ -21,30 +21,30 @@
 
 class OtrsProvider extends AbstractProvider
 {
-    protected $_otrs_connected = 0;
+    protected $otrs_connected = 0;
     protected $_otrs_session = null;
-    protected $_attach_files = 1;
+    protected $attach_files = 1;
     protected $close_advanced = 1;
 
-    const OTRS_QUEUE_TYPE = 10;
-    const OTRS_PRIORITY_TYPE = 11;
-    const OTRS_STATE_TYPE = 12;
-    const OTRS_TYPE_TYPE = 13;
-    const OTRS_CUSTOMERUSER_TYPE = 14;
-    const OTRS_OWNER_TYPE = 15;
-    const OTRS_RESPONSIBLE_TYPE = 16;
+    public const OTRS_QUEUE_TYPE = 10;
+    public const OTRS_PRIORITY_TYPE = 11;
+    public const OTRS_STATE_TYPE = 12;
+    public const OTRS_TYPE_TYPE = 13;
+    public const OTRS_CUSTOMERUSER_TYPE = 14;
+    public const OTRS_OWNER_TYPE = 15;
+    public const OTRS_RESPONSIBLE_TYPE = 16;
 
-    const ARG_QUEUE = 1;
-    const ARG_PRIORITY = 2;
-    const ARG_STATE = 3;
-    const ARG_TYPE = 4;
-    const ARG_CUSTOMERUSER = 5;
-    const ARG_SUBJECT = 6;
-    const ARG_BODY = 7;
-    const ARG_FROM = 8;
-    const ARG_CONTENTTYPE = 9;
-    const ARG_OWNER = 17;
-    const ARG_RESPONSIBLE = 18;
+    public const ARG_QUEUE = 1;
+    public const ARG_PRIORITY = 2;
+    public const ARG_STATE = 3;
+    public const ARG_TYPE = 4;
+    public const ARG_CUSTOMERUSER = 5;
+    public const ARG_SUBJECT = 6;
+    public const ARG_BODY = 7;
+    public const ARG_FROM = 8;
+    public const ARG_CONTENTTYPE = 9;
+    public const ARG_OWNER = 17;
+    public const ARG_RESPONSIBLE = 18;
 
     protected $internal_arg_name = array(
         self::ARG_QUEUE => 'Queue',
@@ -661,7 +661,7 @@ class OtrsProvider extends AbstractProvider
 
     protected function listQueueOtrs()
     {
-        if ($this->_otrs_connected == 0) {
+        if ($this->otrs_connected == 0) {
             if ($this->loginOtrs() == -1) {
                 return -1;
             }
@@ -677,7 +677,7 @@ class OtrsProvider extends AbstractProvider
 
     protected function listPriorityOtrs()
     {
-        if ($this->_otrs_connected == 0) {
+        if ($this->otrs_connected == 0) {
             if ($this->loginOtrs() == -1) {
                 return -1;
             }
@@ -693,7 +693,7 @@ class OtrsProvider extends AbstractProvider
 
     protected function listStateOtrs()
     {
-        if ($this->_otrs_connected == 0) {
+        if ($this->otrs_connected == 0) {
             if ($this->loginOtrs() == -1) {
                 return -1;
             }
@@ -709,7 +709,7 @@ class OtrsProvider extends AbstractProvider
 
     protected function listTypeOtrs()
     {
-        if ($this->_otrs_connected == 0) {
+        if ($this->otrs_connected == 0) {
             if ($this->loginOtrs() == -1) {
                 return -1;
             }
@@ -725,7 +725,7 @@ class OtrsProvider extends AbstractProvider
 
     protected function listCustomerUserOtrs()
     {
-        if ($this->_otrs_connected == 0) {
+        if ($this->otrs_connected == 0) {
             if ($this->loginOtrs() == -1) {
                 return -1;
             }
@@ -741,7 +741,7 @@ class OtrsProvider extends AbstractProvider
 
     protected function listUserOtrs()
     {
-        if ($this->_otrs_connected == 0) {
+        if ($this->otrs_connected == 0) {
             if ($this->loginOtrs() == -1) {
                 return -1;
             }
@@ -757,7 +757,7 @@ class OtrsProvider extends AbstractProvider
 
     protected function closeTicketOtrs($ticket_number)
     {
-        if ($this->_otrs_connected == 0) {
+        if ($this->otrs_connected == 0) {
             if ($this->loginOtrs() == -1) {
                 return -1;
             }
@@ -780,7 +780,7 @@ class OtrsProvider extends AbstractProvider
 
     protected function createTicketOtrs($ticket_arguments, $ticket_dynamic_fields)
     {
-        if ($this->_otrs_connected == 0) {
+        if ($this->otrs_connected == 0) {
             if ($this->loginOtrs() == -1) {
                 return -1;
             }
@@ -839,7 +839,7 @@ class OtrsProvider extends AbstractProvider
 
     protected function loginOtrs()
     {
-        if ($this->_otrs_connected == 1) {
+        if ($this->otrs_connected == 1) {
             return 0;
         }
 
@@ -854,7 +854,7 @@ class OtrsProvider extends AbstractProvider
         }
 
         $this->_otrs_session = $this->_otrs_call_response['SessionID'];
-        $this->_otrs_connected = 1;
+        $this->otrs_connected = 1;
         return 0;
     }
 

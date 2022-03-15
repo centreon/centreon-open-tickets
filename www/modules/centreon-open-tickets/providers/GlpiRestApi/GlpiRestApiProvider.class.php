@@ -24,26 +24,26 @@ class GlpiRestApiProvider extends AbstractProvider
     protected $close_advanced = 1;
     protected $proxy_enabled = 1;
 
-    const GLPI_ENTITY_TYPE = 14;
-    const GLPI_GROUP_TYPE = 15;
-    const GLPI_ITIL_CATEGORY_TYPE = 16;
-    const GLPI_USER_TYPE = 17;
-    const GLPI_SUPPLIER_TYPE = 18;
-    const GLPI_REQUESTER_TYPE = 19;
+    public const GLPI_ENTITY_TYPE = 14;
+    public const GLPI_GROUP_TYPE = 15;
+    public const GLPI_ITIL_CATEGORY_TYPE = 16;
+    public const GLPI_USER_TYPE = 17;
+    public const GLPI_SUPPLIER_TYPE = 18;
+    public const GLPI_REQUESTER_TYPE = 19;
 
-    const ARG_CONTENT = 1;
-    const ARG_ENTITY = 2;
-    const ARG_URGENCY = 3;
-    const ARG_IMPACT = 4;
-    const ARG_ITIL_CATEGORY = 5;
-    const ARG_USER = 6;
-    const ARG_GROUP = 7;
-    const ARG_TITLE = 8;
-    const ARG_PRIORITY = 9;
-    const ARG_SUPPLIER = 10;
-    const ARG_GROUP_ROLE = 11;
-    const ARG_USER_ROLE = 12;
-    const ARG_REQUESTER = 13;
+    public const ARG_CONTENT = 1;
+    public const ARG_ENTITY = 2;
+    public const ARG_URGENCY = 3;
+    public const ARG_IMPACT = 4;
+    public const ARG_ITIL_CATEGORY = 5;
+    public const ARG_USER = 6;
+    public const ARG_GROUP = 7;
+    public const ARG_TITLE = 8;
+    public const ARG_PRIORITY = 9;
+    public const ARG_SUPPLIER = 10;
+    public const ARG_GROUP_ROLE = 11;
+    public const ARG_USER_ROLE = 12;
+    public const ARG_REQUESTER = 13;
 
     private const PAGE_SIZE = 20;
 
@@ -1108,8 +1108,15 @@ class GlpiRestApiProvider extends AbstractProvider
         }
 
         // if proxy is set, we add it to curl
-        if ($this->getFormValue('proxy_address') != '' && $this->_getFormValue('proxy_port') != '') {
-            curl_setopt($curl, CURLOPT_PROXY, $this->getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port'));
+        if (
+            $this->getFormValue('proxy_address') != ''
+            && $this->_getFormValue('proxy_port') != ''
+        ) {
+            curl_setopt(
+                $curl,
+                CURLOPT_PROXY,
+                $this->getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port')
+            );
 
             // if proxy authentication configuration is set, we add it to curl
             if (
