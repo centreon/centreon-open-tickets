@@ -21,7 +21,7 @@
 
 class RequestTracker2Provider extends AbstractProvider
 {
-    protected $_proxy_enabled = 1;
+    protected $proxy_enabled = 1;
 
     const RT_QUEUE_TYPE = 10;
     const RT_CUSTOMFIELD_TYPE = 11;
@@ -32,7 +32,7 @@ class RequestTracker2Provider extends AbstractProvider
     const ARG_CC = 4;
     const ARG_CONTENT = 5;
 
-    protected $_internal_arg_name = array(
+    protected $internal_arg_name = array(
         self::ARG_QUEUE => 'Queue',
         self::ARG_SUBJECT => 'Priority',
         self::ARG_REQUESTOR => 'Requestor',
@@ -350,7 +350,7 @@ class RequestTracker2Provider extends AbstractProvider
                     $result_str = null;
                 }
 
-                $ticket_arguments[$this->_internal_arg_name[$value['Arg']]] = $result_str;
+                $ticket_arguments[$this->internal_arg_name[$value['Arg']]] = $result_str;
             }
         }
         $ticket_dynamic_fields = array();
@@ -477,16 +477,16 @@ class RequestTracker2Provider extends AbstractProvider
     protected function createTicketRt($ticket_arguments, $ticket_dynamic_fields)
     {
         $argument = array(
-            'Queue' => $ticket_arguments[$this->_internal_arg_name[self::ARG_QUEUE]],
-            'Subject' => $ticket_arguments[$this->_internal_arg_name[self::ARG_SUBJECT]],
-            'Requestor' => $ticket_arguments[$this->_internal_arg_name[self::ARG_REQUESTOR]],
-            'Content' => $ticket_arguments[$this->_internal_arg_name[self::ARG_CONTENT]],
+            'Queue' => $ticket_arguments[$this->internal_arg_name[self::ARG_QUEUE]],
+            'Subject' => $ticket_arguments[$this->internal_arg_name[self::ARG_SUBJECT]],
+            'Requestor' => $ticket_arguments[$this->internal_arg_name[self::ARG_REQUESTOR]],
+            'Content' => $ticket_arguments[$this->internal_arg_name[self::ARG_CONTENT]],
         );
 
-        if (isset($ticket_arguments[$this->_internal_arg_name[self::ARG_CC]])
-            && $ticket_arguments[$this->_internal_arg_name[self::ARG_CC]] != ''
+        if (isset($ticket_arguments[$this->internal_arg_name[self::ARG_CC]])
+            && $ticket_arguments[$this->internal_arg_name[self::ARG_CC]] != ''
         ) {
-            $argument['Cc'] = $ticket_arguments[$this->_internal_arg_name[self::ARG_CC]];
+            $argument['Cc'] = $ticket_arguments[$this->internal_arg_name[self::ARG_CC]];
         }
 
         if (count($ticket_dynamic_fields) > 0) {

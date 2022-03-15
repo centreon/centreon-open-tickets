@@ -21,7 +21,7 @@
 
 class JiraProvider extends AbstractProvider
 {
-    protected $_proxy_enabled = 1;
+    protected $proxy_enabled = 1;
 
     const JIRA_PROJECT = 30;
     const JIRA_ASSIGNEE = 31;
@@ -35,7 +35,7 @@ class JiraProvider extends AbstractProvider
     const ARG_ISSUETYPE = 5;
     const ARG_PRIORITY = 6;
 
-    protected $_internal_arg_name = array(
+    protected $internal_arg_name = array(
         self::ARG_PROJECT => 'Project',
         self::ARG_SUMMARY => 'Summary',
         self::ARG_DESCRIPTION => 'Description',
@@ -455,7 +455,7 @@ class JiraProvider extends AbstractProvider
                     $result_str = null;
                 }
 
-                $ticket_arguments[$this->_internal_arg_name[$value['Arg']]] = $result_str;
+                $ticket_arguments[$this->internal_arg_name[$value['Arg']]] = $result_str;
             }
         }
 
@@ -474,7 +474,7 @@ class JiraProvider extends AbstractProvider
                 'host_problems' => $host_problems,
                 'service_problems' => $service_problems,
                 'ticket_value' => $this->_jira_call_response['key'],
-                'subject' => $ticket_arguments[$this->_internal_arg_name[self::ARG_SUMMARY]],
+                'subject' => $ticket_arguments[$this->internal_arg_name[self::ARG_SUMMARY]],
                 'data_type' => self::DATA_TYPE_JSON,
                 'data' => json_encode(
                     array('ticket_key' => $this->_jira_call_response['key'], 'arguments' => $ticket_arguments)
@@ -539,31 +539,31 @@ class JiraProvider extends AbstractProvider
     {
         $argument = array(
             'fields' => array(
-                'project'     => array ('id' => $ticket_arguments[$this->_internal_arg_name[self::ARG_PROJECT]]),
-                'summary'     => $ticket_arguments[$this->_internal_arg_name[self::ARG_SUMMARY]],
-                'description' => $ticket_arguments[$this->_internal_arg_name[self::ARG_DESCRIPTION]],
+                'project'     => array ('id' => $ticket_arguments[$this->internal_arg_name[self::ARG_PROJECT]]),
+                'summary'     => $ticket_arguments[$this->internal_arg_name[self::ARG_SUMMARY]],
+                'description' => $ticket_arguments[$this->internal_arg_name[self::ARG_DESCRIPTION]],
             ),
         );
 
-        if (isset($ticket_arguments[$this->_internal_arg_name[self::ARG_ASSIGNEE]])
-            && $ticket_arguments[$this->_internal_arg_name[self::ARG_ASSIGNEE]] != ''
+        if (isset($ticket_arguments[$this->internal_arg_name[self::ARG_ASSIGNEE]])
+            && $ticket_arguments[$this->internal_arg_name[self::ARG_ASSIGNEE]] != ''
         ) {
             $argument['fields']['assignee'] = array(
-                'name' => $ticket_arguments[$this->_internal_arg_name[self::ARG_ASSIGNEE]]
+                'name' => $ticket_arguments[$this->internal_arg_name[self::ARG_ASSIGNEE]]
             );
         }
-        if (isset($ticket_arguments[$this->_internal_arg_name[self::ARG_PRIORITY]])
-            && $ticket_arguments[$this->_internal_arg_name[self::ARG_PRIORITY]] != ''
+        if (isset($ticket_arguments[$this->internal_arg_name[self::ARG_PRIORITY]])
+            && $ticket_arguments[$this->internal_arg_name[self::ARG_PRIORITY]] != ''
         ) {
             $argument['fields']['priority'] = array(
-                'id' => $ticket_arguments[$this->_internal_arg_name[self::ARG_PRIORITY]]
+                'id' => $ticket_arguments[$this->internal_arg_name[self::ARG_PRIORITY]]
             );
         }
-        if (isset($ticket_arguments[$this->_internal_arg_name[self::ARG_ISSUETYPE]])
-            && $ticket_arguments[$this->_internal_arg_name[self::ARG_ISSUETYPE]] != ''
+        if (isset($ticket_arguments[$this->internal_arg_name[self::ARG_ISSUETYPE]])
+            && $ticket_arguments[$this->internal_arg_name[self::ARG_ISSUETYPE]] != ''
         ) {
             $argument['fields']['issuetype'] = array(
-                'id' => $ticket_arguments[$this->_internal_arg_name[self::ARG_ISSUETYPE]]
+                'id' => $ticket_arguments[$this->internal_arg_name[self::ARG_ISSUETYPE]]
             );
         }
 

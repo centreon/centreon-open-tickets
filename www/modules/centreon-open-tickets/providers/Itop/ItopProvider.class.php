@@ -20,8 +20,8 @@
 */
 class ItopProvider extends AbstractProvider
 {
-    protected $_proxy_enabled = 1;
-    protected $_close_advanced = 1;
+    protected $proxy_enabled = 1;
+    protected $close_advanced = 1;
 
     const ITOP_ORGANIZATION_TYPE = 10;
     const ITOP_CALLER_TYPE = 11;
@@ -38,7 +38,7 @@ class ItopProvider extends AbstractProvider
     const ARG_IMPACT = 8;
     const ARG_URGENCY = 9;
 
-    protected $_internal_arg_name = [
+    protected $internal_arg_name = [
         self::ARG_CONTENT => 'content',
         self::ARG_TITLE => 'title',
         self::ARG_ORGANIZATION => 'organization',
@@ -294,8 +294,12 @@ class ItopProvider extends AbstractProvider
     protected function getConfigContainer1Extra()
     {
         $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/Itop/templates',
-            $this->_centreon_path);
+        $tpl = initSmartyTplForPopup(
+            $this->_centreon_open_tickets_path,
+            $tpl,
+            'providers/Itop/templates',
+            $this->_centreon_path
+        );
         $tpl->assign('centreon_open_tickets_path', $this->_centreon_open_tickets_path);
         $tpl->assign('img_brick', './modules/centreon-open-tickets/images/brick.png');
         $tpl->assign('header', array('Itop' => _("Itop Rest Api")));
@@ -427,9 +431,11 @@ class ItopProvider extends AbstractProvider
     {
         if ($entry['Type'] == self::ITOP_ORGANIZATION_TYPE) {
             $this->assignItopOrganizations($entry, $groups_order, $groups);
-        } elseif ($entry['Type'] == self::ITOP_CALLER_TYPE ||
-            $entry['Type'] == self::ITOP_SERVICE_TYPE ||
-            $entry['Type'] == self::ITOP_SERVICE_SUBCATEGORY_TYPE) {
+        } elseif (
+            $entry['Type'] == self::ITOP_CALLER_TYPE
+            || $entry['Type'] == self::ITOP_SERVICE_TYPE
+            || $entry['Type'] == self::ITOP_SERVICE_SUBCATEGORY_TYPE
+        ) {
                 $this->assignItopAjax($entry, $groups_order, $groups);
         }
     }
@@ -565,7 +571,7 @@ class ItopProvider extends AbstractProvider
                 if ($resultString == '') {
                     $resultstring = null;
                 }
-                $ticketArguments[$this->_internal_arg_name[$value['Arg']]] = $resultString;
+                $ticketArguments[$this->internal_arg_name[$value['Arg']]] = $resultString;
             }
         }
         // we try to open the ticket
@@ -598,12 +604,17 @@ class ItopProvider extends AbstractProvider
     * throw \Exception if there are some missing parameters
     * throw \Exception if the connection failed
     */
-    static public function test($info)
+    public static function test($info)
     {
         // this is called through our javascript code. Those parameters are already checked in JS code.
         // but since this function is public, we check again because anyone could use this function
-        if (!isset($info['address']) || !isset($info['api_version']) || !isset($info['username'])
-            || !isset($info['password']) || !isset($info['protocol'])) {
+        if (
+            !isset($info['address'])
+            || !isset($info['api_version'])
+            || !isset($info['username'])
+            || !isset($info['password'])
+            || !isset($info['protocol'])
+        ) {
                 throw new \Exception('missing arguments', 13);
         }
         // check if php curl is installed
@@ -684,11 +695,25 @@ class ItopProvider extends AbstractProvider
         curl_setopt($curl, CURLOPT_TIMEOUT, $this->getFormValue('timeout'));
 
         // if proxy is set, we add it to curl
-        if ($this->getFormValue('proxy_address') != '' && $this->_getFormValue('proxy_port') != '') {
-            curl_setopt($curl, CURLOPT_PROXY, $this->getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port'));
+        if (
+            $this->getFormValue('proxy_address') != ''
+            && $this->_getFormValue('proxy_port') != ''
+        ) {
+            curl_setopt(
+                $curl,
+                CURLOPT_PROXY,
+                $this->getFormValue('proxy_address') . ':' . $this->_getFormValue('proxy_port')
+            );
             // if proxy authentication configuration is set, we add it to curl
-            if ($this->getFormValue('proxy_username') != '' && $this->_getFormValue('proxy_password') != '') {
-                curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->getFormValue('proxy_username') . ':' . $this->_getFormValue('proxy_password'));
+            if (
+                $this->getFormValue('proxy_username') != ''
+                && $this->_getFormValue('proxy_password') != ''
+            ) {
+                curl_setopt(
+                    $curl,
+                    CURLOPT_PROXYUSERPWD,
+                    $this->getFormValue('proxy_username') . ':' . $this->_getFormValue('proxy_password')
+                );
             }
         }
         // execute curl and get status information

@@ -78,8 +78,8 @@ abstract class AbstractProvider
     protected $_widget_id;
     protected $_uniq_id;
     protected $_attach_files = 0;
-    protected $_close_advanced = 0;
-    protected $_proxy_enabled = 0;
+    protected $close_advanced = 0;
+    protected $proxy_enabled = 0;
 
     const HOSTGROUP_TYPE = 0;
     const HOSTCATEGORY_TYPE = 1;
@@ -104,10 +104,9 @@ abstract class AbstractProvider
         $centreon_path,
         $centreon_open_tickets_path,
         $rule_id,
-        $submitted_config = null,
+        $submitted_config,
         $provider_id
-    )
-    {
+    ) {
         $this->_rule = $rule;
         $this->_centreon_path = $centreon_path;
         $this->_centreon_open_tickets_path = $centreon_open_tickets_path;
@@ -454,7 +453,8 @@ Output: {$service.output|substr:0:1024}
 
     protected function checkFormInteger($uniq_id, $error_msg)
     {
-        if (isset($this->_submitted_config[$uniq_id])
+        if (
+            isset($this->_submitted_config[$uniq_id])
             && $this->_submitted_config[$uniq_id] != ''
             && preg_match('/[^0-9]/', $this->_submitted_config[$uniq_id])
         ) {
@@ -531,7 +531,7 @@ Output: {$service.output|substr:0:1024}
             'ack' => array('label' => _("Acknowledge"), 'html' => $ack_html),
             'close_ticket_enable' => array(
                 'label' => _("Enable"),
-                'enable' => $this->_close_advanced,
+                'enable' => $this->close_advanced,
                 'html' => $close_ticket_enable_html
             ),
             'error_close_centreon' => array(
@@ -636,7 +636,7 @@ Output: {$service.output|substr:0:1024}
                 "common" => _("Common")
             )
         );
-        $tpl->assign("proxy_enabled", $this->_proxy_enabled);
+        $tpl->assign("proxy_enabled", $this->proxy_enabled);
 
         // Form
         $confirm_autoclose_html = '<input size="5" name="confirm_autoclose" type="text" value="' .

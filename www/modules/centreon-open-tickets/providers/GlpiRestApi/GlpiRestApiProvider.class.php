@@ -19,10 +19,10 @@
  * limitations under the License.
  */
 
- class GlpiRestApiProvider extends AbstractProvider
- {
-    protected $_close_advanced = 1;
-    protected $_proxy_enabled = 1;
+class GlpiRestApiProvider extends AbstractProvider
+{
+    protected $close_advanced = 1;
+    protected $proxy_enabled = 1;
 
     const GLPI_ENTITY_TYPE = 14;
     const GLPI_GROUP_TYPE = 15;
@@ -47,7 +47,7 @@
 
     private const PAGE_SIZE = 20;
 
-    protected $_internal_arg_name = [
+    protected $internal_arg_name = [
         self::ARG_CONTENT => 'content',
         self::ARG_ENTITY => 'entity',
         self::ARG_URGENCY => 'urgency',
@@ -384,8 +384,12 @@
     {
         // initiate smarty and a few variables.
         $tpl = new Smarty();
-        $tpl = initSmartyTplForPopup($this->_centreon_open_tickets_path, $tpl, 'providers/GlpiRestApi/templates',
-            $this->_centreon_path);
+        $tpl = initSmartyTplForPopup(
+            $this->_centreon_open_tickets_path,
+            $tpl,
+            'providers/GlpiRestApi/templates',
+            $this->_centreon_path
+        );
         $tpl->assign('centreon_open_tickets_path', $this->_centreon_open_tickets_path);
         $tpl->assign('img_brick', './modules/centreon-open-tickets/images/brick.png');
         $tpl->assign('header', array('GlpiRestApi' => _("Glpi Rest Api")));
@@ -395,7 +399,7 @@
         * we create the html that is going to be displayed
         */
         $address_html = '<input size="50" name="address" type="text" value="' .
-            $this->getFormValue('address') .'" />';
+            $this->getFormValue('address') . '" />';
         $api_path_html = '<input size="50" name="api_path" type="text" value="' .
             $this->getFormValue('api_path') . '" />';
         $protocol_html = '<input size="50" name="protocol" type="text" value="' .
@@ -497,7 +501,7 @@
         $this->_save_config['simple']['timeout'] = $this->_submitted_config['timeout'];
 
         // saves the ticket arguments
-        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted('mappingTicket', array('Arg', 'Value'));
+        $this->_save_config['clones']['mappingTicket'] = $this->getCloneSubmitted('mappingTicket', ['Arg', 'Value']);
     }
 
     /*
@@ -530,15 +534,15 @@
     {
         if ($entry['Type'] == self::GLPI_ENTITY_TYPE) {
             $this->assignGlpiEntities($entry, $groups_order, $groups);
-        } else if ($entry['Type'] == self::GLPI_GROUP_TYPE) {
+        } elseif ($entry['Type'] == self::GLPI_GROUP_TYPE) {
             $this->assignGlpiGroups($entry, $groups_order, $groups);
-        } else if ($entry['Type'] == self::GLPI_ITIL_CATEGORY_TYPE) {
+        } elseif ($entry['Type'] == self::GLPI_ITIL_CATEGORY_TYPE) {
             $this->assignItilCategories($entry, $groups_order, $groups);
-        } else if ($entry['Type'] == self::GLPI_USER_TYPE) {
+        } elseif ($entry['Type'] == self::GLPI_USER_TYPE) {
             $this->assignGlpiUsers($entry, $groups_order, $groups);
-        } else if ($entry['Type'] == self::GLPI_SUPPLIER_TYPE) {
+        } elseif ($entry['Type'] == self::GLPI_SUPPLIER_TYPE) {
             $this->assignGlpiSuppliers($entry, $groups_order, $groups);
-        } else if ($entry['Type'] == self::GLPI_REQUESTER_TYPE) {
+        } elseif ($entry['Type'] == self::GLPI_REQUESTER_TYPE) {
             $this->assignGlpiRequesters($entry, $groups_order, $groups);
         }
     }
@@ -923,7 +927,7 @@
                 if ($resultString == '') {
                     $resultstring = null;
                 }
-                $ticketArguments[$this->_internal_arg_name[$value['Arg']]] = $resultString;
+                $ticketArguments[$this->internal_arg_name[$value['Arg']]] = $resultString;
             }
         }
 
@@ -958,12 +962,17 @@
     * throw \Exception if there are some missing parameters
     * throw \Exception if the connection failed
     */
-    static public function test($info)
+    public static function test($info)
     {
         // this is called through our javascript code. Those parameters are already checked in JS code.
         // but since this function is public, we check again because anyone could use this function
-        if (!isset($info['address']) || !isset($info['api_path']) || !isset($info['user_token'])
-            || !isset($info['app_token']) || !isset($info['protocol'])) {
+        if (
+            !isset($info['address'])
+            || !isset($info['api_path'])
+            || !isset($info['user_token'])
+            || !isset($info['app_token'])
+            || !isset($info['protocol'])
+        ) {
                 throw new \Exception('missing arguments', 13);
         }
 

@@ -28,7 +28,7 @@ class BmcFootprints11Provider extends AbstractProvider
     const ARG_PRIORITYNUMBER = 5;
     const ARG_ASSIGNEE = 6;
 
-    protected $_internal_arg_name = [
+    protected $internal_arg_name = [
         self::ARG_TITLE => 'Title',
         self::ARG_DESCRIPTION => 'Description',
         self::ARG_STATUS => 'Status',
@@ -36,10 +36,6 @@ class BmcFootprints11Provider extends AbstractProvider
         self::ARG_PRIORITYNUMBER => 'PriorityNumber',
         self::ARG_ASSIGNEE => 'Assignee'
     ];
-
-    function __destruct()
-    {
-    }
 
     /**
      * Set default extra value
@@ -245,7 +241,7 @@ class BmcFootprints11Provider extends AbstractProvider
                     $result_str = null;
                 }
 
-                $ticket_arguments[$this->_internal_arg_name[$value['Arg']]] = $result_str;
+                $ticket_arguments[$this->internal_arg_name[$value['Arg']]] = $result_str;
             }
         }
         $ticket_project_fields = array();
@@ -343,21 +339,21 @@ class BmcFootprints11Provider extends AbstractProvider
             <assignees
                 soapenc:arrayType="xsd:string[1]" xsi:type="soapenc:Array">
                 <item xsi:type="xsd:string">' .
-                    $ticket_arguments[$this->_internal_arg_name[self::ARG_ASSIGNEE]] . '</item>
+                    $ticket_arguments[$this->internal_arg_name[self::ARG_ASSIGNEE]] . '</item>
             </assignees>
             ' . $project_fields .
-            (isset($ticket_arguments[$this->_internal_arg_name[self::ARG_PRIORITYNUMBER]]) ?
+            (isset($ticket_arguments[$this->internal_arg_name[self::ARG_PRIORITYNUMBER]]) ?
                 '<priorityNumber xsi:type="xsd:int">' .
-                    $ticket_arguments[$this->_internal_arg_name[self::ARG_PRIORITYNUMBER]] .
+                    $ticket_arguments[$this->internal_arg_name[self::ARG_PRIORITYNUMBER]] .
                     '</priorityNumber>' : '') . '
             <status xsi:type="xsd:string">' .
-                $ticket_arguments[$this->_internal_arg_name[self::ARG_STATUS]] . '</status>
+                $ticket_arguments[$this->internal_arg_name[self::ARG_STATUS]] . '</status>
             <projectID xsi:type="xsd:int">' .
-                $ticket_arguments[$this->_internal_arg_name[self::ARG_PROJECTID]] . '</projectID>
+                $ticket_arguments[$this->internal_arg_name[self::ARG_PROJECTID]] . '</projectID>
             <title xsi:type="xsd:string"><![CDATA[' .
-                $ticket_arguments[$this->_internal_arg_name[self::ARG_TITLE]] . ']]></title>
+                $ticket_arguments[$this->internal_arg_name[self::ARG_TITLE]] . ']]></title>
             <description xsi:type="xsd:string"><![CDATA[' .
-                $ticket_arguments[$this->_internal_arg_name[self::ARG_DESCRIPTION]] . ']]></description>
+                $ticket_arguments[$this->internal_arg_name[self::ARG_DESCRIPTION]] . ']]></description>
         </c-gensym9>
     </MRWebServices__createIssue>
 </soap:Body>

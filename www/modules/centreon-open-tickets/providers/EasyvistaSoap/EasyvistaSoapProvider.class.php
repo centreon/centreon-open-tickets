@@ -21,7 +21,7 @@
 
 class EasyvistaSoapProvider extends AbstractProvider
 {
-    protected $_proxy_enabled = 1;
+    protected $proxy_enabled = 1;
     protected $_attach_files = 1;
 
     public const ARG_ACCOUNT = 1;
@@ -53,7 +53,7 @@ class EasyvistaSoapProvider extends AbstractProvider
     public const ARG_CI_NAME = 27;
     public const ARG_SUBMIT_DATE = 28;
 
-    protected $_internal_arg_name = array(
+    protected $internal_arg_name = array(
         self::ARG_ACCOUNT => array(
             'formid' => 'Account',
             'soapname' => 'Account'
@@ -307,7 +307,7 @@ class EasyvistaSoapProvider extends AbstractProvider
                     $result_str = null;
                 }
 
-                $ticket_arguments[$this->_internal_arg_name[$value['Arg']]['formid']] = $result_str;
+                $ticket_arguments[$this->internal_arg_name[$value['Arg']]['formid']] = $result_str;
             }
         }
 
@@ -364,7 +364,7 @@ class EasyvistaSoapProvider extends AbstractProvider
 <soap:Body>
 <tns:EZV_UpdateRequest xmlns:tns="https://na1.easyvista.com/WebService">
     <tns:Account><![CDATA[' .
-            $ticket_arguments[$this->_internal_arg_name[self::ARG_ACCOUNT]['formid']] . ']]></tns:Account>
+            $ticket_arguments[$this->internal_arg_name[self::ARG_ACCOUNT]['formid']] . ']]></tns:Account>
     <tns:Login><![CDATA[' . $this->rule_data['username'] . ']]></tns:Login>
     <tns:Password><![CDATA[' . $this->rule_data['password'] . ']]></tns:Password>
     <tns:RFC_Number><![CDATA[' . $this->_ticket_number . ']]></tns:RFC_Number>
@@ -391,7 +391,7 @@ class EasyvistaSoapProvider extends AbstractProvider
 <soap:Body>
 <tns:EZV_AttachDocToRequest xmlns:tns="https://na1.easyvista.com/WebService">
     <tns:Account><![CDATA[' .
-            $ticket_arguments[$this->_internal_arg_name[self::ARG_ACCOUNT]['formid']] . ']]></tns:Account>
+            $ticket_arguments[$this->internal_arg_name[self::ARG_ACCOUNT]['formid']] . ']]></tns:Account>
     <tns:Login><![CDATA[' . $this->rule_data['username'] . ']]></tns:Login>
     <tns:Password><![CDATA[' . $this->rule_data['password'] . ']]></tns:Password>
     <tns:path_docname><![CDATA[' . $file['filename'] . ']]></tns:path_docname>
@@ -412,7 +412,7 @@ class EasyvistaSoapProvider extends AbstractProvider
     {
         $attributes = '';
         $account = '';
-        foreach ($this->_internal_arg_name as $key => $value) {
+        foreach ($this->internal_arg_name as $key => $value) {
             if ($value['soapname'] == 'Account') {
                 $account = '<tns:Account><![CDATA[' . $ticket_arguments[$value['formid']] . ']]></tns:Account>';
                 continue;

@@ -39,7 +39,7 @@ class GlpiProvider extends AbstractProvider
     const ARG_GROUP_ASSIGN = 9;
     const ARG_TITLE = 10;
 
-    protected $_internal_arg_name = array(
+    protected $internal_arg_name = array(
         self::ARG_CONTENT => 'content',
         self::ARG_ENTITY => 'entity',
         self::ARG_URGENCY => 'urgency',
@@ -447,7 +447,7 @@ class GlpiProvider extends AbstractProvider
                     $result_str = null;
                 }
 
-                $ticket_arguments[$this->_internal_arg_name[$value['Arg']]] = $result_str;
+                $ticket_arguments[$this->internal_arg_name[$value['Arg']]] = $result_str;
                 // Old version of GLPI use 'recipient' depiste groupassign
                 if ($value['Arg'] == self::ARG_GROUP_ASSIGN) {
                     $ticket_arguments['recipient'] = $result_str;

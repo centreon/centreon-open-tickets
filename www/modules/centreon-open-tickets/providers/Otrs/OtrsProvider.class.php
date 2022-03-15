@@ -24,7 +24,7 @@ class OtrsProvider extends AbstractProvider
     protected $_otrs_connected = 0;
     protected $_otrs_session = null;
     protected $_attach_files = 1;
-    protected $_close_advanced = 1;
+    protected $close_advanced = 1;
 
     const OTRS_QUEUE_TYPE = 10;
     const OTRS_PRIORITY_TYPE = 11;
@@ -46,7 +46,7 @@ class OtrsProvider extends AbstractProvider
     const ARG_OWNER = 17;
     const ARG_RESPONSIBLE = 18;
 
-    protected $_internal_arg_name = array(
+    protected $internal_arg_name = array(
         self::ARG_QUEUE => 'Queue',
         self::ARG_PRIORITY => 'Priority',
         self::ARG_STATE => 'State',
@@ -601,7 +601,7 @@ class OtrsProvider extends AbstractProvider
                     $result_str = null;
                 }
 
-                $ticket_arguments[$this->_internal_arg_name[$value['Arg']]] = $result_str;
+                $ticket_arguments[$this->internal_arg_name[$value['Arg']]] = $result_str;
             }
         }
         $ticket_dynamic_fields = array();

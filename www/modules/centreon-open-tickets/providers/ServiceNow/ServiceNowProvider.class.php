@@ -21,7 +21,7 @@
 
 class ServiceNowProvider extends AbstractProvider
 {
-    protected $_proxy_enabled = 1;
+    protected $proxy_enabled = 1;
 
     const SERVICENOW_LIST_CATEGORY = 20;
     const SERVICENOW_LIST_SUBCATEGORY = 21;
@@ -41,7 +41,7 @@ class ServiceNowProvider extends AbstractProvider
     const ARG_ASSIGNMENT_GROUP = 8;
     const ARG_SEVERITY = 9;
 
-    protected $_internal_arg_name = array(
+    protected $internal_arg_name = array(
         self::ARG_SHORT_DESCRIPTION => 'ShortDescription',
         self::ARG_COMMENTS => 'Comments',
         self::ARG_IMPACT => 'Impact',
@@ -344,7 +344,7 @@ class ServiceNowProvider extends AbstractProvider
                     $result_str = null;
                 }
 
-                $ticket_arguments[$this->_internal_arg_name[$value['Arg']]] = $result_str;
+                $ticket_arguments[$this->internal_arg_name[$value['Arg']]] = $result_str;
             }
         }
 
@@ -366,7 +366,7 @@ class ServiceNowProvider extends AbstractProvider
                 'service_problems' => $service_problems,
                 'ticket_value' => $resultInfo['sysTicketId'],
                 'subject' => $ticket_arguments[
-                    $this->_internal_arg_name[self::ARG_SHORT_DESCRIPTION]
+                    $this->internal_arg_name[self::ARG_SHORT_DESCRIPTION]
                 ],
                 'data_type' => self::DATA_TYPE_JSON,
                 'data' => json_encode($data)
@@ -807,51 +807,51 @@ class ServiceNowProvider extends AbstractProvider
     protected function createTicket($params, $accessToken)
     {
         $uri = '/api/now/v1/table/incident';
-        $impacts = explode('_', $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_IMPACT]], 2);
-        $urgencies = explode('_', $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_URGENCY]], 2);
-        $severities = explode('_', $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_SEVERITY]], 2);
+        $impacts = explode('_', $params['ticket_arguments'][$this->internal_arg_name[self::ARG_IMPACT]], 2);
+        $urgencies = explode('_', $params['ticket_arguments'][$this->internal_arg_name[self::ARG_URGENCY]], 2);
+        $severities = explode('_', $params['ticket_arguments'][$this->internal_arg_name[self::ARG_SEVERITY]], 2);
         $data = array(
             'impact' => $impacts[0],
             'urgency' => $urgencies[0],
             'severity' => $severities[0],
             'short_description' => $params['ticket_arguments'][
-                $this->_internal_arg_name[self::ARG_SHORT_DESCRIPTION]
+                $this->internal_arg_name[self::ARG_SHORT_DESCRIPTION]
             ]
         );
-        if (isset($params['ticket_arguments'][$this->_internal_arg_name[self::ARG_CATEGORY]])) {
+        if (isset($params['ticket_arguments'][$this->internal_arg_name[self::ARG_CATEGORY]])) {
             $category = explode(
                 '_',
-                $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_CATEGORY]],
+                $params['ticket_arguments'][$this->internal_arg_name[self::ARG_CATEGORY]],
                 2
             );
             $data['category'] = $category[0];
         }
-        if (isset($params['ticket_arguments'][$this->_internal_arg_name[self::ARG_SUBCATEGORY]])) {
+        if (isset($params['ticket_arguments'][$this->internal_arg_name[self::ARG_SUBCATEGORY]])) {
             $subcategory = explode(
                 '_',
-                $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_SUBCATEGORY]],
+                $params['ticket_arguments'][$this->internal_arg_name[self::ARG_SUBCATEGORY]],
                 2
             );
             $data['subcategory'] = $subcategory[0];
         }
-        if (isset($params['ticket_arguments'][$this->_internal_arg_name[self::ARG_ASSIGNED_TO]])) {
+        if (isset($params['ticket_arguments'][$this->internal_arg_name[self::ARG_ASSIGNED_TO]])) {
             $assignedTo = explode(
                 '_',
-                $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_ASSIGNED_TO]],
+                $params['ticket_arguments'][$this->internal_arg_name[self::ARG_ASSIGNED_TO]],
                 2
             );
             $data['assigned_to'] = $assignedTo[0];
         }
-        if (isset($params['ticket_arguments'][$this->_internal_arg_name[self::ARG_ASSIGNMENT_GROUP]])) {
+        if (isset($params['ticket_arguments'][$this->internal_arg_name[self::ARG_ASSIGNMENT_GROUP]])) {
             $assignmentGroup = explode(
                 '_',
-                $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_ASSIGNMENT_GROUP]],
+                $params['ticket_arguments'][$this->internal_arg_name[self::ARG_ASSIGNMENT_GROUP]],
                 2
             );
             $data['assignment_group'] = $assignmentGroup[0];
         }
-        if (isset($params['ticket_arguments'][$this->_internal_arg_name[self::ARG_COMMENTS]])) {
-            $data['comments'] = $params['ticket_arguments'][$this->_internal_arg_name[self::ARG_COMMENTS]];
+        if (isset($params['ticket_arguments'][$this->internal_arg_name[self::ARG_COMMENTS]])) {
+            $data['comments'] = $params['ticket_arguments'][$this->internal_arg_name[self::ARG_COMMENTS]];
         }
         $result = $this->runHttpRequest($uri, $accessToken, 'POST', $data);
         return array(

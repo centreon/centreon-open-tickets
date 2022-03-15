@@ -28,7 +28,7 @@ class SerenaProvider extends AbstractProvider
     const ARG_SUB_CATEGORY = 5;
     const ARG_SUB_CATEGORY_DETAILS = 6;
 
-    protected $_internal_arg_name = array(
+    protected $internal_arg_name = array(
         self::ARG_PROJECT_ID => 'project_id',
         self::ARG_SUBJECT => 'subject',
         self::ARG_CONTENT => 'content',
@@ -225,7 +225,7 @@ class SerenaProvider extends AbstractProvider
                     $result_str = null;
                 }
 
-                $ticket_arguments[$this->_internal_arg_name[$value['Arg']]] = $result_str;
+                $ticket_arguments[$this->internal_arg_name[$value['Arg']]] = $result_str;
             }
         }
 
@@ -244,7 +244,7 @@ class SerenaProvider extends AbstractProvider
                 'service_problems' => $service_problems,
                 'ticket_value' => $this->_ticket_number,
                 'subject' => $ticket_arguments[
-                    $this->_internal_arg_name[self::ARG_SUBJECT]
+                    $this->internal_arg_name[self::ARG_SUBJECT]
                 ],
                 'data_type' => self::DATA_TYPE_JSON,
                 'data' => json_encode(
@@ -270,15 +270,15 @@ class SerenaProvider extends AbstractProvider
     {
         $extended_fields = "";
         $listing = array(
-            $this->_internal_arg_name[self::ARG_SUB_CATEGORY_DETAILS] => array(
+            $this->internal_arg_name[self::ARG_SUB_CATEGORY_DETAILS] => array(
                 'dbName' => 'OT_SUB_CATEGORY_DETAILS',
                 'displayName' => 'Sub-category details'
             ),
-            $this->_internal_arg_name[self::ARG_SUB_CATEGORY] => array(
+            $this->internal_arg_name[self::ARG_SUB_CATEGORY] => array(
                 'dbName' => 'OT_SUB_CATEGORY',
                 'displayName' => 'Sub-category'
             ),
-            $this->_internal_arg_name[self::ARG_CATEGORY] => array(
+            $this->internal_arg_name[self::ARG_CATEGORY] => array(
                 'dbName' => 'OT_CATEGORY',
                 'displayName' => 'OT_CATEGORY'
             ),
@@ -319,7 +319,7 @@ class SerenaProvider extends AbstractProvider
     </ae:auth>
     <ae:project>
         <ae:displayName></ae:displayName>
-        <ae:id>" . $ticket_arguments[$this->_internal_arg_name[self::ARG_PROJECT_ID]] . "</ae:id>
+        <ae:id>" . $ticket_arguments[$this->internal_arg_name[self::ARG_PROJECT_ID]] . "</ae:id>
         <ae:uuid></ae:uuid>
         <ae:fullyQualifiedName></ae:fullyQualifiedName>
     </ae:project>
@@ -341,9 +341,9 @@ class SerenaProvider extends AbstractProvider
                 <ae:fullyQualifiedName></ae:fullyQualifiedName>
         </ae:project>
         <ae:title><![CDATA[" .
-                $ticket_arguments[$this->_internal_arg_name[self::ARG_SUBJECT]] . "]]></ae:title>
+                $ticket_arguments[$this->internal_arg_name[self::ARG_SUBJECT]] . "]]></ae:title>
         <ae:description><![CDATA[" .
-                $ticket_arguments[$this->_internal_arg_name[self::ARG_CONTENT]] . "]]></ae:description>
+                $ticket_arguments[$this->internal_arg_name[self::ARG_CONTENT]] . "]]></ae:description>
         <ae:createdBy>
                 <ae:displayName></ae:displayName>
                 <ae:id></ae:id>
