@@ -216,7 +216,7 @@ class MailProvider extends AbstractProvider
                     )
                 ]
             );
-        } catch (Exception $e) {
+        } catch (MailerException $e) {
             $result['ticket_error_message'] = 'Mailer Error: ' . $mail->ErrorInfo;
         }
 
