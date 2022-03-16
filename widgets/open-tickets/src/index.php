@@ -241,25 +241,22 @@ if (count($stateTab)) {
 if (! empty($preferences['duration_filter'])) {
     $tab = explode(" ", $preferences['duration_filter']);
     if (
-        count($tab) < 2
-        || empty($tab[0])
-        || ! is_numeric($tab[1])
+        count($tab) >= 2
+        || ! empty($tab[0])
+        || is_numeric($tab[1])
     ) {
-        break;
-    }
-    $op = $tab[0];
-    if ($op === 'gt') {
-        $op = 'lt';
-    } elseif ($op === 'lt') {
-        $op = 'gt';
-    } elseif ($op === 'gte') {
-        $op = 'lte';
-    } elseif ($op === 'lte') {
-        $op = 'gte';
-    }
-    $op = CentreonUtils::operandToMysqlFormat($op);
+        $op = $tab[0];
+        if ($op === 'gt') {
+            $op = 'lt';
+        } elseif ($op === 'lt') {
+            $op = 'gt';
+        } elseif ($op === 'gte') {
+            $op = 'lte';
+        } elseif ($op === 'lte') {
+            $op = 'gte';
+        }
+        $op = CentreonUtils::operandToMysqlFormat($op);
 
-    if (isset($tab[1]) && is_numeric($tab[1])) {
         $durationValue = time() - $tab[1];
         if (! empty($op)) {
             $query = CentreonUtils::conditionBuilder(
