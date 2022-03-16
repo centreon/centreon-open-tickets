@@ -261,6 +261,12 @@ if (! empty($preferences['duration_filter'])) {
 
     if (isset($tab[1]) && is_int($tab[1])) {
         $durationValue = time() - $tab[1];
+        if (! empty($op)) {
+            $query = CentreonUtils::conditionBuilder(
+                $query,
+                "s.last_state_change " . $op . " " . $durationValue
+            );
+        }
     }
     if ($op != '' && isset($durationValue)) {
         $query = CentreonUtils::conditionBuilder(
