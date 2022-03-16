@@ -243,7 +243,7 @@ if (! empty($preferences['duration_filter'])) {
     if (
         count($tab) < 2
         || empty($tab[0])
-        || ! is_int($tab[1])
+        || ! is_numeric($tab[1])
     ) {
         break;
     }
@@ -259,7 +259,7 @@ if (! empty($preferences['duration_filter'])) {
     }
     $op = CentreonUtils::operandToMysqlFormat($op);
 
-    if (isset($tab[1]) && is_int($tab[1])) {
+    if (isset($tab[1]) && is_numeric($tab[1])) {
         $durationValue = time() - $tab[1];
         if (! empty($op)) {
             $query = CentreonUtils::conditionBuilder(
