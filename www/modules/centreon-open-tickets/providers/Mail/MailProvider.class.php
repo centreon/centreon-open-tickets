@@ -20,7 +20,7 @@
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\Exception as MailerException;
 
 require_once __DIR__ . '/library/PHPMailer.php';
 require_once __DIR__ . '/library/Exception.php';
