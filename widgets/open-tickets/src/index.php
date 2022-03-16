@@ -244,11 +244,11 @@ if (isset($preferences['duration_filter']) && $preferences['duration_filter'] !=
     $op = $tab[0];
     if ($op === 'gt') {
         $op = 'lt';
-    } elseif($op == 'lt') {
+    } elseif($op === 'lt') {
         $op = 'gt';
-    } elseif($op == 'gte') {
+    } elseif($op === 'gte') {
         $op = 'lte';
-    } elseif($op == 'lte') {
+    } elseif($op === 'lte') {
         $op = 'gte';
     }
     $op = CentreonUtils::operandToMysqlFormat($op);
