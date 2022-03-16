@@ -240,7 +240,13 @@ if (count($stateTab)) {
 
 if (! empty($preferences['duration_filter'])) {
     $tab = explode(" ", $preferences['duration_filter']);
-
+    if (
+        count($tab) < 2
+        || empty($tab[0])
+        || ! is_int($tab[1])
+    ) {
+        break;
+    }
     $op = $tab[0];
     if ($op === 'gt') {
         $op = 'lt';
