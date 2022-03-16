@@ -268,12 +268,6 @@ if (! empty($preferences['duration_filter'])) {
             );
         }
     }
-    if ($op != '' && isset($durationValue)) {
-        $query = CentreonUtils::conditionBuilder(
-            $query,
-            "s.last_state_change " . $op . " '$durationValue' "
-        );
-    }
 }
 
 if (isset($preferences['hide_down_host']) && $preferences['hide_down_host']) {
