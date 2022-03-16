@@ -223,7 +223,7 @@ if (isset($preferences['service_description_search']) && $preferences['service_d
         );
     }
 }
-$stateTab = array();
+$stateTab = [];
 if (isset($preferences['svc_warning']) && $preferences['svc_warning']) {
     $stateTab[] = 1;
 }
@@ -237,6 +237,33 @@ if (isset($preferences['svc_unknown']) && $preferences['svc_unknown']) {
 if (count($stateTab)) {
     $query = CentreonUtils::conditionBuilder($query, " s.state IN (" . implode(',', $stateTab) . ")");
 }
+
+if (isset($preferences['duration_filter']) && $preferences['duration_filter'] != "") {
+    $tab = explode(" ", $preferences['duration_filter']);
+    
+    $op = $tab[0];
+    if ($op === 'gt') {
+        $op = 'lt';
+    } elseif($op == 'lt') {
+        $op = 'gt';
+    } elseif($op == 'gte') {
+        $op = 'lte';
+    } elseif($op == 'lte') {
+        $op = 'gte';
+    }
+    $op = CentreonUtils::operandToMysqlFormat($op);
+
+    if (isset($tab[1]) && is_int($tab[1])) {
+        $durationValue = time() - $tab[1];
+    }
+    if ($op != '' && isset($durationValue)) {
+        $query = CentreonUtils::conditionBuilder(
+            $query, 
+            "s.last_state_change " . $op . " '$durationValue' "
+        );
+    }
+}
+
 if (isset($preferences['hide_down_host']) && $preferences['hide_down_host']) {
     $query = CentreonUtils::conditionBuilder($query, " h.state != 1 ");
 }
