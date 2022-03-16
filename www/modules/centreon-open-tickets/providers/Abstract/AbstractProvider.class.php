@@ -530,23 +530,23 @@ Output: {$service.output|substr:0:1024}
         $error_close_centreon_html = '<input type="checkbox" name="error_close_centreon" value="yes" ' .
             ($this->getFormValue('error_close_centreon') == 'yes' ? 'checked' : '') . '/>';
 
-        $array_form = array(
-            'url' => array('label' => _("Url"), 'html' => $url_html),
-            'message_confirm' => array('label' => _("Confirm message popup"), 'html' => $message_confirm_html),
-            'ack' => array('label' => _("Acknowledge"), 'html' => $ack_html),
-            'close_ticket_enable' => array(
+        $array_form = [
+            'url' => ['label' => _("Url"), 'html' => $url_html],
+            'message_confirm' => ['label' => _("Confirm message popup"), 'html' => $message_confirm_html],
+            'ack' => ['label' => _("Acknowledge"), 'html' => $ack_html],
+            'close_ticket_enable' => [
                 'label' => _("Enable"),
                 'enable' => $this->close_advanced,
                 'html' => $close_ticket_enable_html
-            ),
-            'error_close_centreon' => array(
+            ],
+            'error_close_centreon' => [
                 'label' => _("On error continue close Centreon"),
                 'html' => $error_close_centreon_html
-            ),
-            'grouplist' => array('label' => _("Lists")),
-            'customlist' => array('label' => _("Custom list definition")),
-            'bodylist' => array('label' => _("Body list definition")),
-        );
+            ],
+            'grouplist' => ['label' => _("Lists")],
+            'customlist' => ['label' => _("Custom list definition")],
+            'bodylist' => ['label' => _("Body list definition")]
+        ];
 
         $extra_group_options = '';
 
@@ -576,14 +576,14 @@ Output: {$service.output|substr:0:1024}
         $groupListMandatory_html =  '<input id="groupListMandatory_#index#" name="groupListMandatory[#index#]" ' .
             'type="checkbox" value="1" />';
         $groupListSort_html =  '<input id="groupListSort_#index#" name="groupListSort[#index#]" type="checkbox" />';
-        $array_form['groupList'] = array(
-            array('label' => _("Id"), 'html' => $groupListId_html),
-            array('label' => _("Label"), 'html' => $groupListLabel_html),
-            array('label' => _("Type"), 'html' => $groupListType_html),
-            array('label' => _("Filter"), 'html' => $groupListFilter_html),
-            array('label' => _("Mandatory"), 'html' => $groupListMandatory_html),
-            array('label' => _("Sort"), 'html' => $groupListSort_html),
-        );
+        $array_form['groupList'] = [
+            ['label' => _("Id"), 'html' => $groupListId_html],
+            ['label' => _("Label"), 'html' => $groupListLabel_html],
+            ['label' => _("Type"), 'html' => $groupListType_html],
+            ['label' => _("Filter"), 'html' => $groupListFilter_html],
+            ['label' => _("Mandatory"), 'html' => $groupListMandatory_html],
+            ['label' => _("Sort"), 'html' => $groupListSort_html]
+        ];
 
         // Custom list clone
         $customListId_html = '<input id="customListId_#index#" name="customListId[#index#]" size="20"  type="text" />';
@@ -593,12 +593,12 @@ Output: {$service.output|substr:0:1024}
             'type="text" />';
         $customListDefault_html =  '<input id="customListDefault_#index#" name="customListDefault[#index#]" ' .
             'type="checkbox" value="1" />';
-        $array_form['customList'] = array(
-            array('label' => _("Id"), 'html' => $customListId_html),
-            array('label' => _("Value"), 'html' => $customListValue_html),
-            array('label' => _("Label"), 'html' => $customListLabel_html),
-            array('label' => _("Default"), 'html' => $customListDefault_html),
-        );
+        $array_form['customList'] = [
+            ['label' => _("Id"), 'html' => $customListId_html],
+            ['label' => _("Value"), 'html' => $customListValue_html],
+            ['label' => _("Label"), 'html' => $customListLabel_html],
+            ['label' => _("Default"), 'html' => $customListDefault_html]
+        ];
 
         // Body list clone
         $bodyListName_html = '<input id="bodyListName_#index#" name="bodyListName[#index#]" size="20"  ' .
@@ -607,11 +607,11 @@ Output: {$service.output|substr:0:1024}
             'name="bodyListValue[#index#]"></textarea>';
         $bodyListDefault_html =  '<input id="bodyListDefault_#index#" name="bodyListDefault[#index#]" ' .
             'type="checkbox" value="1" />';
-        $array_form['bodyList'] = array(
-            array('label' => _("Name"), 'html' => $bodyListName_html),
-            array('label' => _("Value"), 'html' => $bodyListValue_html),
-            array('label' => _("Default"), 'html' => $bodyListDefault_html),
-        );
+        $array_form['bodyList'] = [
+            ['label' => _("Name"), 'html' => $bodyListName_html],
+            ['label' => _("Value"), 'html' => $bodyListValue_html],
+            ['label' => _("Default"), 'html' => $bodyListDefault_html]
+        ];
 
         $tpl->assign('form', $array_form);
         $this->config['container1_html'] .= $tpl->fetch('conf_container1main.ihtml');
@@ -663,25 +663,25 @@ Output: {$service.output|substr:0:1024}
         $proxy_password_html = '<input size="50" name="proxy_password" type="password" value="' .
             $this->getFormValue('proxy_password') . '" autocomplete="off" />';
 
-        $array_form = array(
-            'macro_ticket_id' => array(
+        $array_form = [
+            'macro_ticket_id' => [
                 'label' => _("Macro Ticket ID") . $this->required_field,
                 'html' => $macro_ticket_id_html
-            ),
-            'format_popup' => array('label' => _("Formatting popup"), 'html' => $format_popup_html),
-            'confirm_autoclose' => array('label' => _("Confirm popup autoclose"), 'html' => $confirm_autoclose_html),
-            'chainrule' => array('label' => _("Chain rules")),
-            'command' => array('label' => _("Commands")),
-            'attach_files' => array(
+            ],
+            'format_popup' => ['label' => _("Formatting popup"), 'html' => $format_popup_html],
+            'confirm_autoclose' => ['label' => _("Confirm popup autoclose"), 'html' => $confirm_autoclose_html],
+            'chainrule' => ['label' => _("Chain rules")],
+            'command' => ['label' => _("Commands")],
+            'attach_files' => [
                 'label' => _("Attach Files"),
                 "enable" => $this->attach_files,
                 'html' => $attach_files_html
-            ),
-            'proxy_address' => array('label' => _("Proxy address"), 'html' => $proxy_address_html),
-            'proxy_port' => array('label' => _("Proxy port"), 'html' => $proxy_port_html),
-            'proxy_username' => array('label' => _("Proxy username"), 'html' => $proxy_username_html),
-            'proxy_password' => array('label' => _("Proxy password"), 'html' => $proxy_password_html),
-        );
+            ],
+            'proxy_address' => ['label' => _("Proxy address"), 'html' => $proxy_address_html],
+            'proxy_port' => ['label' => _("Proxy port"), 'html' => $proxy_port_html],
+            'proxy_username' => ['label' => _("Proxy username"), 'html' => $proxy_username_html],
+            'proxy_password' => ['label' => _("Proxy password"), 'html' => $proxy_password_html]
+        ];
 
         // Chain rule list clone
         $chainruleListProvider_html = '<select id="chainruleListProvider_#index#" ' .
@@ -693,16 +693,16 @@ Output: {$service.output|substr:0:1024}
             }
         }
         $chainruleListProvider_html .= '</select>';
-        $array_form['chainruleList'] = array(
-            array('label' => _("Provider"), 'html' => $chainruleListProvider_html)
-        );
+        $array_form['chainruleList'] = [
+            ['label' => _("Provider"), 'html' => $chainruleListProvider_html]
+        ];
 
         // Command list clone
         $commandListCmd_html = '<input id="commandListCmd_#index#" name="commandListCmd[#index#]" ' .
             'size="60"  type="text" />';
-        $array_form['commandList'] = array(
-            array('label' => _("Command"), 'html' => $commandListCmd_html)
-        );
+        $array_form['commandList'] = [
+            ['label' => _("Command"), 'html' => $commandListCmd_html]
+        ];
 
         $tpl->assign('form', $array_form);
 

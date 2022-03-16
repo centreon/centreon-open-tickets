@@ -75,13 +75,13 @@ class MailProvider extends AbstractProvider
 
         $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
-        $tpl->assign("header", array("mail" => _("Mail")));
+        $tpl->assign("header", ["mail" => _("Mail")]);
 
         // Form
         $from_html = '<input size="50" name="from" type="text" value="' . $this->getFormValue('from') . '" />';
         $to_html = '<input size="50" name="to" type="text" value="' . $this->getFormValue('to') . '" />';
         $subject_html = '<input size="50" name="subject" type="text" value="'
-            . html_entity_decode($this->getFormValue('subject'), ENT_QUOTES, 'UTF-8')
+            . $this->getFormValue('subject')
             . '" />';
         $ishtml_html = '<input type="checkbox" name="ishtml" value="yes" ' .
             ($this->getFormValue('ishtml') == 'yes' ? 'checked' : '') . '/>';
