@@ -173,13 +173,7 @@ if (
     $notify = 1;
 }
 
-$persistent = 0;
-if (
-    isset($centreon->optGen['monitoring_ack_persistent'])
-    && $centreon->optGen['monitoring_ack_persistent']
-) {
-    $persistent = 1;
-}
+$persistent = ! empty($centreon->optGen['monitoring_ack_persistent']) ? 1 : 0;
 
 try {
     $contact_infos = get_contact_information();
