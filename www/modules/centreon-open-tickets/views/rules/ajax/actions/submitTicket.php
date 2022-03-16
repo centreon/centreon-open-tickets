@@ -165,13 +165,7 @@ $selected = $rule->loadSelection(
 
 $sticky = ! empty($centreon->optGen['monitoring_ack_sticky']) ? 2 : 1;
 
-$notify = 0;
-if (
-    isset($centreon->optGen['monitoring_ack_notify'])
-    && $centreon->optGen['monitoring_ack_notify']
-) {
-    $notify = 1;
-}
+$notify = ! empty($centreon->optGen['monitoring_ack_notify']) ? 1 : 0;
 
 $persistent = ! empty($centreon->optGen['monitoring_ack_persistent']) ? 1 : 0;
 
