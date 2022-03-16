@@ -238,7 +238,7 @@ if (count($stateTab)) {
     $query = CentreonUtils::conditionBuilder($query, " s.state IN (" . implode(',', $stateTab) . ")");
 }
 
-if (isset($preferences['duration_filter']) && $preferences['duration_filter'] != "") {
+if (! empty($preferences['duration_filter'])) {
     $tab = explode(" ", $preferences['duration_filter']);
 
     $op = $tab[0];
