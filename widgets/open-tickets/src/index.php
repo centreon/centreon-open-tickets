@@ -242,8 +242,8 @@ if (! empty($preferences['duration_filter'])) {
     $tab = explode(" ", $preferences['duration_filter']);
     if (
         count($tab) >= 2
-        || ! empty($tab[0])
-        || is_numeric($tab[1])
+        && ! empty($tab[0])
+        && is_numeric($tab[1])
     ) {
         $op = $tab[0];
         if ($op === 'gt') {
