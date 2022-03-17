@@ -169,7 +169,7 @@ try {
                 $row['instance_id']
             ]
         );
-        if ($forceCheck == 1) {
+        if ($forceCheck) {
             $command = "SCHEDULE_FORCED_SVC_CHECK;%s;%s;%s";
             call_user_func_array(
                 [$external_cmd, $method_external_name],
