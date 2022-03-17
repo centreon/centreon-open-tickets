@@ -270,7 +270,7 @@ try {
                     ]
                 );
             }
-            if ($centreon_provider->scheduleCheck()) {
+            if ($centreon_provider->doesScheduleCheck()) {
                 $command = "SCHEDULE_FORCED_SVC_CHECK;%s;%s;%s";
                 call_user_func_array(
                     [$external_cmd, $method_external_name],
