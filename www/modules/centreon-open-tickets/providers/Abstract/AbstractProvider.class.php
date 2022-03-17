@@ -1065,11 +1065,10 @@ Output: {$service.output|substr:0:1024}
 
     public function scheduleCheck()
     {
-        if (isset($this->rule_data['schedule_check']) && $this->rule_data['schedule_check'] == 'yes') {
-            return 1;
-        }
-
-        return 0;
+        return (
+            isset($this->rule_data['schedule_check'])
+            && $this->rule_data['schedule_check'] === 'yes'
+        );
     }
 
     public function doCloseTicket()
