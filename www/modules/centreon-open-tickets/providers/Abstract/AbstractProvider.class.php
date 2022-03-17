@@ -1063,7 +1063,7 @@ Output: {$service.output|substr:0:1024}
         return 0;
     }
 
-    public function scheduleCheck()
+    public function doesScheduleCheck(): bool
     {
         return (
             isset($this->rule_data['schedule_check'])
