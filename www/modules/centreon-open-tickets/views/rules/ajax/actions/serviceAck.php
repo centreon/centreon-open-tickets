@@ -92,7 +92,7 @@ while (($row = $dbResult->fetch())) {
 $persistent = 0;
 $sticky = 0;
 $notify = 0;
-$forceCheck = 0;
+$forceCheck = false;
 if (isset($get_information['form']['persistent'])) {
     $persistent = 1;
 }
