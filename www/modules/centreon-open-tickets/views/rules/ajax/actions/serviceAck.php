@@ -103,7 +103,7 @@ if (isset($get_information['form']['notify'])) {
     $notify = 1;
 }
 if (isset($get_information['form']['forcecheck'])) {
-    $forceCheck = 1;
+    $forceCheck = true;
 }
 
 try {
