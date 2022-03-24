@@ -44,24 +44,24 @@
         {else}
             {foreach item=elem from=$elemArr}
                 {if $elem.status == 'Disabled'}
-                    <tr class="row_disabled">
-                        {else}
-                    <tr class="{cycle values='list_one,list_two'} row_enabled">
+                <tr class="row_disabled">
+                {else}
+                <tr class="{cycle values='list_one,list_two'} row_enabled">
                 {/if}
-                <td class="ListColPicker">
-                    {$elem.select}
-                </td>
-                <td class="ListColLeft">
-                    <a href={$elem.url_edit}>
-                        {$elem.name}
-                    </a>
-                </td>
-                <td class="ListColCenter">
-                    {$elem.status}
-                </td>
-                <td class="ListColCenter">
-                    {$elem.dup}
-                </td>
+                    <td class="ListColPicker">
+                        {$elem.select}
+                    </td>
+                    <td class="ListColLeft">
+                        <a href={$elem.url_edit}>
+                            {$elem.name}
+                        </a>
+                    </td>
+                    <td class="ListColCenter">
+                        {$elem.status}
+                    </td>
+                    <td class="ListColCenter">
+                        {$elem.dup}
+                    </td>
                 </tr>
             {/foreach}
         {/if}
