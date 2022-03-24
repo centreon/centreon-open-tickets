@@ -524,8 +524,10 @@ Output: {$service.output|substr:0:1024}
         $url_html = '<input size="50" name="url" type="text" value="' . $this->getFormValue('url') . '" />';
         $message_confirm_html = '<textarea rows="8" cols="70" name="message_confirm">' .
             $this->getFormValue('message_confirm') . '</textarea>';
-        $ack_html = '<input type="checkbox" name="ack" value="yes" ' .
-            ($this->getFormValue('ack') == 'yes' ? 'checked' : '') . '/>';
+        $ack_html = '<div class="md-checkbox md-checkbox-inline">' .
+            '<input type="checkbox" id="ack" name="ack" value="yes" ' .
+            ($this->getFormValue('ack') == 'yes' ? 'checked' : '') .
+            '/><label class="empty-label" for="ack"></label></div>';
         $scheduleCheckHtml = '<input type="checkbox" name="schedule_check" value="yes" ' .
             ($this->getFormValue('schedule_check') === 'yes' ? 'checked' : '') . '/>';
         $close_ticket_enable_html = '<input type="checkbox" name="close_ticket_enable" value="yes" ' .
@@ -577,9 +579,12 @@ Output: {$service.output|substr:0:1024}
         '</select>';
         $groupListFilter_html =  '<input id="groupListFilter_#index#" name="groupListFilter[#index#]" ' .
             'size="20"  type="text" />';
-        $groupListMandatory_html =  '<input id="groupListMandatory_#index#" name="groupListMandatory[#index#]" ' .
-            'type="checkbox" value="1" />';
-        $groupListSort_html =  '<input id="groupListSort_#index#" name="groupListSort[#index#]" type="checkbox" />';
+        $groupListMandatory_html =  '<div class="md-checkbox md-checkbox-inline">' .
+            '<input id="groupListMandatory_#index#" name="groupListMandatory[#index#]" ' .
+            'type="checkbox" value="1" /><label class="empty-label" for="groupListMandatory_#index#"></label></div>';
+        $groupListSort_html =  '<div class="md-checkbox md-checkbox-inline">' .
+            '<input id="groupListSort_#index#" name="groupListSort[#index#]" type="checkbox" />' .
+            '<label class="empty-label" for="groupListSort_#index#"></label></div>';
         $array_form['groupList'] = [
             ['label' => _("Id"), 'html' => $groupListId_html],
             ['label' => _("Label"), 'html' => $groupListLabel_html],
@@ -595,8 +600,9 @@ Output: {$service.output|substr:0:1024}
             'type="text" />';
         $customListLabel_html = '<input id="customListLabel_#index#" name="customListLabel[#index#]" size="20"  ' .
             'type="text" />';
-        $customListDefault_html =  '<input id="customListDefault_#index#" name="customListDefault[#index#]" ' .
-            'type="checkbox" value="1" />';
+        $customListDefault_html =  '<div class="md-checkbox md-checkbox-inline">' .
+            '<input id="customListDefault_#index#" name="customListDefault[#index#]" ' .
+            'type="checkbox" value="1" /><label class="empty-label" for="customListDefault_#index#"></label></div>';
         $array_form['customList'] = [
             ['label' => _("Id"), 'html' => $customListId_html],
             ['label' => _("Value"), 'html' => $customListValue_html],
@@ -609,8 +615,9 @@ Output: {$service.output|substr:0:1024}
             'type="text" />';
         $bodyListValue_html = '<textarea type="textarea" id="bodyListValue_#index#" rows="8" cols="70" ' .
             'name="bodyListValue[#index#]"></textarea>';
-        $bodyListDefault_html =  '<input id="bodyListDefault_#index#" name="bodyListDefault[#index#]" ' .
-            'type="checkbox" value="1" />';
+        $bodyListDefault_html =  '<div class="md-checkbox md-checkbox-inline">' .
+            '<input id="bodyListDefault_#index#" name="bodyListDefault[#index#]" ' .
+            'type="checkbox" value="1" /><label class="empty-label" for="bodyListDefault_#index#"></label></div>';
         $array_form['bodyList'] = [
             ['label' => _("Name"), 'html' => $bodyListName_html],
             ['label' => _("Value"), 'html' => $bodyListValue_html],
