@@ -121,7 +121,7 @@ class BmcFootprints11Provider extends AbstractProvider
             $this->getFormValue('username') . '" />';
         $password_html = '<input size="50" name="password" type="password" value="' .
             $this->getFormValue('password') . '" autocomplete="off" />';
-        $https_html = '<div class="md-checkbox md-checkbox-inline">'.
+        $https_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input type="checkbox" id="https" name="https" value="yes" ' .
             ($this->getFormValue('https') == 'yes' ? 'checked' : '') .
             '/><label class="empty-label" for="https"></label></div>';
