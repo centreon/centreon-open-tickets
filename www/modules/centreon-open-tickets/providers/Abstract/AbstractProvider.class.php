@@ -530,10 +530,14 @@ Output: {$service.output|substr:0:1024}
             '/><label class="empty-label" for="ack"></label></div>';
         $scheduleCheckHtml = '<input type="checkbox" name="schedule_check" value="yes" ' .
             ($this->getFormValue('schedule_check') === 'yes' ? 'checked' : '') . '/>';
-        $close_ticket_enable_html = '<input type="checkbox" name="close_ticket_enable" value="yes" ' .
-            ($this->getFormValue('close_ticket_enable') == 'yes' ? 'checked' : '') . '/>';
-        $error_close_centreon_html = '<input type="checkbox" name="error_close_centreon" value="yes" ' .
-            ($this->getFormValue('error_close_centreon') == 'yes' ? 'checked' : '') . '/>';
+        $close_ticket_enable_html = '<div class="md-checkbox md-checkbox-inline">' .
+            '<input type="checkbox" id="close_ticket" name="close_ticket_enable" value="yes" ' .
+            ($this->getFormValue('close_ticket_enable') == 'yes' ? 'checked' : '') . '/>' .
+            '<label class="empty-label" for="close_ticket"></label></div>';
+        $error_close_centreon_html = '<div class="md-checkbox md-checkbox-inline">' .
+            '<input type="checkbox" id="error_close_centreon" name="error_close_centreon" value="yes" ' .
+            ($this->getFormValue('error_close_centreon') == 'yes' ? 'checked' : '') . '/>' .
+            '<label class="empty-label" for="error_close_centreon"></label></div>';
 
         $array_form = [
             'url' => ['label' => _("Url"), 'html' => $url_html],
@@ -661,8 +665,10 @@ Output: {$service.output|substr:0:1024}
             $this->getFormValue('macro_ticket_id') . '" />';
         $format_popup_html = '<textarea rows="8" cols="70" name="format_popup">' .
             $this->getFormValue('format_popup') . '</textarea>';
-        $attach_files_html = '<input type="checkbox" name="attach_files" value="yes" ' .
-            ($this->getFormValue('attach_files') == 'yes' ? 'checked' : '') . '/>';
+        $attach_files_html = '<div class="md-checkbox md-checkbox-inline">' .
+            '<input type="checkbox" id="attach_files" name="attach_files" value="yes" ' .
+            ($this->getFormValue('attach_files') == 'yes' ? 'checked' : '') . '/>' .
+            '<label class="empty-label" for="attach_files"></label></div>';
 
         //Proxy
         $proxy_address_html = '<input size="50" name="proxy_address" type="text" value="' .
