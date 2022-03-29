@@ -537,7 +537,7 @@ Output: {$service.output|substr:0:1024}
             'url' => ['label' => _("Url"), 'html' => $url_html],
             'message_confirm' => ['label' => _("Confirm message popup"), 'html' => $message_confirm_html],
             'ack' => ['label' => _("Acknowledge"), 'html' => $ack_html],
-            'schedule_check' => ['label' => _("Schedule check"), 'html' => $schedule_check_html],
+            'schedule_check' => ['label' => _("Schedule check"), 'html' => $scheduleCheckHtml],
             'close_ticket_enable' => [
                 'label' => _("Enable"),
                 'enable' => $this->close_advanced,
