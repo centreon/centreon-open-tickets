@@ -751,7 +751,7 @@ Output: {$service.output|substr:0:1024}
             isset($this->submitted_config['ack']) && $this->submitted_config['ack'] == 'yes'
         ) ? $this->submitted_config['ack'] : '';
         $this->save_config['simple']['schedule_check'] = (
-            isset($this->submitted_config['schedule_check']) && $this->submitted_config['schedule_check'] == 'yes'
+            isset($this->submitted_config['schedule_check']) && $this->submitted_config['schedule_check'] === 'yes'
         ) ? $this->submitted_config['schedule_check'] : '';
         $this->save_config['simple']['attach_files'] =
             (isset($this->submitted_config['attach_files']) && $this->submitted_config['attach_files'] == 'yes'
