@@ -21,7 +21,7 @@
 
 $resultat = [
     "code" => 0,
-    "msg" => 'ok'
+    "msg" => 'ok',
 ];
 
 // We get Host or Service
