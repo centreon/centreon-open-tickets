@@ -170,7 +170,7 @@ try {
             ]
         );
         if ($forceCheck) {
-            $command = "SCHEDULE_FORCED_SVC_CHECK;%s;%s;%s";
+            $command = "SCHEDULE_FORCED_SVC_CHECK;%s;%s;%d";
             call_user_func_array(
                 [$external_cmd, $method_external_name],
                 [
