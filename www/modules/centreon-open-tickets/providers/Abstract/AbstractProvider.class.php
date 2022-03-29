@@ -1063,6 +1063,11 @@ Output: {$service.output|substr:0:1024}
         return 0;
     }
 
+    /**
+     * Check if schedule check is needed
+     *
+     * @return bool
+     */
     public function doesScheduleCheck(): bool
     {
         return (
