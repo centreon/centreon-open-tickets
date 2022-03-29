@@ -222,7 +222,7 @@ try {
                 );
             }
             if ($centreon_provider->doesScheduleCheck()) {
-                $command = "SCHEDULE_FORCED_HOST_CHECK;%s;%s";
+                $command = "SCHEDULE_FORCED_HOST_CHECK;%s;%d";
                 call_user_func_array(
                     [$external_cmd, $method_external_name],
                     [
