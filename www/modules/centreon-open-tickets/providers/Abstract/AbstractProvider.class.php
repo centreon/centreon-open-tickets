@@ -526,8 +526,8 @@ Output: {$service.output|substr:0:1024}
             $this->getFormValue('message_confirm') . '</textarea>';
         $ack_html = '<input type="checkbox" name="ack" value="yes" ' .
             ($this->getFormValue('ack') == 'yes' ? 'checked' : '') . '/>';
-        $schedule_check_html = '<input type="checkbox" name="schedule_check" value="yes" ' .
-            ($this->getFormValue('schedule_check') == 'yes' ? 'checked' : '') . '/>';
+        $scheduleCheckHtml = '<input type="checkbox" name="schedule_check" value="yes" ' .
+            ($this->getFormValue('schedule_check') === 'yes' ? 'checked' : '') . '/>';
         $close_ticket_enable_html = '<input type="checkbox" name="close_ticket_enable" value="yes" ' .
             ($this->getFormValue('close_ticket_enable') == 'yes' ? 'checked' : '') . '/>';
         $error_close_centreon_html = '<input type="checkbox" name="error_close_centreon" value="yes" ' .
