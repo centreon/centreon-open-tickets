@@ -87,7 +87,7 @@ class MailProvider extends AbstractProvider
             . '" />';
         $ishtml_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input type="checkbox" id="ishtml" name="ishtml" value="yes" ' .
-            ($this->getFormValue('ishtml') == 'yes' ? 'checked' : '') . '/>' .
+            ($this->getFormValue('ishtml') === 'yes' ? 'checked' : '') . '/>' .
             '<label class="empty-label" for="ishtml"></label></div>';
 
         $array_form = array(

@@ -526,17 +526,17 @@ Output: {$service.output|substr:0:1024}
             $this->getFormValue('message_confirm') . '</textarea>';
         $ack_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input type="checkbox" id="ack" name="ack" value="yes" ' .
-            ($this->getFormValue('ack') == 'yes' ? 'checked' : '') .
+            ($this->getFormValue('ack') === 'yes' ? 'checked' : '') .
             '/><label class="empty-label" for="ack"></label></div>';
         $scheduleCheckHtml = '<input type="checkbox" name="schedule_check" value="yes" ' .
             ($this->getFormValue('schedule_check') === 'yes' ? 'checked' : '') . '/>';
         $close_ticket_enable_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input type="checkbox" id="close_ticket" name="close_ticket_enable" value="yes" ' .
-            ($this->getFormValue('close_ticket_enable') == 'yes' ? 'checked' : '') . '/>' .
+            ($this->getFormValue('close_ticket_enable') === 'yes' ? 'checked' : '') . '/>' .
             '<label class="empty-label" for="close_ticket"></label></div>';
         $error_close_centreon_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input type="checkbox" id="error_close_centreon" name="error_close_centreon" value="yes" ' .
-            ($this->getFormValue('error_close_centreon') == 'yes' ? 'checked' : '') . '/>' .
+            ($this->getFormValue('error_close_centreon') === 'yes' ? 'checked' : '') . '/>' .
             '<label class="empty-label" for="error_close_centreon"></label></div>';
 
         $array_form = [
@@ -583,10 +583,10 @@ Output: {$service.output|substr:0:1024}
         '</select>';
         $groupListFilter_html =  '<input id="groupListFilter_#index#" name="groupListFilter[#index#]" ' .
             'size="20"  type="text" />';
-        $groupListMandatory_html =  '<div class="md-checkbox md-checkbox-inline">' .
+        $groupListMandatory_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input id="groupListMandatory_#index#" name="groupListMandatory[#index#]" ' .
             'type="checkbox" value="1" /><label class="empty-label" for="groupListMandatory_#index#"></label></div>';
-        $groupListSort_html =  '<div class="md-checkbox md-checkbox-inline">' .
+        $groupListSort_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input id="groupListSort_#index#" name="groupListSort[#index#]" type="checkbox" />' .
             '<label class="empty-label" for="groupListSort_#index#"></label></div>';
         $array_form['groupList'] = [
@@ -604,7 +604,7 @@ Output: {$service.output|substr:0:1024}
             'type="text" />';
         $customListLabel_html = '<input id="customListLabel_#index#" name="customListLabel[#index#]" size="20"  ' .
             'type="text" />';
-        $customListDefault_html =  '<div class="md-checkbox md-checkbox-inline">' .
+        $customListDefault_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input id="customListDefault_#index#" name="customListDefault[#index#]" ' .
             'type="checkbox" value="1" /><label class="empty-label" for="customListDefault_#index#"></label></div>';
         $array_form['customList'] = [
@@ -619,7 +619,7 @@ Output: {$service.output|substr:0:1024}
             'type="text" />';
         $bodyListValue_html = '<textarea type="textarea" id="bodyListValue_#index#" rows="8" cols="70" ' .
             'name="bodyListValue[#index#]"></textarea>';
-        $bodyListDefault_html =  '<div class="md-checkbox md-checkbox-inline">' .
+        $bodyListDefault_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input id="bodyListDefault_#index#" name="bodyListDefault[#index#]" ' .
             'type="checkbox" value="1" /><label class="empty-label" for="bodyListDefault_#index#"></label></div>';
         $array_form['bodyList'] = [
@@ -667,7 +667,7 @@ Output: {$service.output|substr:0:1024}
             $this->getFormValue('format_popup') . '</textarea>';
         $attach_files_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input type="checkbox" id="attach_files" name="attach_files" value="yes" ' .
-            ($this->getFormValue('attach_files') == 'yes' ? 'checked' : '') . '/>' .
+            ($this->getFormValue('attach_files') === 'yes' ? 'checked' : '') . '/>' .
             '<label class="empty-label" for="attach_files"></label></div>';
 
         //Proxy

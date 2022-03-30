@@ -123,7 +123,7 @@ class BmcFootprints11Provider extends AbstractProvider
             $this->getFormValue('password') . '" autocomplete="off" />';
         $https_html = '<div class="md-checkbox md-checkbox-inline">' .
             '<input type="checkbox" id="https" name="https" value="yes" ' .
-            ($this->getFormValue('https') == 'yes' ? 'checked' : '') .
+            ($this->getFormValue('https') === 'yes' ? 'checked' : '') .
             '/><label class="empty-label" for="https"></label></div>';
         $timeout_html = '<input size="2" name="timeout" type="text" value="' .
             $this->getFormValue('timeout') . '" />';
