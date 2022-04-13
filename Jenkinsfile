@@ -116,7 +116,7 @@ try {
         stash name: "rpms-alma8", includes: 'output/noarch/*.rpm'
         sh 'rm -rf output'
       }
-    }
+    },
     'Debian bullseye packaging and signing': {
       node {
         dir('centreon-open-tickets') {
