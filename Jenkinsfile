@@ -14,12 +14,22 @@ if (env.BRANCH_NAME.startsWith('release-')) {
   env.BUILD = 'CI'
 }
 
+def checkoutCentreonBuild() {
+  dir('centreon-build') {
+    checkout resolveScm(source: [$class: 'GitSCMSource',
+      remote: 'https://github.com/centreon/centreon-build.git',
+      credentialsId: 'technique-ci',
+      traits: [[$class: 'jenkins.plugins.git.traits.BranchDiscoveryTrait']]],
+      targets: [env.BRANCH_NAME, 'master'])
+  }
+}
+
 /*
 ** Pipeline code.
 */
 stage('Source') {
   node {
-    sh 'setup_centreon_build.sh'
+    checkoutCentreonBuild()
     dir('centreon-open-tickets') {
       checkout scm
     }
@@ -49,7 +59,7 @@ try {
       timeout(time: 10, unit: 'MINUTES') {
         def qualityGate = waitForQualityGate()
           if (qualityGate.status != 'OK') {
-            currentBuild.result = 'FAIL' 
+            currentBuild.result = 'FAIL'
           }
       if ((currentBuild.result ?: 'SUCCESS') != 'SUCCESS') {
         error("Quality gate failure: ${qualityGate.status}.");
@@ -60,7 +70,7 @@ try {
   stage('Package') {
     parallel 'centos7': {
       node {
-        sh 'setup_centreon_build.sh'
+        checkoutCentreonBuild()
         sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-package.sh centos7"
         archiveArtifacts artifacts: 'rpms-centos7.tar.gz'
         stash name: "rpms-centos7", includes: 'output/noarch/*.rpm'
@@ -69,7 +79,7 @@ try {
     },
     'alma8': {
       node {
-        sh 'setup_centreon_build.sh'
+        checkoutCentreonBuild()
         sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-package.sh alma8"
         archiveArtifacts artifacts: 'rpms-alma8.tar.gz'
         stash name: "rpms-alma8", includes: 'output/noarch/*.rpm'
@@ -84,7 +94,7 @@ try {
   if ((env.BUILD == 'RELEASE') || (env.BUILD == 'REFERENCE')) {
     stage('Delivery') {
       node {
-        sh 'setup_centreon_build.sh'
+        checkoutCentreonBuild()
         unstash 'rpms-centos7'
         unstash 'rpms-alma8'
         sh "./centreon-build/jobs/open-tickets/${serie}/mon-open-tickets-delivery.sh"
