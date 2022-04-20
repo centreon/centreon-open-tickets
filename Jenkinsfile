@@ -3,7 +3,7 @@
 */
 def serie = '22.04'
 def stableBranch = "master"
-iif (env.BRANCH_NAME.startsWith('release-')) {
+if (env.BRANCH_NAME.startsWith('release-')) {
   env.BUILD = 'RELEASE'
   env.REPO = 'testing'
 } else if (env.BRANCH_NAME == stableBranch) {
