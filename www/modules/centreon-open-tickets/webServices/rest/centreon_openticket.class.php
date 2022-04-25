@@ -24,6 +24,7 @@ require_once _CENTREON_PATH_ . '/www/api/class/webService.class.php';
 
 define('CENTREON_OPENTICKET_PATH', _CENTREON_PATH_ . '/www/modules/centreon-open-tickets');
 
+require_once CENTREON_OPENTICKET_PATH . '/class/rule.php';
 require_once CENTREON_OPENTICKET_PATH . '/class/automatic.class.php';
 
 class CentreonOpenticket extends CentreonWebService
@@ -75,7 +76,7 @@ class CentreonOpenticket extends CentreonWebService
     public function postOpenService()
     {
         /* {
-         *   "provider_name": "mail",
+         *   "rule_name": "mail",
          *   "contact_name": "test",
          *   "contact_alias": "test2",
          *   "contact_email": "test@localhost",
@@ -96,7 +97,7 @@ class CentreonOpenticket extends CentreonWebService
          *   }
          * }
          */
-        if (!isset($this->arguments['provider_name'])
+        if (!isset($this->arguments['rule_name'])
             || !isset($this->arguments['host_id'])
             || !isset($this->arguments['service_id'])
             || !isset($this->arguments['service_state'])
@@ -105,7 +106,15 @@ class CentreonOpenticket extends CentreonWebService
             throw new RestBadRequestException('Parameters missing');
         }
 
-        $automatic = new Automatic($this->centreon, $this->pearDBMonitoring, $this->pearDB);
+        $rule = new Centreon_OpenTickets_Rule($this->pearDB);
+        $automatic = new Automatic(
+            $rule,
+            _CENTREON_PATH_,
+            CENTREON_OPENTICKET_PATH . '/',
+            $this->centreon,
+            $this->pearDBMonitoring,
+            $this->pearDB
+        );
         try {
             $rv = $automatic->openService($this->arguments);
         } catch (Exception $e) {

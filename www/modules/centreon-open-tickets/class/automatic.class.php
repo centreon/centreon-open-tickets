@@ -24,6 +24,8 @@ class Automatic
     protected $centreon;
     protected $dbCentstorage;
     protected $dbCentreon;
+    protected $openTicketPath;
+    protected $rule;
 
     /**
      * Constructor
@@ -31,11 +33,20 @@ class Automatic
      * @param CentreonDB $db
      * @return void
      */
-    public function __construct($centreon, $dbCentstorage, $dbCentreon)
+    public function __construct($rule, $centreonPath, $openTicketpath, $centreon, $dbCentstorage, $dbCentreon)
     {
+        global $register_providers;
+        require_once $openTicketpath . 'providers/register.php';
+        require_once $openTicketpath . 'providers/Abstract/AbstractProvider.class.php';
+
+        $this->registerProviders = $register_providers;
+        $this->rule = $rule;
+        $this->centreonPath = $centreonPath;
+        $this->openTicketPath = $openTicketpath;
         $this->centreon = $centreon;
         $this->dbCentstorage = $dbCentstorage;
         $this->dbCentreon = $dbCentreon;
+        $this->uniqId = uniqid();
     }
 
     protected function debug($message)
@@ -45,24 +56,24 @@ class Automatic
     }
 
     /**
-     * Test provider exists and returns the ruleId
+     * Get rule information
      *
      * @param string   $name
-     * @return integer
+     * @return mixed
      */
-    protected function getProviderId($name)
+    protected function getRuleInfo($name)
     {
         $stmt = $this->dbCentreon->prepare(
-            "SELECT rule_id FROM mod_open_tickets_rule
+            "SELECT rule_id, alias, provider_id FROM mod_open_tickets_rule
             WHERE alias = :alias AND activate = '1'"
         );
         $stmt->bindParam(':alias', $name, PDO::PARAM_STR);
         $stmt->execute();
-        if (!($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
+        if (!($ruleInfo = $stmt->fetch(PDO::FETCH_ASSOC))) {
             throw new Exception('Wrong parameter rule_id');
         }
 
-        return $row['rule_id'];
+        return $ruleInfo;
     }
 
     /**
@@ -183,6 +194,90 @@ class Automatic
     }
 
     /**
+     * Get provider class
+     *
+     * @param string   $name
+     * @param int      $ruleId
+     * @return mixed
+     */
+    function getProviderClass($ruleInfo)
+    {
+        $providerName = null;
+        foreach ($this->registerProviders as $name => $id) {
+            if (isset($ruleInfo['provider_id']) && $id == $ruleInfo['provider_id']) {
+                $providerName = $name;
+                break;
+            }
+        }
+
+        if (is_null($providerName)) {
+            throw new Exception('Provider not exist');
+        }
+
+        if (!file_exists(
+            $this->openTicketPath . 'providers/' . $providerName . '/' . $providerName . 'Provider.class.php'
+            )
+        ) {
+            throw new Exception('Provider not exist');
+        }
+
+        require_once $this->openTicketPath . 'providers/' . $providerName . '/' . $providerName . 'Provider.class.php';
+        $classname = $providerName . 'Provider';
+        $providerClass = new $classname(
+            $this->rule,
+            $this->centreonPath,
+            $this->openTicketPath,
+            $ruleInfo['rule_id'],
+            null,
+            $ruleInfo['provider_id']
+        );
+        $providerClass->setUniqId($this->uniqId);
+
+        return $providerClass;
+    }
+
+    protected function getForm($params, $groups)
+    {
+        $form = [];
+        if (isset($params['extra_properties']) && is_array($params['extra_properties'])) {
+            foreach ($params['extra_properties'] as $key => $value) {
+                $form[$key] = $value;
+            }
+        }
+
+        foreach ($groups as $groupId => $groupEntry) {
+            if (!isset($params['select'][$groupId])) {
+                if (count($groupEntry['values']) == 1) {
+                    foreach ($groupEntry['values'] as $key => $value) {
+                        $form['select_' . $groupId] = $key . '___' . $value;
+                        if (isset($groupEntry['placeholder']) &&
+                            isset($groupEntry['placeholder'][$key])) {
+                            $form['select_' . $groupId] .= '___' . $groupEntry['placeholder'][$key];
+                        }
+                    }
+                }
+                continue;
+            }
+
+            foreach ($groupEntry['values'] as $key => $value) {
+                if ($params['select'][$groupId] == $key ||
+                    $params['select'][$groupId] == $value ||
+                    (isset($groupEntry['placeholder']) &&
+                     isset($groupEntry['placeholder'][$key]) &&
+                     $params['select'][$groupId] == $groupEntry['placeholder'][$key])) {
+                        $form['select_' . $groupId] = $key . '___' . $value;
+                        if (isset($groupEntry['placeholder']) &&
+                            isset($groupEntry['placeholder'][$key])) {
+                            $form['select_' . $groupId] .= '___' . $groupEntry['placeholder'][$key];
+                        }
+                }
+            }
+        }
+
+        return $form;
+    }
+
+    /**
      * Open a service ticket
      *
      * @param array $params
@@ -190,10 +285,43 @@ class Automatic
      */
     public function openService($params)
     {
-        $ruleId = $this->getProviderId($params['provider_name']);
+        $ruleInfo = $this->getRuleInfo($params['rule_name']);
         $contact = $this->getContactInformation($params);
         $service = $this->getServiceInformation($params);
 
+        $providerClass = $this->getProviderClass($ruleInfo);
+
+        // execute popup to get extra listing in cache
+        $rv = $providerClass->getFormatPopup(
+            [
+                'title' => 'auto',
+                'user' => [
+                    'name' => $contact['name'],
+                    'alias' => $contact['alias'],
+                    'email' => $contact['email']
+                ]
+            ],
+            true
+        );
+
+        $form = $this->getForm($params, $rv['groups']);
+        $providerClass->setForm($form);
+        $rv = $providerClass->automateValidateFormatPopupLists();
+        if ($rv['code'] == 1) {
+            throw new Exception('please select '. array_join(', ', $rv['lists']));
+        }
+
+        $this->debug(print_r($form, true));
+
+        // validate form
+        /*$rv = $providerClass->submitTicket(
+            $this->dbCentstorage,
+            $contact,
+            [],
+            $service
+        );
+
+        $this->debug(print_r($rv, true));*/
         return ['code' => 0, 'message' => 'open ticket opened'];
     }
 }
