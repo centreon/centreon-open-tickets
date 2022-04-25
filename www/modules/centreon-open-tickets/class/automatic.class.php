@@ -186,9 +186,6 @@ class Automatic
         if (isset($params['host_name'])) {
             $service['host_name'] = $params['host_name'];
         }
-        if (isset($params['host_name'])) {
-            $service['host_name'] = $params['host_name'];
-        }
 
         return $service;
     }
@@ -238,7 +235,7 @@ class Automatic
 
     protected function getForm($params, $groups)
     {
-        $form = [];
+        $form = [ 'title' => 'automate' ];
         if (isset($params['extra_properties']) && is_array($params['extra_properties'])) {
             foreach ($params['extra_properties'] as $key => $value) {
                 $form[$key] = $value;
@@ -308,20 +305,23 @@ class Automatic
         $providerClass->setForm($form);
         $rv = $providerClass->automateValidateFormatPopupLists();
         if ($rv['code'] == 1) {
-            throw new Exception('please select '. array_join(', ', $rv['lists']));
+            throw new Exception('please select ' . implode(', ', $rv['lists']));
         }
 
         $this->debug(print_r($form, true));
 
         // validate form
-        /*$rv = $providerClass->submitTicket(
+        $rv = $providerClass->submitTicket(
             $this->dbCentstorage,
             $contact,
             [],
-            $service
+            [$service]
         );
 
-        $this->debug(print_r($rv, true));*/
-        return ['code' => 0, 'message' => 'open ticket opened'];
+        $this->debug(print_r($rv, true));
+        if ($rv['ticket_is_ok'] == 1) {
+            return ['code' => 0, 'message' => 'open ticket ' . $rv['ticket_id']];
+        }
+        return ['code' => 1, 'message' => 'open ticket error'];
     }
 }

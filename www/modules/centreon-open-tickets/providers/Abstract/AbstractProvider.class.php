@@ -1047,8 +1047,7 @@ Output: {$service.output|substr:0:1024}
             foreach ($this->rule_data['clones']['groupList'] as $values) {
                 if (
                     $values['Mandatory'] == 1
-                    && isset($this->submitted_config['select_' . $values['Id']])
-                    && $this->submitted_config['select_' . $values['Id']] == '-1'
+                    && !isset($this->submitted_config['select_' . $values['Id']])
                 ) {
                     $rv['code'] = 1;
                     $rv['lists'][] = $values['Id'];
