@@ -30,19 +30,23 @@ class Automatic
     /**
      * Constructor
      *
-     * @param CentreonDB $db
+     * @param  object $rule
+     * @param  string $centreonPath
+     * @param  string $openTicketPath
+     * @param  object $dbCentstorage
+     * @param  object $dbCentreon
      * @return void
      */
-    public function __construct($rule, $centreonPath, $openTicketpath, $centreon, $dbCentstorage, $dbCentreon)
+    public function __construct($rule, $centreonPath, $openTicketPath, $centreon, $dbCentstorage, $dbCentreon)
     {
         global $register_providers;
-        require_once $openTicketpath . 'providers/register.php';
-        require_once $openTicketpath . 'providers/Abstract/AbstractProvider.class.php';
+        require_once $openTicketPath . 'providers/register.php';
+        require_once $openTicketPath . 'providers/Abstract/AbstractProvider.class.php';
 
         $this->registerProviders = $register_providers;
         $this->rule = $rule;
         $this->centreonPath = $centreonPath;
-        $this->openTicketPath = $openTicketpath;
+        $this->openTicketPath = $openTicketPath;
         $this->centreon = $centreon;
         $this->dbCentstorage = $dbCentstorage;
         $this->dbCentreon = $dbCentreon;
@@ -58,8 +62,8 @@ class Automatic
     /**
      * Get rule information
      *
-     * @param string   $name
-     * @return mixed
+     * @param  string   $name
+     * @return array
      */
     protected function getRuleInfo($name)
     {
@@ -79,8 +83,8 @@ class Automatic
     /**
      * Get contact information
      *
-     * @param string   $name
-     * @return mixed
+     * @param  string   $name
+     * @return array
      */
     function getContactInformation($params)
     {  
@@ -113,8 +117,9 @@ class Automatic
     /**
      * Get service information
      *
-     * @param mixed   $params
+     * @param  mixed   $params
      * @return mixed
+     * @throws \Exception
      */
     function getServiceInformation($params)
     {
@@ -132,9 +137,9 @@ class Automatic
         if (!$this->centreon->user->admin) {
             $query .=
                 ' AND EXISTS(
-                    SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (' . $this->centreon->user->grouplistStr . ') AND ' .
-                '   centreon_acl.host_id = :host_id AND centreon_acl.service_id = :service_id
-                 )';
+                SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (' . 
+                $this->centreon->user->grouplistStr . ') AND ' .
+                '   centreon_acl.host_id = :host_id AND centreon_acl.service_id = :service_id)';
         }
         $stmt = $this->dbCentstorage->prepare($query);
         $stmt->bindParam(':host_id', $params['host_id'], PDO::PARAM_INT);
@@ -194,11 +199,65 @@ class Automatic
     }
 
     /**
+     * Get host information
+     *
+     * @param  mixed   $params
+     * @return mixed
+     * @throws \Exception
+     */
+    function getHostInformation($params)
+    {
+        $query = 'SELECT * FROM hosts WHERE hosts.host_id = :host_id';
+        if (!$this->centreon->user->admin) {
+            $query .=
+                ' AND EXISTS(
+                SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (' . 
+                $this->centreon->user->grouplistStr . ') AND ' .
+                '   centreon_acl.host_id = :host_id)';
+        }
+        $stmt = $this->dbCentstorage->prepare($query);
+        $stmt->bindParam(':host_id', $params['host_id'], PDO::PARAM_INT);
+        $stmt->execute();
+        if (!($host = $stmt->fetch(PDO::FETCH_ASSOC))) {
+            throw new Exception('Wrong parameter host_id or acl');
+        }
+
+        $host['host_state'] = $host['state'];
+        $host['state_str'] = $params['host_state'];
+        $host['last_state_change_duration'] = CentreonDuration::toString(
+            time() - $host['last_state_change']
+        );
+        $host['last_hard_state_change_duration'] = CentreonDuration::toString(
+            time() - $host['last_hard_state_change']
+        );
+
+        if (isset($params['last_host_state_change'])) {
+            $host['last_state_change_duration'] = CentreonDuration::toString(
+                time() - $params['last_host_state_change']
+            );
+            $host['last_hard_state_change_duration'] = CentreonDuration::toString(
+                time() - $params['last_host_state_change']
+            );
+        }
+        if (isset($params['host_output'])) {
+            $host['output'] = $params['host_output'];
+        }
+        if (isset($params['host_name'])) {
+            $host['name'] = $params['host_name'];
+        }
+        if (isset($params['host_alias'])) {
+            $host['alias'] = $params['host_alias'];
+        }
+
+        return $host;
+    }
+
+    /**
      * Get provider class
      *
-     * @param string   $name
-     * @param int      $ruleId
-     * @return mixed
+     * @param  array   $ruleInfo
+     * @return object
+     * @throws \Exception
      */
     function getProviderClass($ruleInfo)
     {
@@ -236,6 +295,13 @@ class Automatic
         return $providerClass;
     }
 
+    /**
+     * Get form values
+     *
+     * @param  mixed   $params
+     * @param  mixed   $groups
+     * @return array
+     */
     protected function getForm($params, $groups)
     {
         $form = [ 'title' => 'automate' ];
@@ -280,11 +346,11 @@ class Automatic
     /**
      * Submit provider ticket
      *
-     * @param mixed $params
-     * @param array $ruleInfo
-     * @param array $contact
-     * @param array $host
-     * @param array $service
+     * @param  mixed $params
+     * @param  array $ruleInfo
+     * @param  array $contact
+     * @param  array $host
+     * @param  array $service
      * @return array
      */
     protected function submitTicket($params, $ruleInfo, $contact, $host, $service)
@@ -330,11 +396,12 @@ class Automatic
     /**
      * Do rule chaining
      *
-     * @param array $chainRuleList
-     * @param mixed $params
-     * @param array $contact
-     * @param array $host
-     * @param array $service
+     * @param  array $chainRuleList
+     * @param  mixed $params
+     * @param  array $contact
+     * @param  array $host
+     * @param  array $service
+     * @return void
      */
     protected function doChainRules($chainRuleList, $params, $contact, $host, $service)
     {
@@ -358,12 +425,13 @@ class Automatic
     }
 
     /**
-     * Acknowledget, set macro and force check
+     * Acknowledge, set macro and force check for a service
      *
-     * @param mixed  $providerClass
+     * @param object $providerClass
      * @param string $ticketId
      * @param array  $contact
      * @param array  $service
+     * @return void
      */
     protected function externalServiceCommands($providerClass, $ticketId, $contact, $service)
     {
@@ -429,13 +497,88 @@ class Automatic
                 ]
             );
         }
+
+        $externalCmd->write();
+    }
+
+    /**
+     * Acknowledge, set macro and force check for a host
+     *
+     * @param object $providerClass
+     * @param string $ticketId
+     * @param array  $contact
+     * @param array  $host
+     * @return void
+     */
+    protected function externalHostCommands($providerClass, $ticketId, $contact, $host)
+    {
+        require_once $this->centreonPath . 'www/class/centreonExternalCommand.class.php';
+
+        $externalCmd = new CentreonExternalCommand($this->centreon);
+        $methodExternalName = 'set_process_command';
+        if (method_exists($externalCmd, $methodExternalName) == false) {
+            $methodExternalName = 'setProcessCommand';
+        }
+
+        $command = "CHANGE_CUSTOM_HOST_VAR;%s;%s;%s";
+        call_user_func_array(
+            [$externalCmd, $methodExternalName],
+            [
+                sprintf(
+                    $command,
+                    $host['name'],
+                    $providerClass->getMacroTicketId(),
+                    $ticketId
+                ),
+                $host['instance_id']
+            ]
+        );
+
+        if ($providerClass->doAck()) {
+            $sticky = ! empty($this->centreon->optGen['monitoring_ack_sticky']) ? 2 : 1;
+            $notify = ! empty($this->centreon->optGen['monitoring_ack_notify']) ? 1 : 0;
+            $persistent = ! empty($this->centreon->optGen['monitoring_ack_persistent']) ? 1 : 0;
+
+            $command = "ACKNOWLEDGE_HOST_PROBLEM;%s;%s;%s;%s;%s;%s";
+            call_user_func_array(
+                [$externalCmd, $methodExternalName],
+                [
+                    sprintf(
+                        $command,
+                        $host['name'],
+                        $sticky,
+                        $notify,
+                        $persistent,
+                        $contact['alias'],
+                        'open ticket: ' . $ticketId
+                    ),
+                    $host['instance_id']
+                ]
+            );
+        }
+
+        if ($providerClass->doesScheduleCheck()) {
+            $command = "SCHEDULE_FORCED_HOST_CHECK;%s;%d";
+            call_user_func_array(
+                [$externalCmd, $methodExternalName],
+                [
+                    sprintf(
+                        $command,
+                        $host['name'],
+                        time()
+                    ),
+                    $host['instance_id']
+                ]
+            );
+        }
+
         $externalCmd->write();
     }
 
     /**
      * Open a service ticket
      *
-     * @param array $params
+     * @param  mixed $params
      * @return array
      */
     public function openService($params)
@@ -448,6 +591,26 @@ class Automatic
         $this->doChainRules($rv['chainRuleList'], $params, $contact, [], [$service]);        
 
         $this->externalServiceCommands($rv['providerClass'], $rv['ticket_id'], $contact, $service);
+
+        return ['code' => 0, 'message' => 'Open ticket ' . $rv['ticket_id']];
+    }
+
+    /**
+     * Open a host ticket
+     *
+     * @param  mixed $params
+     * @return array
+     */
+    public function openHost($params)
+    {
+        $ruleInfo = $this->getRuleInfo($params['rule_name']);
+        $contact = $this->getContactInformation($params);
+        $host = $this->getHostInformation($params);
+
+        $rv = $this->submitTicket($params, $ruleInfo, $contact, [$host], []);
+        $this->doChainRules($rv['chainRuleList'], $params, $contact, [$host], []);        
+
+        $this->externalHostCommands($rv['providerClass'], $rv['ticket_id'], $contact, $host);
 
         return ['code' => 0, 'message' => 'Open ticket ' . $rv['ticket_id']];
     }

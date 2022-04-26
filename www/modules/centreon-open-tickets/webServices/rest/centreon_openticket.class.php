@@ -147,7 +147,6 @@ class CentreonOpenticket extends CentreonWebService
          */
         if (!isset($this->arguments['rule_name'])
             || !isset($this->arguments['host_id'])
-            || !isset($this->arguments['service_id'])
             || !isset($this->arguments['host_state'])
             || !isset($this->arguments['host_output'])
         ) {
