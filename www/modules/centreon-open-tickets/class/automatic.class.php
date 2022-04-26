@@ -273,11 +273,12 @@ class Automatic
             throw new Exception('Provider not exist');
         }
 
-        if (!file_exists($this->openTicketPath . 'providers/' . $providerName . '/' . $providerName . 'Provider.class.php')) {
+        $file = $this->openTicketPath . 'providers/' . $providerName . '/' . $providerName . 'Provider.class.php';
+        if (!file_exists($file)) {
             throw new Exception('Provider not exist');
         }
 
-        require_once $this->openTicketPath . 'providers/' . $providerName . '/' . $providerName . 'Provider.class.php';
+        require_once $file;
         $classname = $providerName . 'Provider';
         $providerClass = new $classname(
             $this->rule,
@@ -313,8 +314,10 @@ class Automatic
                 if (count($groupEntry['values']) == 1) {
                     foreach ($groupEntry['values'] as $key => $value) {
                         $form['select_' . $groupId] = $key . '___' . $value;
-                        if (isset($groupEntry['placeholder']) &&
-                            isset($groupEntry['placeholder'][$key])) {
+                        if (
+                            isset($groupEntry['placeholder'])
+                            && isset($groupEntry['placeholder'][$key])
+                        ) {
                             $form['select_' . $groupId] .= '___' . $groupEntry['placeholder'][$key];
                         }
                     }
@@ -323,7 +326,8 @@ class Automatic
             }
 
             foreach ($groupEntry['values'] as $key => $value) {
-                if ($params['select'][$groupId] == $key
+                if (
+                    $params['select'][$groupId] == $key
                     || $params['select'][$groupId] == $value
                     || (
                         isset($groupEntry['placeholder'])
@@ -332,8 +336,10 @@ class Automatic
                        )
                 ) {
                     $form['select_' . $groupId] = $key . '___' . $value;
-                    if (isset($groupEntry['placeholder']) &&
-                        isset($groupEntry['placeholder'][$key])) {
+                    if (
+                        isset($groupEntry['placeholder'])
+                        && isset($groupEntry['placeholder'][$key])
+                    ) {
                         $form['select_' . $groupId] .= '___' . $groupEntry['placeholder'][$key];
                     }
                 }
