@@ -66,7 +66,7 @@ class Centreon_OpenTickets_Rule
 
     public function getAliasAndProviderId($rule_id)
     {
-        $result = array();
+        $result = [];
         if (is_null($rule_id)) {
             return $result;
         }

@@ -494,7 +494,7 @@ Output: {$service.output|substr:0:1024}
 
     public function getChainRuleList()
     {
-        $result = array();
+        $result = [];
         if (isset($this->rule_data['clones']['chainruleList'])) {
             $result = $this->rule_data['clones']['chainruleList'];
         }

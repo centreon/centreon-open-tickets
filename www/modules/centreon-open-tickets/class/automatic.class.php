@@ -186,6 +186,9 @@ class Automatic
         if (isset($params['host_name'])) {
             $service['host_name'] = $params['host_name'];
         }
+        if (isset($params['host_alias'])) {
+            $service['host_alias'] = $params['host_alias'];
+        }
 
         return $service;
     }
@@ -275,17 +278,17 @@ class Automatic
     }
 
     /**
-     * Open a service ticket
+     * Submit provider ticket
      *
-     * @param array $params
+     * @param mixed $params
+     * @param array $ruleInfo
+     * @param array $contact
+     * @param array $host
+     * @param array $service
      * @return array
      */
-    public function openService($params)
+    protected function submitTicket($params, $ruleInfo, $contact, $host, $service)
     {
-        $ruleInfo = $this->getRuleInfo($params['rule_name']);
-        $contact = $this->getContactInformation($params);
-        $service = $this->getServiceInformation($params);
-
         $providerClass = $this->getProviderClass($ruleInfo);
 
         // execute popup to get extra listing in cache
@@ -308,20 +311,144 @@ class Automatic
             throw new Exception('please select ' . implode(', ', $rv['lists']));
         }
 
-        $this->debug(print_r($form, true));
-
         // validate form
         $rv = $providerClass->submitTicket(
             $this->dbCentstorage,
             $contact,
-            [],
-            [$service]
+            $host,
+            $service
+        );
+        if ($rv['ticket_is_ok'] == 0) {
+            throw new Exception('open ticket error');
+        }
+        $rv['chainRuleList'] = $providerClass->getChainRuleList();
+        $rv['providerClass'] = $providerClass;
+
+        return $rv;
+    }
+
+    /**
+     * Do rule chaining
+     *
+     * @param array $chainRuleList
+     * @param mixed $params
+     * @param array $contact
+     * @param array $host
+     * @param array $service
+     */
+    protected function doChainRules($chainRuleList, $params, $contact, $host, $service)
+    {
+        $loopCheck = [];
+
+        while (($ruleId = array_shift($chainRuleList))) {
+            $ruleInfo = $this->rule->getAliasAndProviderId($ruleId);
+
+            if (count($ruleInfo) == 0) {
+                continue;
+            }
+            if (isset($loopCheck[$ruleInfo['provider_id']])) {
+                continue;
+            }
+            $loopCheck[$ruleInfo['provider_id']] = 1;
+
+            $rv = $this->submitTicket($params, $ruleInfo, $contact, $host, $service);
+
+            array_unshift($chainRuleList, $rv['chainRuleList']);
+        }
+    }
+
+    /**
+     * Acknowledget, set macro and force check
+     *
+     * @param mixed  $providerClass
+     * @param string $ticketId
+     * @param array  $contact
+     * @param array  $service
+     */
+    protected function externalServiceCommands($providerClass, $ticketId, $contact, $service)
+    {
+        require_once $this->centreonPath . 'www/class/centreonExternalCommand.class.php';
+
+        $externalCmd = new CentreonExternalCommand($this->centreon);
+        $methodExternalName = 'set_process_command';
+        if (method_exists($externalCmd, $methodExternalName) == false) {
+            $methodExternalName = 'setProcessCommand';
+        }
+
+        $command = "CHANGE_CUSTOM_SVC_VAR;%s;%s;%s;%s";
+        call_user_func_array(
+            [$externalCmd, $methodExternalName],
+            [
+                sprintf(
+                    $command,
+                    $service['host_name'],
+                    $service['description'],
+                    $providerClass->getMacroTicketId(),
+                    $ticketId
+                ),
+                $service['instance_id']
+            ]
         );
 
-        $this->debug(print_r($rv, true));
-        if ($rv['ticket_is_ok'] == 1) {
-            return ['code' => 0, 'message' => 'open ticket ' . $rv['ticket_id']];
+        if ($providerClass->doAck()) {
+            $sticky = ! empty($this->centreon->optGen['monitoring_ack_sticky']) ? 2 : 1;
+            $notify = ! empty($this->centreon->optGen['monitoring_ack_notify']) ? 1 : 0;
+            $persistent = ! empty($this->centreon->optGen['monitoring_ack_persistent']) ? 1 : 0;
+
+            $command = "ACKNOWLEDGE_SVC_PROBLEM;%s;%s;%s;%s;%s;%s;%s";
+            call_user_func_array(
+                [$externalCmd, $methodExternalName],
+                [
+                    sprintf(
+                        $command,
+                        $service['host_name'],
+                        $service['description'],
+                        $sticky,
+                        $notify,
+                        $persistent,
+                        $contact['alias'],
+                        'open ticket: ' . $ticketId
+                    ),
+                    $service['instance_id']
+                ]
+            );
         }
-        return ['code' => 1, 'message' => 'open ticket error'];
+
+        if ($providerClass->doesScheduleCheck()) {
+            $command = "SCHEDULE_FORCED_SVC_CHECK;%s;%s;%d";
+            call_user_func_array(
+                [$externalCmd, $methodExternalName],
+                [
+                    sprintf(
+                        $command,
+                        $service['host_name'],
+                        $service['description'],
+                        time()
+                    ),
+                    $service['instance_id']
+                ]
+            );
+        }
+        $externalCmd->write();
+    }
+
+    /**
+     * Open a service ticket
+     *
+     * @param array $params
+     * @return array
+     */
+    public function openService($params)
+    {
+        $ruleInfo = $this->getRuleInfo($params['rule_name']);
+        $contact = $this->getContactInformation($params);
+        $service = $this->getServiceInformation($params);
+
+        $rv = $this->submitTicket($params, $ruleInfo, $contact, [], [$service]);
+        $this->doChainRules($rv['chainRuleList'], $params, $contact, [], [$service]);        
+
+        $this->externalServiceCommands($rv['providerClass'], $rv['ticket_id'], $contact, $service);
+
+        return ['code' => 0, 'message' => 'Open ticket ' . $rv['ticket_id']];
     }
 }
