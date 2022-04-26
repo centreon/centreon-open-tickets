@@ -86,8 +86,8 @@ class Automatic
      * @param  string   $name
      * @return array
      */
-    function getContactInformation($params)
-    {  
+    protected function getContactInformation($params)
+    {
         $rv = ['alias' => '', 'email' => '', 'name' => ''];
         $dbResult = $this->dbCentreon->query(
             "SELECT
@@ -121,7 +121,7 @@ class Automatic
      * @return mixed
      * @throws \Exception
      */
-    function getServiceInformation($params)
+    protected function getServiceInformation($params)
     {
         $query = 'SELECT
             services.*,
@@ -137,7 +137,7 @@ class Automatic
         if (!$this->centreon->user->admin) {
             $query .=
                 ' AND EXISTS(
-                SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (' . 
+                SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (' .
                 $this->centreon->user->grouplistStr . ') AND ' .
                 '   centreon_acl.host_id = :host_id AND centreon_acl.service_id = :service_id)';
         }
@@ -205,13 +205,13 @@ class Automatic
      * @return mixed
      * @throws \Exception
      */
-    function getHostInformation($params)
+    protected function getHostInformation($params)
     {
         $query = 'SELECT * FROM hosts WHERE hosts.host_id = :host_id';
         if (!$this->centreon->user->admin) {
             $query .=
                 ' AND EXISTS(
-                SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (' . 
+                SELECT * FROM centreon_acl WHERE centreon_acl.group_id IN (' .
                 $this->centreon->user->grouplistStr . ') AND ' .
                 '   centreon_acl.host_id = :host_id)';
         }
@@ -259,7 +259,7 @@ class Automatic
      * @return object
      * @throws \Exception
      */
-    function getProviderClass($ruleInfo)
+    protected function getProviderClass($ruleInfo)
     {
         $providerName = null;
         foreach ($this->registerProviders as $name => $id) {
@@ -273,10 +273,7 @@ class Automatic
             throw new Exception('Provider not exist');
         }
 
-        if (!file_exists(
-            $this->openTicketPath . 'providers/' . $providerName . '/' . $providerName . 'Provider.class.php'
-            )
-        ) {
+        if (!file_exists($this->openTicketPath . 'providers/' . $providerName . '/' . $providerName . 'Provider.class.php')) {
             throw new Exception('Provider not exist');
         }
 
@@ -326,16 +323,19 @@ class Automatic
             }
 
             foreach ($groupEntry['values'] as $key => $value) {
-                if ($params['select'][$groupId] == $key ||
-                    $params['select'][$groupId] == $value ||
-                    (isset($groupEntry['placeholder']) &&
-                     isset($groupEntry['placeholder'][$key]) &&
-                     $params['select'][$groupId] == $groupEntry['placeholder'][$key])) {
-                        $form['select_' . $groupId] = $key . '___' . $value;
-                        if (isset($groupEntry['placeholder']) &&
-                            isset($groupEntry['placeholder'][$key])) {
-                            $form['select_' . $groupId] .= '___' . $groupEntry['placeholder'][$key];
-                        }
+                if ($params['select'][$groupId] == $key
+                    || $params['select'][$groupId] == $value
+                    || (
+                        isset($groupEntry['placeholder'])
+                        && isset($groupEntry['placeholder'][$key])
+                        && $params['select'][$groupId] == $groupEntry['placeholder'][$key]
+                       )
+                ) {
+                    $form['select_' . $groupId] = $key . '___' . $value;
+                    if (isset($groupEntry['placeholder']) &&
+                        isset($groupEntry['placeholder'][$key])) {
+                        $form['select_' . $groupId] .= '___' . $groupEntry['placeholder'][$key];
+                    }
                 }
             }
         }
@@ -588,7 +588,7 @@ class Automatic
         $service = $this->getServiceInformation($params);
 
         $rv = $this->submitTicket($params, $ruleInfo, $contact, [], [$service]);
-        $this->doChainRules($rv['chainRuleList'], $params, $contact, [], [$service]);        
+        $this->doChainRules($rv['chainRuleList'], $params, $contact, [], [$service]);
 
         $this->externalServiceCommands($rv['providerClass'], $rv['ticket_id'], $contact, $service);
 
@@ -608,7 +608,7 @@ class Automatic
         $host = $this->getHostInformation($params);
 
         $rv = $this->submitTicket($params, $ruleInfo, $contact, [$host], []);
-        $this->doChainRules($rv['chainRuleList'], $params, $contact, [$host], []);        
+        $this->doChainRules($rv['chainRuleList'], $params, $contact, [$host], []);
 
         $this->externalHostCommands($rv['providerClass'], $rv['ticket_id'], $contact, $host);
 

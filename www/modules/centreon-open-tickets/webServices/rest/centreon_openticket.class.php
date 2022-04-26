@@ -97,7 +97,8 @@ class CentreonOpenticket extends CentreonWebService
          *   }
          * }
          */
-        if (!isset($this->arguments['rule_name'])
+        if (
+            !isset($this->arguments['rule_name'])
             || !isset($this->arguments['host_id'])
             || !isset($this->arguments['service_id'])
             || !isset($this->arguments['service_state'])
@@ -118,7 +119,7 @@ class CentreonOpenticket extends CentreonWebService
         try {
             $rv = $automatic->openService($this->arguments);
         } catch (Exception $e) {
-            $rv = [ 'code' => -1, 'message' => $e->getMessage() ]; 
+            $rv = [ 'code' => -1, 'message' => $e->getMessage() ];
         }
         return $rv;
     }
@@ -145,7 +146,8 @@ class CentreonOpenticket extends CentreonWebService
          *   }
          * }
          */
-        if (!isset($this->arguments['rule_name'])
+        if (
+            !isset($this->arguments['rule_name'])
             || !isset($this->arguments['host_id'])
             || !isset($this->arguments['host_state'])
             || !isset($this->arguments['host_output'])
@@ -165,7 +167,7 @@ class CentreonOpenticket extends CentreonWebService
         try {
             $rv = $automatic->openHost($this->arguments);
         } catch (Exception $e) {
-            $rv = [ 'code' => -1, 'message' => $e->getMessage() ]; 
+            $rv = [ 'code' => -1, 'message' => $e->getMessage() ];
         }
         return $rv;
     }

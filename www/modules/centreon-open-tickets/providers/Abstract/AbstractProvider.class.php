@@ -1058,7 +1058,7 @@ Output: {$service.output|substr:0:1024}
         return $rv;
     }
 
-    public function getFormatPopup($args, $addGroups=false)
+    public function getFormatPopup($args, $addGroups = false)
     {
         if (
             !isset($this->rule_data['format_popup'])
