@@ -614,4 +614,185 @@ class Automatic
 
         return ['code' => 0, 'message' => 'Open ticket ' . $rv['ticket_id']];
     }
+
+    /**
+     *
+     * @param mixed $params
+     * @param string $macroName
+     * @return int $ticketId
+    */
+    protected function getHostTicket($params, $macroName)
+    {
+        
+        $stmt = $this->dbCentstorage->prepare(
+            "SELECT SQL_CALC_FOUND_ROWS mot.ticket_value AS ticket_id 
+            FROM hosts h 
+            LEFT JOIN customvariables cv ON (h.host_id = cv.host_id AND (cv.service_id IS NULL or cv.service_id = 0) AND cv.name = :macro_name)
+            LEFT JOIN mod_open_tickets mot ON cv.value = mot.ticket_value WHERE h.host_id = :host_id"
+        );
+        $stmt->bindParam(':macro_name', $macroName, PDO::PARAM_STR);
+        $stmt->bindParam(':host_id', $params['host_id'], PDO::PARAM_INT);
+        $stmt->execute();
+
+        if (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
+            $ticketId = $row['ticket_id'];
+        }
+
+        return $ticketId;
+    }
+
+    /**
+     *
+     * @param mixed $params
+     * @param string $macroName
+     * @return int $ticketId
+    */
+    protected function getServiceTicket($params, $macroName)
+    {
+        $stmt = $this->dbCentstorage->prepare(
+            "SELECT SQL_CALC_FOUND_ROWS mot.ticket_value AS ticket_id 
+            FROM services s 
+            LEFT JOIN customvariables cv ON ( cv.service_id = :service_id AND cv.name = :macro_name)
+            LEFT JOIN mod_open_tickets mot ON cv.value = mot.ticket_value WHERE s.service_id = :service_id"
+        );
+        $stmt->bindParam(':service_id', $params['service_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':macro_name', $macroName, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        if (($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
+            $ticketId = $row['ticket_id'];
+        }
+
+        return $ticketId;
+    }
+
+    /**
+     * Close a host ticket
+     *
+     * @param  mixed $params
+     * @return array
+     */
+    public function closeHost($params)
+    {
+        $ruleInfo = $this->getRuleInfo($params['rule_name']);
+        $host = $this->getHostInformation($params);
+        $providerClass = $this->getProviderClass($ruleInfo);
+        $macroName = $providerClass->getMacroTicketId();
+
+        $ticketId = $this->getHostTicket($params, $macroName);
+
+        $rv = ['code' => 0, 'message' => 'no ticket found for host: ' . $host['name']];
+
+        if ($ticketId) {
+            try {
+                $providerClass->closeTicket($ticketId);
+                $this->changeMacroHost($macroName, $host);
+                $rv = ['code' => 0, 'message' => 'ticket ' . $ticketId . ' has been closed'];
+            } catch (Exception $e) {
+                $rv = [ 'code' => -1, 'message' => $e->getMessage() ];
+            }
+        }
+
+        return $rv;
+    }
+
+    /**
+     * Close a service ticket
+     *
+     * @param  mixed $params
+     * @return array
+     */
+    public function closeService($params)
+    {
+        $ruleInfo = $this->getRuleInfo($params['rule_name']);
+        $service = $this->getServiceInformation($params);
+        $providerClass = $this->getProviderClass($ruleInfo);
+        $macroName = $providerClass->getMacroTicketId();
+
+        $ticketId = $this->getServiceTicket($params, $macroName);
+
+        $rv = ['code' => 0, 'message' => 'no ticket found for service: ' . $service['host_name'] . " " . $service['description']];
+
+        if ($ticketId) {
+            try {
+                $providerClass->closeTicket($ticketId);
+                $this->changeMacroService($macroName, $service);
+                $rv = ['code' => 0, 'message' => 'ticket ' . $ticketId . ' has been closed'];
+            } catch (Exception $e) {
+                $rv = [ 'code' => -1, 'message' => $e->getMessage() ];
+            }
+        }
+
+        return $rv;
+    }
+
+    /**
+     * Reset the ticket custom macro for host
+     *
+     * @param  string $macroName
+     * @param array $host
+     * @return void
+     */
+    protected function changeMacroHost($macroName, $host)
+    {
+        require_once $this->centreonPath . 'www/class/centreonExternalCommand.class.php';
+
+        $externalCmd = new CentreonExternalCommand($this->centreon);
+        $methodExternalName = 'set_process_command';
+        if (method_exists($externalCmd, $methodExternalName) == false) {
+            $methodExternalName = 'setProcessCommand';
+        }
+
+        $command = "CHANGE_CUSTOM_HOST_VAR;%s;%s;%s";
+        call_user_func_array(
+            [$externalCmd, $methodExternalName],
+            [
+                sprintf(
+                    $command,
+                    $host['name'],
+                    $macroName,
+                    ""
+                ),
+                $host['instance_id']
+            ]
+        );
+
+        $externalCmd->write();
+    }
+
+    /**
+     * Reset the ticket custom macro for service
+     *
+     * @param  string $macroName
+     * @param array $service
+     * @return void
+     */
+    protected function changeMacroService($macroName, $service)
+    {
+        require_once $this->centreonPath . 'www/class/centreonExternalCommand.class.php';
+
+        $externalCmd = new CentreonExternalCommand($this->centreon);
+        $methodExternalName = 'set_process_command';
+        if (method_exists($externalCmd, $methodExternalName) == false) {
+            $methodExternalName = 'setProcessCommand';
+        }
+
+        $command = "CHANGE_CUSTOM_SVC_VAR;%s;%s;%s;%s";
+        call_user_func_array(
+            [$externalCmd, $methodExternalName],
+            [
+                sprintf(
+                    $command,
+                    $service['host_name'],
+                    $service['description'],
+                    $macroName,
+                    ""
+                ),
+                $service['instance_id']
+            ]
+        );
+
+        $externalCmd->write();
+    }
 }
