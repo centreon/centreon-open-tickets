@@ -53,12 +53,6 @@ class Automatic
         $this->uniqId = uniqid();
     }
 
-    protected function debug($message)
-    {
-        $fp = fopen('/var/log/php-fpm/debug.txt', 'a+');
-        fwrite($fp, $message . "\n");
-    }
-
     /**
      * Get rule information
      *

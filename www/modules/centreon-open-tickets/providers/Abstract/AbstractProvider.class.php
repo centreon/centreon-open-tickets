@@ -162,6 +162,12 @@ abstract class AbstractProvider
         $this->uniq_id = $uniq_id;
     }
 
+    /**
+     * Set form values
+     *
+     * @param  mixed $form
+     * @return void
+     */
     public function setForm($form)
     {
         $this->submitted_config = $form;
@@ -1053,6 +1059,11 @@ Output: {$service.output|substr:0:1024}
         }
     }
 
+    /**
+     * Check select lists requirement
+     *
+     * @return array
+     */
     public function automateValidateFormatPopupLists()
     {
         $rv = ['code' => 0, 'lists' => [] ];

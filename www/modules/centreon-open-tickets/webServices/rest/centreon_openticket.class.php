@@ -73,6 +73,11 @@ class CentreonOpenticket extends CentreonWebService
         }
     }
 
+    /**
+     * Webservice to open a ticket for a service
+     *
+     * @return array
+     */
     public function postOpenService()
     {
         /* {
@@ -124,6 +129,11 @@ class CentreonOpenticket extends CentreonWebService
         return $rv;
     }
 
+    /**
+     * Webservice to open a ticket for a host
+     *
+     * @return array
+     */
     public function postOpenHost()
     {
         /* {
