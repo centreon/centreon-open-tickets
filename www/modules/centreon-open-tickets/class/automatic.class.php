@@ -623,12 +623,14 @@ class Automatic
     */
     protected function getHostTicket($params, $macroName)
     {
-        
         $stmt = $this->dbCentstorage->prepare(
             "SELECT SQL_CALC_FOUND_ROWS mot.ticket_value AS ticket_id 
             FROM hosts h 
-            LEFT JOIN customvariables cv ON (h.host_id = cv.host_id AND (cv.service_id IS NULL or cv.service_id = 0) AND cv.name = :macro_name)
-            LEFT JOIN mod_open_tickets mot ON cv.value = mot.ticket_value WHERE h.host_id = :host_id"
+            LEFT JOIN customvariables cv ON (h.host_id = cv.host_id 
+            AND (cv.service_id IS NULL or cv.service_id = 0) 
+            AND cv.name = :macro_name)
+            LEFT JOIN mod_open_tickets mot ON cv.value = mot.ticket_value 
+            WHERE h.host_id = :host_id"
         );
         $stmt->bindParam(':macro_name', $macroName, PDO::PARAM_STR);
         $stmt->bindParam(':host_id', $params['host_id'], PDO::PARAM_INT);
@@ -653,7 +655,8 @@ class Automatic
             "SELECT SQL_CALC_FOUND_ROWS mot.ticket_value AS ticket_id 
             FROM services s 
             LEFT JOIN customvariables cv ON ( cv.service_id = :service_id AND cv.name = :macro_name)
-            LEFT JOIN mod_open_tickets mot ON cv.value = mot.ticket_value WHERE s.service_id = :service_id"
+            LEFT JOIN mod_open_tickets mot ON cv.value = mot.ticket_value 
+            WHERE s.service_id = :service_id"
         );
         $stmt->bindParam(':service_id', $params['service_id'], PDO::PARAM_INT);
         $stmt->bindParam(':macro_name', $macroName, PDO::PARAM_STR);
@@ -712,7 +715,8 @@ class Automatic
 
         $ticketId = $this->getServiceTicket($params, $macroName);
 
-        $rv = ['code' => 0, 'message' => 'no ticket found for service: ' . $service['host_name'] . " " . $service['description']];
+        $rv = ['code' => 0, 'message' => 'no ticket found for service: ' 
+               . $service['host_name'] . " " . $service['description']];
 
         if ($ticketId) {
             try {
