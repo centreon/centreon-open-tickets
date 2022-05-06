@@ -715,7 +715,7 @@ class Automatic
 
         $ticketId = $this->getServiceTicket($params, $macroName);
 
-        $rv = ['code' => 0, 'message' => 'no ticket found for service: ' 
+        $rv = ['code' => 0, 'message' => 'no ticket found for service: '
                . $service['host_name'] . " " . $service['description']];
 
         if ($ticketId) {
