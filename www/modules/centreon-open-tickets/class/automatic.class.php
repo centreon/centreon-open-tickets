@@ -686,7 +686,7 @@ class Automatic
 
         if ($ticketId) {
             try {
-                $providerClass->closeTicket($ticketId);
+                $providerClass->closeTicket([$ticketId]);
                 $this->changeMacroHost($macroName, $host);
                 $rv = ['code' => 0, 'message' => 'ticket ' . $ticketId . ' has been closed'];
             } catch (Exception $e) {
@@ -716,7 +716,7 @@ class Automatic
 
         if ($ticketId) {
             try {
-                $providerClass->closeTicket($ticketId);
+                $providerClass->closeTicket([$ticketId]);
                 $this->changeMacroService($macroName, $service);
                 $rv = ['code' => 0, 'message' => 'ticket ' . $ticketId . ' has been closed'];
             } catch (Exception $e) {
