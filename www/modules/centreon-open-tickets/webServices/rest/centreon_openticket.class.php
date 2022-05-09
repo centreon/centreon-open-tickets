@@ -181,4 +181,66 @@ class CentreonOpenticket extends CentreonWebService
         }
         return $rv;
     }
+
+    public function postCloseHost()
+    {
+        /* {
+         *   "rule_name": "mail",
+         *   "host_id": 10
+         */
+        if (
+            !isset($this->arguments['rule_name'])
+            || !isset($this->arguments['host_id'])
+        ) {
+            throw new RestBadRequestException('Parameters missing');
+        }
+
+        $rule = new Centreon_OpenTickets_Rule($this->pearDB);
+        $automatic = new Automatic(
+            $rule,
+            _CENTREON_PATH_,
+            CENTREON_OPENTICKET_PATH . '/',
+            $this->centreon,
+            $this->pearDBMonitoring,
+            $this->pearDB
+        );
+        try {
+            $rv = $automatic->closeHost($this->arguments);
+        } catch (Exception $e) {
+            $rv = [ 'code' => -1, 'message' => $e->getMessage() ];
+        }
+        return $rv;
+    }
+
+    public function postCloseService()
+    {
+        /* {
+         *   "rule_name": "mail",
+         *   "host_id": 10,
+         *   "service_id": 30
+         */
+        if (
+            !isset($this->arguments['rule_name'])
+            || !isset($this->arguments['service_id'])
+            || !isset($this->arguments['host_id'])
+        ) {
+            throw new RestBadRequestException('Parameters missing');
+        }
+
+        $rule = new Centreon_OpenTickets_Rule($this->pearDB);
+        $automatic = new Automatic(
+            $rule,
+            _CENTREON_PATH_,
+            CENTREON_OPENTICKET_PATH . '/',
+            $this->centreon,
+            $this->pearDBMonitoring,
+            $this->pearDB
+        );
+        try {
+            $rv = $automatic->closeService($this->arguments);
+        } catch (Exception $e) {
+            $rv = [ 'code' => -1, 'message' => $e->getMessage() ];
+        }
+        return $rv;
+    }
 }
