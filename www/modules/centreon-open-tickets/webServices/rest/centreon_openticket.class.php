@@ -182,6 +182,11 @@ class CentreonOpenticket extends CentreonWebService
         return $rv;
     }
 
+    /**
+     * Webservice to close a ticket for a host
+     *
+     * @return array
+     */
     public function postCloseHost()
     {
         /* {
@@ -212,6 +217,11 @@ class CentreonOpenticket extends CentreonWebService
         return $rv;
     }
 
+    /**
+     * Webservice to close a ticket for a service
+     *
+     * @return array
+     */
     public function postCloseService()
     {
         /* {
