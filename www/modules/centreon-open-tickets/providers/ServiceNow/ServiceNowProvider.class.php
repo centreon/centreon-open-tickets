@@ -365,7 +365,7 @@ class ServiceNowProvider extends AbstractProvider
                 'contact' => $contact,
                 'host_problems' => $host_problems,
                 'service_problems' => $service_problems,
-                'ticket_value' => $resultInfo['sysTicketId'],
+                'ticket_value' => $resultInfo['ticketId'],
                 'subject' => $ticket_arguments[
                     $this->internal_arg_name[self::ARG_SHORT_DESCRIPTION]
                 ],
@@ -676,7 +676,7 @@ class ServiceNowProvider extends AbstractProvider
     protected function getListImpact($params, $accessToken)
     {
         $uri = '/api/now/table/sys_choice?sysparm_fields=value,label,inactive' .
-            '&sysparm_query=nameSTARTSWITHtask%5EelementSTARTSWITHimpact';
+            '&sysparm_query=nameSTARTSWITHtask%5EelementSTARTSWITHimpact%5ElanguageSTARTSWITHen';
         $result = $this->runHttpRequest($uri, $accessToken);
 
         $selected = array();
@@ -704,7 +704,7 @@ class ServiceNowProvider extends AbstractProvider
     protected function getListUrgency($params, $accessToken)
     {
         $uri = '/api/now/table/sys_choice?sysparm_fields=value,label,inactive' .
-            '&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHurgency';
+            '&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHurgency%5ElanguageSTARTSWITHen';
         $result = $this->runHttpRequest($uri, $accessToken);
 
         $selected = array();
@@ -732,7 +732,7 @@ class ServiceNowProvider extends AbstractProvider
     protected function getListSeverity($params, $accessToken)
     {
         $uri = '/api/now/table/sys_choice?sysparm_fields=value,label,inactive' .
-            '&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHseverity';
+            '&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHseverity%5ElanguageSTARTSWITHen';
         $result = $this->runHttpRequest($uri, $accessToken);
 
         $selected = array();
@@ -760,7 +760,7 @@ class ServiceNowProvider extends AbstractProvider
     protected function getListCategory($params, $accessToken)
     {
         $uri = '/api/now/table/sys_choice?sysparm_fields=value,label,inactive' .
-            '&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHcategory';
+            '&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHcategory%5ElanguageSTARTSWITHen';
         $result = $this->runHttpRequest($uri, $accessToken);
 
         $selected = array();
@@ -788,7 +788,7 @@ class ServiceNowProvider extends AbstractProvider
     protected function getListSubcategory($params, $accessToken)
     {
         $uri = '/api/now/table/sys_choice?sysparm_fields=value,label,inactive' .
-            '&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHsubcategory';
+            '&sysparm_query=nameSTARTSWITHincident%5EelementSTARTSWITHsubcategory%5ElanguageSTARTSWITHen';
         $result = $this->runHttpRequest($uri, $accessToken);
 
         $selected = array();
