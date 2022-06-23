@@ -70,7 +70,8 @@ if ($preferences['toolbar_buttons']) {
             "../../modules/centreon-open-tickets/images/open-ticket.svg' name='service-ticket' " .
             "style='border: none; width: 24px; height: 24px; vertical-align: middle;' /> </label> | ";
         }
-        if ($preferences['action_ack']
+        if (
+            $preferences['action_ack']
             && ($canDoAction || $centreon->user->access->checkAction("service_acknowledgement"))
         ) {
             $toolbar .= "<label id='buttontoolbar_70' style='font-size: 13px; font-weight: bold; cursor:pointer;'' " .
