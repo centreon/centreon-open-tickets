@@ -1387,7 +1387,9 @@ class GlpiRestApiProvider extends AbstractProvider
             'content' => $ticketArguments['content'],
             'entities_id' => $ticketArguments['entity'],
             'urgency' => $ticketArguments['urgency'],
-            'itilcategories_id' => $ticketArguments['category'],
+            'itilcategories_id' => (
+                    $ticketArguments['category'] != ''
+                ) ? $ticketArguments['category'] : null,
             'impact' => $ticketArguments['impact'],
             'priority' => $ticketArguments['priority']
         );
