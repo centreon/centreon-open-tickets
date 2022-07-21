@@ -129,7 +129,7 @@ $query = "SELECT SQL_CALC_FOUND_ROWS h.host_id,
         s.service_id,
         s.description,
         s.state AS s_state,
-        h.state_type AS state_type,
+        s.state_type AS state_type,
         s.last_hard_state,
         s.output,
         s.scheduled_downtime_depth AS s_scheduled_downtime_depth,
@@ -223,7 +223,7 @@ if (isset($preferences['service_description_search']) && $preferences['service_d
         );
     }
 }
-$stateTab = array();
+$stateTab = [];
 if (isset($preferences['svc_warning']) && $preferences['svc_warning']) {
     $stateTab[] = 1;
 }
@@ -237,6 +237,36 @@ if (isset($preferences['svc_unknown']) && $preferences['svc_unknown']) {
 if (count($stateTab)) {
     $query = CentreonUtils::conditionBuilder($query, " s.state IN (" . implode(',', $stateTab) . ")");
 }
+
+if (! empty($preferences['duration_filter'])) {
+    $tab = explode(" ", $preferences['duration_filter']);
+    if (
+        count($tab) >= 2
+        && ! empty($tab[0])
+        && is_numeric($tab[1])
+    ) {
+        $op = $tab[0];
+        if ($op === 'gt') {
+            $op = 'lt';
+        } elseif ($op === 'lt') {
+            $op = 'gt';
+        } elseif ($op === 'gte') {
+            $op = 'lte';
+        } elseif ($op === 'lte') {
+            $op = 'gte';
+        }
+        $op = CentreonUtils::operandToMysqlFormat($op);
+
+        $durationValue = time() - $tab[1];
+        if (! empty($op)) {
+            $query = CentreonUtils::conditionBuilder(
+                $query,
+                "s.last_state_change " . $op . " " . $durationValue
+            );
+        }
+    }
+}
+
 if (isset($preferences['hide_down_host']) && $preferences['hide_down_host']) {
     $query = CentreonUtils::conditionBuilder($query, " h.state != 1 ");
 }
