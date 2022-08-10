@@ -106,7 +106,7 @@
             {/if}
         {if $preferences.display_status}
         <td class='ListColCenter' style='white-space:nowrap;'>
-            <span  style='font-weight:bold;' class="badge {$elem.color}">{$elem.s_state}</span>
+            <span style='font-weight:bold;' class="badge {$elem.color}">{$elem.s_state}</span>
         </td>
         {/if}
         {if $preferences.display_duration}<td class='ListColCenter' style='white-space:nowrap;'>{$elem.last_state_change}</td>{/if}
