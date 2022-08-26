@@ -78,12 +78,12 @@ $macro_tickets = $rule->getMacroNames($preferences['rule'], $widgetId);
 
 
 $aStateType = array("1" => "H", "0" => "S");
-$aColorHost = array(
+$aColorHost = [
     0 => 'host_up',
     1 => 'host_down',
     2 => 'host_unreachable',
     4 => 'host_pending'
-);
+];
 
 $aColorService = array(
     0 => 'service_ok',
