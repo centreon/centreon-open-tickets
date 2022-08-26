@@ -85,13 +85,13 @@ $aColorHost = [
     4 => 'host_pending'
 ];
 
-$aColorService = array(
+$aColorService = [
     0 => 'service_ok',
     1 => 'service_warning',
     2 => 'service_critical',
     3 => 'service_unknown',
     4 => 'pending'
-);
+];
 $stateLabels = array(
     0 => "Ok",
     1 => "Warning",
