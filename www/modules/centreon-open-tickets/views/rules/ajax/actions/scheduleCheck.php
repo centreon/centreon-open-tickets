@@ -38,8 +38,8 @@ $selected_str = '';
 $selected_str_append = '';
 $hosts_selected_str = '';
 $hosts_selected_str_append = '';
-$hosts_done = array();
-$services_done = array();
+$hostsDone = [];
+$servicesDone = [];
 foreach ($selected_values as $value) {
     $str = explode(';', $value);
     $selected_str .= $selected_str_append . 'services.host_id = ' . $str[0] . ' AND services.service_id = ' . $str[1];
