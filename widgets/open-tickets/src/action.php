@@ -108,7 +108,8 @@ function schedule_check(int $isService, int $forced, int $autoCloseActionPopup)
 {
     global $cmd, $centreon, $centreon_path;
 
-    $selection = $_REQUEST['selection'];
+    $selection = filter_var($_REQUEST['selection'], FILTER_SANITIZE_STRING);
+    
     $path = $centreon_path . "www/widgets/open-tickets/src/";
     $template = new Smarty();
     $template = initSmartyTpl($path . 'templates/', $template, "./", $centreon_path);
