@@ -20,10 +20,10 @@
  * limitations under the License.
  */
 
-$resultat = array(
+$result = [
     "code" => 0,
     "msg" => 'ok',
-);
+];
 
 // We get Host or Service
 $selected_values = explode(',', $get_information['form']['selection']);
