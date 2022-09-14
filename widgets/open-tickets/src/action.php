@@ -100,11 +100,11 @@ function service_ack(int $autoCloseActionPopup)
 
 /**
  * schedule_check: prepare variables for widget popup when scheduling a check
- * @param $isService (boolean) set to 1 if you want to schedule a check on a service
- * @param $forced (boolean) set to 1 if you want to schedule a forced check
- * @param $autoCloseActionPopup (boolean) set to 1 if you want to automatically close call popup
+ * @param int $isService set to 1 if you want to schedule a check on a service
+ * @param int $forced set to 1 if you want to schedule a forced check
+ * @param int $autoCloseActionPopup set to 1 if you want to automatically close call popup
  */
-function schedule_check($isService, $forced, $autoCloseActionPopup)
+function schedule_check(int $isService, int $forced, int $autoCloseActionPopup)
 {
     global $cmd, $centreon, $centreon_path;
 
