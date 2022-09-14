@@ -42,9 +42,9 @@ $centreon_bg = new CentreonXMLBGRequest($dependencyInjector, session_id(), 1, 1,
 
 /**
  * service_ack: put an ack on a host and service
- * @param $autoCloseActionPopup (boolean) set to 1 if you want to automatically close call popup
+ * @param int $autoCloseActionPopup set to 1 if you want to automatically close call popup
  */
-function service_ack($autoCloseActionPopup)
+function service_ack(int $autoCloseActionPopup)
 {
     global $cmd, $centreon, $centreon_path;
 
