@@ -31,7 +31,7 @@ $forced = $get_information['form']['forced'];
 $isService = $get_information['form']['isService'];
 $db_storage = new centreonDBManager('centstorage');
 
-$problems = array();
+$problems = [];
 
 # check services and hosts
 $selected_str = '';
