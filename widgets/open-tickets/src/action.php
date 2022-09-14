@@ -110,7 +110,6 @@ function schedule_check(int $isService, int $forced, int $autoCloseActionPopup)
 
     $selection = $_REQUEST['selection'];
     $path = $centreon_path . "www/widgets/open-tickets/src/";
-    $title = _("Scheduling checks");
     $template = new Smarty();
     $template = initSmartyTpl($path . 'templates/', $template, "./", $centreon_path);
     $template->assign('selection', $selection);
