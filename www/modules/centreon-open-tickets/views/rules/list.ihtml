@@ -17,10 +17,9 @@
     <table class="ToolbarTable table">
         <tr class="ToolbarTR">
             <td>
-                {$msg.options} {$form.o1.html}
+                {$form.o1.html}
                 <a class='btc bt_success' href="{$msg.addL}">{$msg.add}</a>
             </td>
-            <input name="p" value="{$p}" type="hidden">
             <td class='toolbarPagination'>
                 {php}
                     include('./include/common/pagination.php');
@@ -30,7 +29,12 @@
     </table>
     <table class="ListTable">
         <tr class="ListHeader">
-            <td class="ListColHeaderPicker"><input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"></td>
+            <td class="ListColHeaderPicker">
+                <div class="md-checkbox md-checkbox-inline">
+                    <input type="checkbox" id="checkall" name="checkall" onclick="checkUncheckAll(this);">
+                    <label class="empty-label" for="checkall"></label>
+                </div>
+            </td>
             <td class="ListColHeaderLeft">{$ruleLabel}</td>
             <td class="ListColHeaderCenter">{$statusLabel}</td>
             <td class="ListColHeaderCenter">{$optionLabel}</td>
@@ -42,7 +46,7 @@
                 {if $elem.status == 'Disabled'}
                 <tr class="row_disabled">
                 {else}
-                <tr class="row_enabled">
+                <tr class="{cycle values='list_one,list_two'} row_enabled">
                 {/if}
                     <td class="ListColPicker">
                         {$elem.select}
@@ -65,10 +69,9 @@
     <table class="ToolbarTable table">
         <tr class="ToolbarTR">
             <td>
-                {$msg.options} {$form.o2.html}
+                {$form.o2.html}
                 <a class='btc bt_success' href="{$msg.addL}">{$msg.add}</a>
             </td>
-            <input name="p" value="{$p}" type="hidden">
             <td class='toolbarPagination'>
                 {php}
                     include('./include/common/pagination.php');
