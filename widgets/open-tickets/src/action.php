@@ -113,7 +113,7 @@ function schedule_check(int $isService, int $forced, int $autoCloseActionPopup)
     $template = new Smarty();
     $template = initSmartyTpl($path . 'templates/', $template, "./", $centreon_path);
     $template->assign('selection', $selection);
-    $template->assign('titleLabel', $title);
+    $template->assign('titleLabel', _("Scheduling checks"));
     $template->assign('forced', $forced);
     $template->assign('isService', $isService);
     $template->assign('autoCloseActionPopup', $autoCloseActionPopup);
