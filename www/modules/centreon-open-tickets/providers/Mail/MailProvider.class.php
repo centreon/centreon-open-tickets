@@ -19,21 +19,26 @@
  * limitations under the License.
  */
 
-require_once __DIR__ . '/library/class.phpmailer.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception as MailerException;
+
+require_once __DIR__ . '/library/PHPMailer.php';
+require_once __DIR__ . '/library/Exception.php';
 
 class MailProvider extends AbstractProvider
 {
-    protected $_attach_files = 1;
+    protected $attach_files = 1;
 
-    protected function _setDefaultValueMain($body_html = 0)
+    protected function setDefaultValueMain($body_html = 0)
     {
-        parent::_setDefaultValueMain(1);
+        parent::setDefaultValueMain(1);
     }
 
-    protected function _setDefaultValueExtra()
+    protected function setDefaultValueExtra()
     {
         $this->default_data['from'] = '{$user.email}';
-        $this->default_data['subject'] = 'Issue {$ticket_id} - {include file="file:$centreon_open_tickets_path' .
+        $this->default_data['subject'] =
+            'Issue {$ticket_id} - {include file="file:$centreon_open_tickets_path' .
             '/providers/Abstract/templates/display_title.ihtml"}';
         $this->default_data['clones']['headerMail'] = array();
         $this->default_data['ishtml'] = 'yes';
@@ -44,20 +49,20 @@ class MailProvider extends AbstractProvider
      *
      * @return a string
      */
-    protected function _checkConfigForm()
+    protected function checkConfigForm()
     {
-        $this->_check_error_message = '';
-        $this->_check_error_message_append = '';
-        $this->_checkFormValue('from', "Please set 'From' value");
-        $this->_checkFormValue('to', "Please set 'To' value");
-        $this->_checkFormValue('subject', "Please set 'Subject' value");
-        $this->_checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
-        $this->_checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
+        $this->check_error_message = '';
+        $this->check_error_message_append = '';
+        $this->checkFormValue('from', "Please set 'From' value");
+        $this->checkFormValue('to', "Please set 'To' value");
+        $this->checkFormValue('subject', "Please set 'Subject' value");
+        $this->checkFormValue('macro_ticket_id', "Please set 'Macro Ticket ID' value");
+        $this->checkFormInteger('confirm_autoclose', "'Confirm popup autoclose' must be a number");
 
-        $this->_checkLists();
+        $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -66,26 +71,29 @@ class MailProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer1Extra()
+    protected function getConfigContainer1Extra()
     {
         $tpl = $this->initSmartyTemplate('providers/Mail/templates');
 
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign("img_brick", "./modules/centreon-open-tickets/images/brick.png");
-        $tpl->assign("header", array("mail" => _("Mail")));
+        $tpl->assign("header", ["mail" => _("Mail")]);
 
         // Form
-        $from_html = '<input size="50" name="from" type="text" value="' . $this->_getFormValue('from') . '" />';
-        $to_html = '<input size="50" name="to" type="text" value="' . $this->_getFormValue('to') . '" />';
-        $subject_html = '<input size="50" name="subject" type="text" value="' .
-            htmlentities($this->_getFormValue('subject')) . '" />';
-        $ishtml_html = '<input type="checkbox" name="ishtml" value="yes" ' .
-            ($this->_getFormValue('ishtml') == 'yes' ? 'checked' : '') . '/>';
+        $from_html = '<input size="50" name="from" type="text" value="' . $this->getFormValue('from') . '" />';
+        $to_html = '<input size="50" name="to" type="text" value="' . $this->getFormValue('to') . '" />';
+        $subject_html = '<input size="50" name="subject" type="text" value="'
+            . $this->getFormValue('subject')
+            . '" />';
+        $ishtml_html = '<div class="md-checkbox md-checkbox-inline">' .
+            '<input type="checkbox" id="ishtml" name="ishtml" value="yes" ' .
+            ($this->getFormValue('ishtml') === 'yes' ? 'checked' : '') . '/>' .
+            '<label class="empty-label" for="ishtml"></label></div>';
 
         $array_form = array(
-            'from' => array('label' => _("From") . $this->_required_field, 'html' => $from_html),
-            'to' => array('label' => _("To") . $this->_required_field, 'html' => $to_html),
-            'subject' => array('label' => _("Subject") . $this->_required_field, 'html' => $subject_html),
+            'from' => array('label' => _("From") . $this->required_field, 'html' => $from_html),
+            'to' => array('label' => _("To") . $this->required_field, 'html' => $to_html),
+            'subject' => array('label' => _("Subject") . $this->required_field, 'html' => $subject_html),
             'header' => array('label' => _("Headers")),
             'ishtml' => array('label' => _("Use html"), 'html' => $ishtml_html),
         );
@@ -101,8 +109,8 @@ class MailProvider extends AbstractProvider
         );
 
         $tpl->assign('form', $array_form);
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['headerMail'] = $this->_getCloneValue('headerMail');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['clones']['headerMail'] = $this->getCloneValue('headerMail');
     }
 
     /**
@@ -110,20 +118,20 @@ class MailProvider extends AbstractProvider
      *
      * @return void
      */
-    protected function _getConfigContainer2Extra()
+    protected function getConfigContainer2Extra()
     {
     }
 
     protected function saveConfigExtra()
     {
-        $this->_save_config['clones']['headerMail'] = $this->_getCloneSubmitted('headerMail', array('Name', 'Value'));
-        $this->_save_config['simple']['from'] = $this->_submitted_config['from'];
-        $this->_save_config['simple']['to'] = $this->_submitted_config['to'];
-        $this->_save_config['simple']['subject'] = $this->_submitted_config['subject'];
-        $this->_save_config['simple']['ishtml'] = (
-            isset($this->_submitted_config['ishtml'])
-            && $this->_submitted_config['ishtml'] == 'yes'
-        ) ? $this->_submitted_config['ishtml'] : '';
+        $this->save_config['clones']['headerMail'] = $this->getCloneSubmitted('headerMail', array('Name', 'Value'));
+        $this->save_config['simple']['from'] = $this->submitted_config['from'];
+        $this->save_config['simple']['to'] = $this->submitted_config['to'];
+        $this->save_config['simple']['subject'] = $this->submitted_config['subject'];
+        $this->save_config['simple']['ishtml'] = (
+            isset($this->submitted_config['ishtml'])
+            && $this->submitted_config['ishtml'] == 'yes'
+        ) ? $this->submitted_config['ishtml'] : '';
     }
 
     public function validateFormatPopup()
@@ -154,7 +162,7 @@ class MailProvider extends AbstractProvider
         }
 
         $tpl = $this->initSmartyTemplate();
-        $tpl->assign("centreon_open_tickets_path", $this->_centreon_open_tickets_path);
+        $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
         $tpl->assign('user', $contact);
         $tpl->assign('host_selected', $host_problems);
         $tpl->assign('service_selected', $service_problems);
@@ -168,33 +176,35 @@ class MailProvider extends AbstractProvider
         $tpl->assign('string', $this->rule_data['subject']);
         $subject = $tpl->fetch('eval.ihtml');
 
-        $mail = new PHPMailer();
-        $mail->setFrom($from);
-        $mail->addAddress($this->rule_data['to']);
-        if (isset($this->rule_data['ishtml']) && $this->rule_data['ishtml'] == 'yes') {
-            $mail->isHTML(true);
-        }
-        $attach_files = $this->getUploadFiles();
-        foreach ($attach_files as $file) {
-            $mail->addAttachment($file['filepath'], $file['filename']);
-        }
-
-        $headers = "From: " . $from;
-
-        if (isset($this->rule_data['clones']['headerMail'])) {
-            foreach ($this->rule_data['clones']['headerMail'] as $values) {
-                $mail->addCustomHeader($values['Name'], $values['Value']);
-                $headers .= "\r\n" . $values['Name'] . ':' . $values['Value'];
+        $mail = new PHPMailer(true);
+        try {
+            $mail->CharSet = 'utf-8';
+            $mail->setFrom($from);
+            $mail->addAddress($this->rule_data['to']);
+            if (isset($this->rule_data['ishtml']) && $this->rule_data['ishtml'] == 'yes') {
+                $mail->isHTML(true);
             }
-        }
+            $attach_files = $this->getUploadFiles();
+            foreach ($attach_files as $file) {
+                $mail->addAttachment($file['filepath'], $file['filename']);
+            }
 
-        $mail->Subject = $subject;
-        $mail->Body = $this->body;
-        if ($mail->send()) {
+            $headers = "From: " . $from;
+
+            if (isset($this->rule_data['clones']['headerMail'])) {
+                foreach ($this->rule_data['clones']['headerMail'] as $values) {
+                    $mail->addCustomHeader($values['Name'], $values['Value']);
+                    $headers .= "\r\n" . $values['Name'] . ':' . $values['Value'];
+                }
+            }
+
+            $mail->Subject = $subject;
+            $mail->Body = $this->body;
+            $mail->send();
             $this->saveHistory(
                 $db_storage,
                 $result,
-                array(
+                [
                     'no_create_ticket_id' => true,
                     'contact' => $contact,
                     'host_problems' => $host_problems,
@@ -202,18 +212,16 @@ class MailProvider extends AbstractProvider
                     'subject' => $subject,
                     'data_type' => self::DATA_TYPE_JSON,
                     'data' => json_encode(
-                        array(
-                            'body' => $this->body,
-                            'from' => $from,
-                            'headers' => $headers,
-                            'to' => $this->rule_data['to']
-                        )
+                        [
+                            'mail' => $mail->getSentMIMEMessage()
+                        ]
                     )
-                )
+                ]
             );
-        } else {
+        } catch (MailerException $e) {
             $result['ticket_error_message'] = 'Mailer Error: ' . $mail->ErrorInfo;
-            $result['ticket_is_ok'] = 1;
+        } catch (\Exception $e) {
+            $result['ticket_error_message'] = 'Mailer Error: ' . $e->getMessage();
         }
 
         return $result;
