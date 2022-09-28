@@ -74,7 +74,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function setDefaultValueExtra() {
+    protected function setDefaultValueExtra()
+    {
         $this->default_data['address'] = '127.0.0.1';
         $this->default_data['protocol'] = 'http';
         $this->default_data['user'] = '';
@@ -153,7 +154,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function setDefaultValueMain($body_html = 0) {
+    protected function setDefaultValueMain($body_html = 0)
+    {
         parent::setDefaultValueMain($body_html);
 
         $this->default_data['url'] = '{$protocol}://{$address}/';
@@ -246,7 +248,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @throw \Exception when a form field is not set
     */
-    protected function checkConfigForm() {
+    protected function checkConfigForm()
+    {
         $this->check_error_message = '';
         $this->check_error_message_append = '';
 
@@ -269,7 +272,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function getConfigContainer1Extra() {
+    protected function getConfigContainer1Extra()
+    {
         // initiate smarty and a few variables.
         $tpl = $this->initSmartyTemplate('providers/Isilog/templates');
         $tpl->assign("centreon_open_tickets_path", $this->centreon_open_tickets_path);
@@ -438,7 +442,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function saveConfigExtra() {
+    protected function saveConfigExtra()
+    {
         $this->save_config['simple']['address'] = $this->submitted_config['address'];
         $this->save_config['simple']['username'] = $this->submitted_config['username'];
         $this->save_config['simple']['protocol'] = $this->submitted_config['protocol'];
@@ -467,7 +472,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {string} $str html code that add an option to a select
     */
-    protected function getGroupListOptions() {
+    protected function getGroupListOptions()
+    {
         $str = '<option value="' . self::ISILOG_CATEGORY_TYPE . '">Category</option>' .
             '<option value="' . self::ISILOG_SERVICE_TYPE . '">Service</option>' .
             '<option value="' . self::ISILOG_IMPACT_TYPE . '">Impact</option>' .
@@ -492,7 +498,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    protected function assignOthers($entry, &$groups_order, &$groups) {
+    protected function assignOthers($entry, &$groups_order, &$groups)
+    {
         if ($entry['Type'] == self::ISILOG_CATEGORY_TYPE) {
             $this->assignIsilogCategory($entry, $groups_order, $groups);
         } elseif ($entry['Type'] == self::ISILOG_SERVICE_TYPE) {
@@ -529,7 +536,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get categories from isilog
     */
-    protected function assignIsilogCategory($entry, &$groups_order, &$groups) {
+    protected function assignIsilogCategory($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -553,7 +561,7 @@ class IsilogProvider extends AbstractProvider {
 
         $listCategories = simplexml_load_string($listCategories);
         $result = array();
-        $xmlResults=$listCategories->children('s', true)->Body->children()
+        $xmlResults = $listCategories->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
 
@@ -592,7 +600,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get services from isilog
     */
-    protected function assignIsilogService($entry, &$groups_order, &$groups) {
+    protected function assignIsilogService($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -617,11 +626,11 @@ class IsilogProvider extends AbstractProvider {
         $listServices = simplexml_load_string($listServices);
         $result = array();
 
-        $xmlResults=$listServices->children('s', true)->Body->children()
+        $xmlResults = $listServices->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
-        foreach ($xmlResults as $xmlResult) {
 
+        foreach ($xmlResults as $xmlResult) {
             foreach ($xmlResult->IsiFields->IsiWsDataField as $field) {
                 if ($field->IsiField[0] == 'L_REFERENCECOMPLET') {
                     $serviceName = $field->IsiValue[0]->__toString();
@@ -656,7 +665,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get teams from isilog
     */
-    protected function assignIsilogTeam($entry, &$groups_order, &$groups) {
+    protected function assignIsilogTeam($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -681,11 +691,11 @@ class IsilogProvider extends AbstractProvider {
         $listTeams = simplexml_load_string($listTeams);
         $result = array();
 
-        $xmlResults=$listTeams->children('s', true)->Body->children()
+        $xmlResults = $listTeams->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
-        foreach ($xmlResults as $xmlResult) {
 
+        foreach ($xmlResults as $xmlResult) {
             foreach ($xmlResult->IsiFields->IsiWsDataField as $field) {
                 if ($field->IsiField[0] == 'L_EQUIPE') {
                     $teamName = $field->IsiValue[0]->__toString();
@@ -720,7 +730,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get OU from isilog
     */
-    protected function assignIsilogOU($entry, &$groups_order, &$groups) {
+    protected function assignIsilogOU($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -745,11 +756,11 @@ class IsilogProvider extends AbstractProvider {
         $listOU = simplexml_load_string($listOU);
         $result = array();
 
-        $xmlResults=$listOU->children('s', true)->Body->children()
+        $xmlResults = $listOU->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
-        foreach ($xmlResults as $xmlResult) {
 
+        foreach ($xmlResults as $xmlResult) {
             foreach ($xmlResult->IsiFields->IsiWsDataField as $field) {
                 if ($field->IsiField[0] == 'L_FULLNAMESERVICE') {
                     $ouName = $field->IsiValue[0]->__toString();
@@ -784,7 +795,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get sites from isilog
     */
-    protected function assignIsilogSite($entry, &$groups_order, &$groups) {
+    protected function assignIsilogSite($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -809,11 +821,11 @@ class IsilogProvider extends AbstractProvider {
         $listSites = simplexml_load_string($listSites);
         $result = array();
 
-        $xmlResults=$listSites->children('s', true)->Body->children()
+        $xmlResults = $listSites->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
-        foreach ($xmlResults as $xmlResult) {
 
+        foreach ($xmlResults as $xmlResult) {
             foreach ($xmlResult->IsiFields->IsiWsDataField as $field) {
                 if ($field->IsiField[0] == 'L_FULLNAMESITE') {
                     $siteName = $field->IsiValue[0]->__toString();
@@ -848,7 +860,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get users from isilog
     */
-    protected function assignIsilogUser($entry, &$groups_order, &$groups) {
+    protected function assignIsilogUser($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -873,11 +886,11 @@ class IsilogProvider extends AbstractProvider {
         $listUsers = simplexml_load_string($listUsers);
         $result = array();
 
-        $xmlResults=$listUsers->children('s', true)->Body->children()
+        $xmlResults = $listUsers->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
-        foreach ($xmlResults as $xmlResult) {
 
+        foreach ($xmlResults as $xmlResult) {
             foreach ($xmlResult->IsiFields->IsiWsDataField as $field) {
                 if ($field->IsiField[0] == 'N_UTIL') {
                     $lastName = $field->IsiValue[0]->__toString();
@@ -914,7 +927,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get impact from isilog
     */
-    protected function assignIsilogImpact($entry, &$groups_order, &$groups) {
+    protected function assignIsilogImpact($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -939,11 +953,11 @@ class IsilogProvider extends AbstractProvider {
         $listImpacts = simplexml_load_string($listImpacts);
         $result = array();
 
-        $xmlResults=$listImpacts->children('s', true)->Body->children()
+        $xmlResults = $listImpacts->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
-        foreach ($xmlResults as $xmlResult) {
 
+        foreach ($xmlResults as $xmlResult) {
             foreach ($xmlResult->IsiFields->IsiWsDataField as $field) {
                 if ($field->IsiField[0] == 'L_SEVERITE') {
                     $impactName = $field->IsiValue[0]->__toString();
@@ -978,7 +992,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get urgencies from isilog
     */
-    protected function assignIsilogUrgency($entry, &$groups_order, &$groups) {
+    protected function assignIsilogUrgency($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -1003,11 +1018,10 @@ class IsilogProvider extends AbstractProvider {
         $listUrgencies = simplexml_load_string($listUrgencies);
         $result = array();
 
-        $xmlResults=$listUrgencies->children('s', true)->Body->children()
+        $xmlResults = $listUrgencies->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
         foreach ($xmlResults as $xmlResult) {
-
             foreach ($xmlResult->IsiFields->IsiWsDataField as $field) {
                 if ($field->IsiField[0] == 'L_BLOCAGE') {
                     $urgencyName = $field->IsiValue[0]->__toString();
@@ -1042,7 +1056,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get qualifier from isilog
     */
-    protected function assignIsilogQualifier($entry, &$groups_order, &$groups) {
+    protected function assignIsilogQualifier($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -1071,12 +1086,12 @@ class IsilogProvider extends AbstractProvider {
         $listQualifiers = simplexml_load_string($listQualifiers);
         $result = array();
 
-        $xmlResults=$listQualifiers->children('s', true)->Body->children()
+        $xmlResults = $listQualifiers->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
+
         foreach ($xmlResults as $xmlResult) {
             $isQualifier = false;
-
             foreach ($xmlResult->IsiFields->IsiWsDataField as $field) {
                 if ($field->IsiField[0] == 'L_LOV_VALUE') {
                     $qualifierName = $field->IsiValue[0]->__toString();
@@ -1117,7 +1132,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get origins from isilog
     */
-    protected function assignIsilogOrigin($entry, &$groups_order, &$groups) {
+    protected function assignIsilogOrigin($entry, &$groups_order, &$groups)
+    {
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
@@ -1146,12 +1162,12 @@ class IsilogProvider extends AbstractProvider {
         $listOrigins = simplexml_load_string($listOrigins);
         $result = array();
 
-        $xmlResults=$listOrigins->children('s', true)->Body->children()
+        $xmlResults = $listOrigins->children('s', true)->Body->children()
             ->IsiGetQueryResultResponse->IsiGetQueryResultResult
             ->Objects->children('b', true)->anyType->children()->IsiWsEntity;
+
         foreach ($xmlResults as $xmlResult) {
             $isOrigin = false;
-
             foreach ($xmlResult->IsiFields->IsiWsDataField as $field) {
                 if ($field->IsiField[0] == 'L_LOV_VALUE') {
                     $originName = $field->IsiValue[0]->__toString();
@@ -1201,12 +1217,19 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if there are some missing parameters
     * throw \Exception if the connection failed
     */
-    static public function test($info) {
+    public static function test($info)
+    {
         // this is called through our javascript code. Those parameters are already checked in JS code.
         // but since this function is public, we check again because anyone could use this function
-        if (!isset($info['address']) || !isset($info['username']) || !isset($info['password'])
-            || !isset($info['database']) || !isset($info['webservice']) || !isset($info['protocol'])) {
-                throw new \Exception('missing parameters', 13);
+        if (
+            !isset($info['address'])
+            || !isset($info['username'])
+            || !isset($info['password'])
+            || !isset($info['database'])
+            || !isset($info['webservice'])
+            || !isset($info['protocol'])
+        ) {
+            throw new \Exception('missing parameters', 13);
         }
 
         // check if php curl is installed
@@ -1311,11 +1334,11 @@ class IsilogProvider extends AbstractProvider {
     * @return {array} $result will tell us if the submit ticket action resulted in a ticket being opened
     */
     protected function doSubmit(
-        $db_storage, 
-        $contact, 
-        $host_problems, 
-        $service_problems, 
-        $extraTicketArguments=array()
+        $db_storage,
+        $contact,
+        $host_problems,
+        $service_problems,
+        $extraTicketArguments = array()
     ) {
         // initiate a result array
         $result = array(
@@ -1341,7 +1364,7 @@ class IsilogProvider extends AbstractProvider {
             foreach ($this->rule_data['clones']['mappingTicket'] as $value) {
                 $tpl->assign('string', $value['Value']);
                 $resultString = $tpl->fetch('eval.ihtml');
-                
+
                 if ($resultString == '') {
                     $resultString = null;
                 }
@@ -1379,7 +1402,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get categories data
     */
-    protected function getCategories() {
+    protected function getCategories()
+    {
         $webserviceName = $this->rule_data['centreoncat'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
@@ -1415,7 +1439,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get services data
     */
-    protected function getServices() {
+    protected function getServices()
+    {
         $webserviceName = $this->rule_data['centreonservice'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
@@ -1451,7 +1476,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get teams data
     */
-    protected function getTeam() {
+    protected function getTeam()
+    {
         $webserviceName = $this->rule_data['centreonteam'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
@@ -1487,7 +1513,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get sites data
     */
-    protected function getSite() {
+    protected function getSite()
+    {
         $webserviceName = $this->rule_data['centreonsite'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
@@ -1523,7 +1550,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get OU data
     */
-    protected function getOU() {
+    protected function getOU()
+    {
         $webserviceName = $this->rule_data['centreonou'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
@@ -1559,7 +1587,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get users data
     */
-    protected function getUser() {
+    protected function getUser()
+    {
         $webserviceName = $this->rule_data['centreonuser'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
@@ -1595,7 +1624,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get impacts data
     */
-    protected function getImpact() {
+    protected function getImpact()
+    {
         $webserviceName = $this->rule_data['centreonimpact'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
@@ -1631,7 +1661,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get urgencies data
     */
-    protected function getUrgency() {
+    protected function getUrgency()
+    {
         $webserviceName = $this->rule_data['centreonurgency'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
@@ -1667,7 +1698,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get informations data
     */
-    protected function getOthers() {
+    protected function getOthers()
+    {
         $webserviceName = $this->rule_data['centreonothers'];
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
@@ -1707,7 +1739,8 @@ class IsilogProvider extends AbstractProvider {
     * throw \Exception if we can't open a ticket
     * throw \Exception if the soap webservice return an error
     */
-    protected function createTicket($ticketArguments) {
+    protected function createTicket($ticketArguments)
+    {
         // L_TITRENEWS , title
         // DE_SYMPAPPEL , body
         // IDT_APPEL , ticket id
@@ -1823,7 +1856,7 @@ class IsilogProvider extends AbstractProvider {
         }
 
         // extract the xml with the data from the soap envelope
-        $xmlResult=$this->isilogCallResult->children('soap', true)->Body->children()
+        $xmlResult = $this->isilogCallResult->children('soap', true)->Body->children()
             ->IsiAddAndGetCallResponse->IsiAddAndGetCallResult;
         $fixEncoding = preg_replace('/encoding="utf-16"/i', 'encoding="utf-8"', $xmlResult[0]);
         $ticketData = simplexml_load_string($fixEncoding);
@@ -1856,7 +1889,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {string} soap header
     */
-    protected function buildHeader($isiCallProgram = null) {
+    protected function buildHeader($isiCallProgram = null)
+    {
         $soapHeader = '<isil:IsiWsAuthHeader>'
             . '<isil:IsiCallProgram>' . $isiCallProgram . '</isil:IsiCallProgram>'
             . '<isil:IsiDataBaseID>' . $this->rule_data['database'] . '</isil:IsiDataBaseID>'
@@ -1875,7 +1909,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {string} $envelope the soap envelope
     */
-    protected function getSoapEnvelope($webserviceName, $numberOfResult) {
+    protected function getSoapEnvelope($webserviceName, $numberOfResult)
+    {
         $envelope = '<soap:Envelope xmlns:s="http://www.w3.org/2001/XMLSchema" '
             . 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
             . 'xmlns:soap="http://www.w3.org/2003/05/soap-envelope" '
@@ -1909,8 +1944,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get data or the data is not valid
     */
-    protected function getSoapData($soapInfo, $getEntriesNumber = false) {
-
+    protected function getSoapData($soapInfo, $getEntriesNumber = false)
+    {
         try {
             $this->isilogCallResult = $this->callWebservice($soapInfo);
         } catch (\Exception $e) {
@@ -1932,7 +1967,6 @@ class IsilogProvider extends AbstractProvider {
         } else {
             return $this->isilogCallResult;
         }
-
     }
 
     /*
@@ -1944,8 +1978,9 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if we can't get data
     */
-    protected function callWebservice($soapInfo) {
-        $curlEndpoint = $this->rule_data['protocol'] . '://' 
+    protected function callWebservice($soapInfo)
+    {
+        $curlEndpoint = $this->rule_data['protocol'] . '://'
             . $this->rule_data['address'] . '/' . $soapInfo['webservice'];
 
         $curlHeader = array(
@@ -1995,8 +2030,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * throw \Exception if it can't close the ticket
     */
-    protected function closeTicketIsilog($ticketId) {
-
+    protected function closeTicketIsilog($ticketId)
+    {
         preg_match('/(\w+)_(\w+)/', $ticketId, $matches);
 
         $soapInfo = array(
@@ -2042,7 +2077,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {void}
     */
-    public function closeTicket(&$tickets) {
+    public function closeTicket(&$tickets)
+    {
         if ($this->doCloseTicket()) {
             foreach ($tickets as $k => $v) {
                 try {
