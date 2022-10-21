@@ -293,7 +293,8 @@ class IsilogProvider extends AbstractProvider
             . $this->getFormValue('username') . '" />';
         $protocol_html = '<input size="50" name="protocol" type="text" value="'
             . $this->getFormValue('protocol') . '" />';
-        $checkCertificateHtml = '<input size="50" id="check_certificate" name="check_certificate" type="checkbox" value="yes" '
+        $checkCertificateHtml = '<input size="50" id="check_certificate" '
+            . 'name="check_certificate" type="checkbox" value="yes" '
             . ($this->getFormValue('check_certificate') === 'yes' ? 'checked' : '') . '/>'
             . '<label class="empty-label" for="check_certificate"></label>';
         $password_html = '<input size="50" name="password" type="text" value="'
@@ -2006,7 +2007,7 @@ class IsilogProvider extends AbstractProvider
         );
 
         $checkCertificate = (
-            isset($this->rule_data['check_certificate']) 
+            isset($this->rule_data['check_certificate'])
             && $this->rule_data['check_certificate'] == 'yes'
         ) ? true : false;
 
