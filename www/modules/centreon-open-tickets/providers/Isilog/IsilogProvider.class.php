@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright 2016-2019 Centreon (http://www.centreon.com/)
  *
@@ -19,7 +20,8 @@
  * limitations under the License.
  */
 
-class IsilogProvider extends AbstractProvider {
+class IsilogProvider extends AbstractProvider
+{
     protected $close_advanced = 1;
     protected $proxy_enabled = 1;
 
@@ -27,31 +29,31 @@ class IsilogProvider extends AbstractProvider {
     // if it's true, it means that we already got the result set, so we don't need to reach the webservice again
     protected $get_others = false;
 
-    const ISILOG_CATEGORY_TYPE = 20;
-    const ISILOG_SERVICE_TYPE = 21;
-    const ISILOG_IMPACT_TYPE = 22;
-    const ISILOG_URGENCY_TYPE = 23;
-    const ISILOG_QUALIFIER_TYPE = 24;
-    const ISILOG_ORIGIN_TYPE = 25;
-    const ISILOG_TEAM_TYPE = 26;
-    const ISILOG_USER_TYPE = 27;
-    const ISILOG_OU_TYPE = 28;
-    const ISILOG_SITE_TYPE = 29;
-    const ISILOG_CUSTOMER_TYPE = 30;
+    protected const ISILOG_CATEGORY_TYPE = 20;
+    protected const ISILOG_SERVICE_TYPE = 21;
+    protected const ISILOG_IMPACT_TYPE = 22;
+    protected const ISILOG_URGENCY_TYPE = 23;
+    protected const ISILOG_QUALIFIER_TYPE = 24;
+    protected const ISILOG_ORIGIN_TYPE = 25;
+    protected const ISILOG_TEAM_TYPE = 26;
+    protected const ISILOG_USER_TYPE = 27;
+    protected const ISILOG_OU_TYPE = 28;
+    protected const ISILOG_SITE_TYPE = 29;
+    protected const ISILOG_CUSTOMER_TYPE = 30;
 
-    const ARG_CONTENT = 1;
-    const ARG_TITLE = 2;
-    const ARG_CATEGORY = 3;
-    const ARG_SERVICE = 4;
-    const ARG_IMPACT = 5;
-    const ARG_URGENCY = 6;
-    const ARG_QUALIFIER = 7;
-    const ARG_ORIGIN = 8;
-    const ARG_TEAM = 9;
-    const ARG_USER = 10;
-    const ARG_OU = 11;
-    const ARG_SITE = 12;
-    const ARG_CUSTOMER = 13;
+    protected const ARG_CONTENT = 1;
+    protected const ARG_TITLE = 2;
+    protected const ARG_CATEGORY = 3;
+    protected const ARG_SERVICE = 4;
+    protected const ARG_IMPACT = 5;
+    protected const ARG_URGENCY = 6;
+    protected const ARG_QUALIFIER = 7;
+    protected const ARG_ORIGIN = 8;
+    protected const ARG_TEAM = 9;
+    protected const ARG_USER = 10;
+    protected const ARG_OU = 11;
+    protected const ARG_SITE = 12;
+    protected const ARG_CUSTOMER = 13;
 
     protected $internal_arg_name = array(
         self::ARG_CONTENT => 'content',
@@ -285,7 +287,7 @@ class IsilogProvider extends AbstractProvider {
         * we create the html that is going to be displayed
         */
         $address_html = '<input size="50" name="address" type="text" value="'
-            . $this->getFormValue('address') .'" />';
+            . $this->getFormValue('address') . '" />';
         $username_html = '<input size="50" name="username" type="text" value="'
             . $this->getFormValue('username') . '" />';
         $protocol_html = '<input size="50" name="protocol" type="text" value="'
@@ -435,7 +437,9 @@ class IsilogProvider extends AbstractProvider {
         $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
-    protected function getConfigContainer2Extra() {}
+    protected function getConfigContainer2Extra()
+    {
+    }
 
     /*
     * Saves the rule form in the database
@@ -462,7 +466,7 @@ class IsilogProvider extends AbstractProvider {
 
         // saves the ticket arguments
         $this->save_config['clones']['mappingTicket'] = $this->getCloneSubmitted(
-            'mappingTicket', 
+            'mappingTicket',
             array('Arg', 'Value')
         );
     }
@@ -504,7 +508,7 @@ class IsilogProvider extends AbstractProvider {
             $this->assignIsilogCategory($entry, $groups_order, $groups);
         } elseif ($entry['Type'] == self::ISILOG_SERVICE_TYPE) {
             $this->assignIsilogService($entry, $groups_order, $groups);
-        }  elseif ($entry['Type'] == self::ISILOG_IMPACT_TYPE) {
+        } elseif ($entry['Type'] == self::ISILOG_IMPACT_TYPE) {
             $this->assignIsilogImpact($entry, $groups_order, $groups);
         } elseif ($entry['Type'] == self::ISILOG_URGENCY_TYPE) {
             $this->assignIsilogUrgency($entry, $groups_order, $groups);
@@ -1200,7 +1204,8 @@ class IsilogProvider extends AbstractProvider {
     *
     * @return {array} telling us if there is a missing parameter
     */
-    public function validateFormatPopup() {
+    public function validateFormatPopup()
+    {
         $result = array('code' => 0, 'message' => 'ok');
         $this->validateFormatPopupLists($result);
 
