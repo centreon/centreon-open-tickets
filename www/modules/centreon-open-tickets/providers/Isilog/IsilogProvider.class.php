@@ -80,6 +80,7 @@ class IsilogProvider extends AbstractProvider
     {
         $this->default_data['address'] = '127.0.0.1';
         $this->default_data['protocol'] = 'http';
+        $this->default_data['check_certificate'] = 'yes';
         $this->default_data['user'] = '';
         $this->default_data['password'] = '';
         $this->default_data['database'] = '';
@@ -264,8 +265,8 @@ class IsilogProvider extends AbstractProvider
 
         $this->checkLists();
 
-        if ($this->_check_error_message != '') {
-            throw new Exception($this->_check_error_message);
+        if ($this->check_error_message != '') {
+            throw new Exception($this->check_error_message);
         }
     }
 
@@ -292,6 +293,9 @@ class IsilogProvider extends AbstractProvider
             . $this->getFormValue('username') . '" />';
         $protocol_html = '<input size="50" name="protocol" type="text" value="'
             . $this->getFormValue('protocol') . '" />';
+        $checkCertificateHtml = '<input size="50" id="check_certificate" name="check_certificate" type="checkbox" value="yes" '
+            . ($this->getFormValue('check_certificate') === 'yes' ? 'checked' : '') . '/>'
+            . '<label class="empty-label" for="check_certificate"></label>';
         $password_html = '<input size="50" name="password" type="text" value="'
             . $this->getFormValue('password') . '" autocomplete="off" />';
         $timeout_html = '<input size="50" name="timeout" type="text" value="'
@@ -320,23 +324,27 @@ class IsilogProvider extends AbstractProvider
         // this array is here to link a label with the html code that we've wrote above
         $array_form = array(
             'address' => array(
-                'label' => _('Address') . $this->_required_field,
+                'label' => _('Address') . $this->required_field,
                 'html' => $address_html
             ),
             'username' => array(
-                'label' => _('Username') . $this->_required_field,
+                'label' => _('Username') . $this->required_field,
                 'html' => $username_html
             ),
             'protocol' => array(
-                'label' => _('Protocol') . $this->_required_field,
+                'label' => _('Protocol') . $this->required_field,
                 'html' => $protocol_html
             ),
+            'check_certificate' => array(
+                'label' => _('Check SSL certificates'),
+                'html' => $checkCertificateHtml
+            ),
             'password' => array(
-                'label' => _('Password') . $this->_required_field,
+                'label' => _('Password') . $this->required_field,
                 'html' => $password_html
             ),
             'database' => array(
-                'label' => _('Database name') . $this->_required_field,
+                'label' => _('Database name') . $this->required_field,
                 'html' => $database_html
             ),
             'timeout' => array(
@@ -433,8 +441,8 @@ class IsilogProvider extends AbstractProvider
 
         $tpl->assign('form', $array_form);
         $tpl->assign('arrayWebservices', $arrayWebservices);
-        $this->_config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
-        $this->_config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
+        $this->config['container1_html'] .= $tpl->fetch('conf_container1extra.ihtml');
+        $this->config['clones']['mappingTicket'] = $this->getCloneValue('mappingTicket');
     }
 
     protected function getConfigContainer2Extra()
@@ -451,6 +459,9 @@ class IsilogProvider extends AbstractProvider
         $this->save_config['simple']['address'] = $this->submitted_config['address'];
         $this->save_config['simple']['username'] = $this->submitted_config['username'];
         $this->save_config['simple']['protocol'] = $this->submitted_config['protocol'];
+        $this->save_config['simple']['check_certificate'] = (
+            isset($this->submitted_config['check_certificate']) && $this->submitted_config['check_certificate'] == 'yes'
+        ) ? 'yes' : '';
         $this->save_config['simple']['password'] = $this->submitted_config['password'];
         $this->save_config['simple']['database'] = $this->submitted_config['database'];
         $this->save_config['simple']['timeout'] = $this->submitted_config['timeout'];
@@ -545,7 +556,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -609,7 +620,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -674,7 +685,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -739,7 +750,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -804,7 +815,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -869,7 +880,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -936,7 +947,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -1001,7 +1012,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -1065,7 +1076,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -1141,7 +1152,7 @@ class IsilogProvider extends AbstractProvider
         // add a label to our entry and activate sorting or not.
         $groups[$entry['Id']] = array(
             'label' => _($entry['Label']) .
-            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->_required_field : '' ),
+            (isset($entry['Mandatory']) && $entry['Mandatory'] == 1 ? $this->required_field : '' ),
             'sort' => (isset($entry['Sort']) && $entry['Sort'] == 1 ? 1 : 0)
         );
         // adds our entry in the group order array
@@ -1242,6 +1253,8 @@ class IsilogProvider extends AbstractProvider
             throw new \Exception("couldn't find php curl", 10);
         }
 
+        $checkCertificate = (isset($info['check_certificate']) && $info['check_certificate'] == 1) ? true : false;
+
         $soapInfo = array(
             'action' => 'http://isilog.fr/IIsiQueryService/IsiGetQueryResult',
             'content-type' => 'application/soap+xml;charset=UTF-8',
@@ -1257,24 +1270,24 @@ class IsilogProvider extends AbstractProvider
             </isil:IsiWsAuthHeader>';
 
         $soapInfo['envelope'] = '<soap:Envelope xmlns:s="http://www.w3.org/2001/XMLSchema" '
-                . 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
-                . 'xmlns:soap="http://www.w3.org/2003/05/soap-envelope" '
-                . 'xmlns:wsa="http://wwww.w3.org/2005/08/addressing" '
-                . 'xmlns:isil="http://isilog.fr/" >'
-                . '<soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">' . $soapHeader
-                . '<wsa:Action>http://isilog.fr/IIsiQueryService/IsiGetQueryResult</wsa:Action>'
-                . '<wsa:To>https://demo.iws-saas.fr/IsilogWebSystem/WebServices/IsiQueryService.svc</wsa:To>'
-                . '</soap:Header>'
-                . '<soap:Body>'
-                . '<isil:IsiGetQueryResult>'
-                . '<isil:queryId>' . $info['webservice'] . '</isil:queryId>'
-                . '<isil:limit>1</isil:limit>'
-                . '<isil:totalRecordCount>1</isil:totalRecordCount>'
-                . '<isil:modifiedCriteria>'
-                . '</isil:modifiedCriteria>'
-                . '</isil:IsiGetQueryResult>'
-                . '</soap:Body>'
-                . '</soap:Envelope>';
+            . 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+            . 'xmlns:soap="http://www.w3.org/2003/05/soap-envelope" '
+            . 'xmlns:wsa="http://wwww.w3.org/2005/08/addressing" '
+            . 'xmlns:isil="http://isilog.fr/" >'
+            . '<soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">' . $soapHeader
+            . '<wsa:Action>http://isilog.fr/IIsiQueryService/IsiGetQueryResult</wsa:Action>'
+            . '<wsa:To>https://demo.iws-saas.fr/IsilogWebSystem/WebServices/IsiQueryService.svc</wsa:To>'
+            . '</soap:Header>'
+            . '<soap:Body>'
+            . '<isil:IsiGetQueryResult>'
+            . '<isil:queryId>' . $info['webservice'] . '</isil:queryId>'
+            . '<isil:limit>1</isil:limit>'
+            . '<isil:totalRecordCount>1</isil:totalRecordCount>'
+            . '<isil:modifiedCriteria>'
+            . '</isil:modifiedCriteria>'
+            . '</isil:IsiGetQueryResult>'
+            . '</soap:Body>'
+            . '</soap:Envelope>';
 
         $curlEndpoint = $info['protocol'] . '://' . $info['address'] . '/' . $soapInfo['webservice'];
 
@@ -1284,12 +1297,11 @@ class IsilogProvider extends AbstractProvider
             'Content-Length: ' . strlen($soapInfo['envelope'])
         );
 
-
         // initiate our curl options
         $curl = curl_init($curlEndpoint);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $curlHeader);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, $checkCertificate);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_TIMEOUT, $info['timeout']);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $soapInfo['envelope']);
@@ -1322,7 +1334,6 @@ class IsilogProvider extends AbstractProvider
         if ($statut != 'responseOk') {
             throw new \Exception($statut, 13);
         }
-
         return true;
     }
 
@@ -1994,12 +2005,16 @@ class IsilogProvider extends AbstractProvider
             'Content-Length: ' . strlen($soapInfo['envelope'])
         );
 
+        $checkCertificate = (
+            isset($this->rule_data['check_certificate']) 
+            && $this->rule_data['check_certificate'] == 'yes'
+        ) ? true : false;
 
         // initiate our curl options
         $curl = curl_init($curlEndpoint);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $curlHeader);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, $checkCertificate);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl, CURLOPT_TIMEOUT, $this->rule_data['timeout']);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $soapInfo['envelope']);

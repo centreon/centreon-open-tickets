@@ -1,6 +1,6 @@
 <tr class="list_lvl_1">
   <td class="ListColLvl1_name" colspan="2">
-    <h4>{$header.Isilog}</h4>
+    <h4>{$header.isilog}</h4>
   </td>
 </tr>
 <tr class="list_one">
@@ -44,6 +44,16 @@
   </td>
 </tr>
 <tr class="list_two">
+  <td class="FormRowField">
+    {$form.check_certificate.label}
+  </td>
+  <td class="FormRowValue">
+    <div class="md-checkbox md-checkbox-inline">
+      {$form.check_certificate.html}
+    </div>
+  </td>
+</tr>
+<tr class="list_one">
   <td class="FormRowField">
     {$form.timeout.label}
   </td>
@@ -226,6 +236,7 @@
         password: jQuery('input[name="password"]').val(),
         database: jQuery('input[name="database"]').val(),
         timeout: jQuery('input[name="timeout"]').val(),
+        check_certificate: jQuery('#check_certificate').is(":checked"),
         webservice: jQuery('.select_isilog_webservice').find(':selected').text(),
         proxy_address: jQuery('input[name="proxy_address"]').val(),
         proxy_port: jQuery('input[name="proxy_port"]').val(),
